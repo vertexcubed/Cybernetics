@@ -1,4 +1,4 @@
-package com.vertexcubed;
+package com.vertexcubed.cybernetics;
 
 import java.util.List;
 import java.util.Set;

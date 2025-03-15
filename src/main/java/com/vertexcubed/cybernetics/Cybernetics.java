@@ -1,6 +1,9 @@
 package com.vertexcubed.cybernetics;
 
+import com.vertexcubed.cybernetics.common.registry.CybAttachments;
 import com.vertexcubed.cybernetics.common.registry.CybKeyMappings;
+import com.vertexcubed.cybernetics.common.registry.CybMenus;
+import com.vertexcubed.cybernetics.common.registry.CybScreens;
 import com.vertexcubed.cybernetics.server.network.CybPayloads;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -54,9 +57,12 @@ public class Cybernetics
     {
         CREATIVE_MODE_TABS.register(modEventBus);
 
-        NeoForge.EVENT_BUS.register(this);
+        modEventBus.register(this);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+
+        CybAttachments.register(modEventBus);
+        CybMenus.register(modEventBus);
     }
 
     @SubscribeEvent
@@ -64,6 +70,7 @@ public class Cybernetics
         CybPayloads.regsiter(event);
     }
 
+    @SubscribeEvent
     public void registerScreens(RegisterMenuScreensEvent event) {
         CybScreens.register(event);
     }

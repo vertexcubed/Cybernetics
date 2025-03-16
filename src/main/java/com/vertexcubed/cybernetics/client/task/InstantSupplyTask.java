@@ -1,31 +1,30 @@
 package com.vertexcubed.cybernetics.client.task;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.UUID;
+import java.util.function.Supplier;
 
-public class InstantTask extends AbstractTask<AbstractTask.NoResult> {
+public class InstantSupplyTask<T> extends AbstractTask<T> {
 
-    private final Runnable run;
-    public InstantTask(Runnable run) {
+    private final Supplier<T> sup;
+    private T value = null;
+    public InstantSupplyTask(Supplier<T> sup) {
         super(UUID.randomUUID());
-        this.run = run;
+        this.sup = sup;
     }
 
     @Override
     public void update(long gameTime, float partialTick) {
-        run.run();
+        value = sup.get();
         state = TaskState.COMPLETED;
     }
 
     @Override
-    public NoResult getResult() {
-        return NONE;
+    public T getResult() {
+        return value;
     }
 
     @Override
     public void interrupt() {
 
     }
-
 }

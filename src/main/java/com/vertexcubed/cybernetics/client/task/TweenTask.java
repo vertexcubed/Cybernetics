@@ -8,10 +8,12 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class TweenTask extends AbstractTask<AbstractTask.NoResult> {
+public class TweenTask extends AbstractTask<Float> {
 
 
+    private final boolean maxOnInterrupt;
     private final Consumer<Float> setter;
+    private final Supplier<Float> getter;
     private final Easing easing;
     private final Float oldValue;
     private final float newValue;
@@ -19,13 +21,55 @@ public class TweenTask extends AbstractTask<AbstractTask.NoResult> {
     private final long startTime;
     private boolean isInterrupted = false;
 
+    /**
+     * @param getter A getter function for the float to tween.
+     * @param setter A setter function to tween.
+     * @param newValue The new value to tween to.
+     * @param startTime The start time in gameTime.
+     * @param duration The duration.
+     */
     public TweenTask(Supplier<Float> getter, Consumer<Float> setter, float newValue, long startTime, int duration) {
-        this(getter, setter, newValue, startTime, duration, Easing.LINEAR);
+        this(true, getter, setter, newValue, startTime, duration, Easing.LINEAR);
     }
 
+    /**
+     * @param getter A getter function for the float to tween.
+     * @param setter A setter function to tween.
+     * @param newValue The new value to tween to.
+     * @param startTime The start time in gameTime.
+     * @param duration The duration.
+     * @param easing An Easing.
+     */
     public TweenTask(Supplier<Float> getter, Consumer<Float> setter, float newValue, long startTime, int duration, Easing easing) {
+        this(true, getter, setter, newValue, startTime, duration, easing);
+    }
+
+    /**
+     * @param maxOnInterrupt Should the value be set to the max value if interrupted? T/F
+     * @param getter A getter function for the float to tween.
+     * @param setter A setter function to tween.
+     * @param newValue The new value to tween to.
+     * @param startTime The start time in gameTime.
+     * @param duration The duration.
+     */
+    public TweenTask(boolean maxOnInterrupt, Supplier<Float> getter, Consumer<Float> setter, float newValue, long startTime, int duration) {
+        this(maxOnInterrupt, getter, setter, newValue, startTime, duration, Easing.LINEAR);
+    }
+
+    /**
+     * @param maxOnInterrupt Should the value be set to the max value if interrupted? T/F
+     * @param getter A getter function for the float to tween.
+     * @param setter A setter function to tween.
+     * @param newValue The new value to tween to.
+     * @param startTime The start time in gameTime.
+     * @param duration The duration.
+     * @param easing An Easing.
+     */
+    public TweenTask(boolean maxOnInterrupt, Supplier<Float> getter, Consumer<Float> setter, float newValue, long startTime, int duration, Easing easing) {
         super(UUID.randomUUID());
+        this.maxOnInterrupt = maxOnInterrupt;
         this.setter = setter;
+        this.getter = getter;
         this.oldValue = getter.get();
         this.newValue = newValue;
         this.startTime = startTime;
@@ -57,13 +101,15 @@ public class TweenTask extends AbstractTask<AbstractTask.NoResult> {
     }
 
     @Override
-    public NoResult getResult() {
-        return NONE;
+    public Float getResult() {
+        return getter.get();
     }
 
     @Override
     public void interrupt() {
-        setter.accept(newValue);
+        if(maxOnInterrupt) {
+            setter.accept(newValue);
+        }
         isInterrupted = true;
     }
 

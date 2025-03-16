@@ -1,6 +1,12 @@
 package com.vertexcubed.cybernetics.client.gui.cyberware;
 
+import com.vertexcubed.cybernetics.Cybernetics;
+import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
+import com.vertexcubed.cybernetics.client.task.AbstractTask;
+import com.vertexcubed.cybernetics.client.task.InstantTask;
+import com.vertexcubed.cybernetics.client.task.WaitTask;
 import com.vertexcubed.cybernetics.common.menu.CyberwareMenu;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -27,8 +33,13 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
     protected void init() {
         super.init();
 
-
-
+        Cybernetics.LOGGER.info("Waiting 40 ticks...");
+        ScreenHelper.getTaskManager(this)
+                .addTickTask(
+                        new WaitTask<>(Minecraft.getInstance().level.getGameTime() + 40, AbstractTask.NONE)
+                                .onComplete(prev ->
+                                        new InstantTask(() -> Cybernetics.LOGGER.info("Task completed!"))
+                                ));
     }
 
     @Override

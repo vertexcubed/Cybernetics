@@ -1,9 +1,10 @@
 package com.vertexcubed.cybernetics.mixin.client;
 
-import com.vertexcubed.cybernetics.client.gui.animation.ScreenAnimController;
 import com.vertexcubed.cybernetics.client.gui.util.ICybScreen;
+import com.vertexcubed.cybernetics.client.task.TaskManager;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,26 +15,32 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ScreenMixin implements ICybScreen {
 
     @Unique
-    private final ScreenAnimController cybernetics$controller = new ScreenAnimController(cybernetics$self());;
-
-
-    @Unique
-    private Screen cybernetics$self() {
-        return (Screen) (Object) this;
-    }
+    private final TaskManager cybernetics$tasks = new TaskManager();
 
     @Override
-    public ScreenAnimController cybernetics$getScreenAnimController() {
-        return cybernetics$controller;
+    public TaskManager cybernetics$getTaskManager() {
+        return cybernetics$tasks;
     }
 
     @Inject(method = "removed", at=@At("TAIL"))
     public void cybernetics$onRemoved(CallbackInfo ci) {
-        cybernetics$controller.onRemoved();
+        cybernetics$tasks.interruptAll();
+        cybernetics$tasks.clear();
     }
 
-    @Inject(method = "init()V", at=@At("TAIL"))
-    public void cybernetics$onInit(CallbackInfo ci) {
-        cybernetics$controller.onInit();
+    @Inject(method = "tick", at=@At("HEAD"))
+    public void cybernetics$onTick(CallbackInfo ci) {
+        if(Minecraft.getInstance().level == null) {
+            return;
+        }
+        cybernetics$tasks.tick(Minecraft.getInstance().level.getGameTime());
+    }
+
+    @Inject(method = "render", at=@At("HEAD"))
+    public void cybernetics$onRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+        if(Minecraft.getInstance().level == null) {
+            return;
+        }
+        cybernetics$tasks.tickFrame(Minecraft.getInstance().level.getGameTime(), partialTick);
     }
 }

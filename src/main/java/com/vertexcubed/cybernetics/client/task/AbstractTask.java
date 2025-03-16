@@ -15,9 +15,11 @@ public abstract class AbstractTask<T> {
         FAILURE
     }
 
+    protected TaskState state;
     private final UUID uuid;
     protected AbstractTask(@Nonnull final UUID uuid) {
         this.uuid = uuid;
+        state = TaskState.PENDING;
     }
 
     /**
@@ -36,7 +38,11 @@ public abstract class AbstractTask<T> {
     protected @Nonnull Function<T, AbstractTask<?>> onInterruptFunc = (prev -> null);
 
 
-    public abstract @Nonnull TaskState update(long gameTime, float partialTick);
+    public abstract void update(long gameTime, float partialTick);
+
+    public TaskState getState() {
+        return state;
+    }
 
     public AbstractTask<T> withTag(String tag) {
         tags.add(tag);
@@ -70,6 +76,9 @@ public abstract class AbstractTask<T> {
         return this;
     }
 
+    /**
+     * Note: result may not be accurate if getResult() is called before the task is finished.
+     */
     public abstract T getResult();
 
     public abstract void interrupt();

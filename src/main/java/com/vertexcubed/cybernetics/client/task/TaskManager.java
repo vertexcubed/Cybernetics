@@ -19,10 +19,13 @@ public class TaskManager {
         while(!currentTickTasks.isEmpty()) {
             AbstractTask<?> task = currentTickTasks.poll();
 
-            //Run the next task
-            AbstractTask.TaskState state = task.update(gameTime, 0);
+            //In case a subclass does state = INTERRUPTED in the interrupt() method. Shouldnt do this but oh well.
+            if(task.getState() != AbstractTask.TaskState.INTERRUPTED) {
+                //Run the next task
+                task.update(gameTime, 0);
+            }
 
-            processTaskResult(task, state, nextTickTasks);
+            processTaskResult(task, currentTickTasks, nextTickTasks);
         }
 
         //Swap
@@ -37,10 +40,13 @@ public class TaskManager {
         while(!currentFrameTasks.isEmpty()) {
             AbstractTask<?> task = currentFrameTasks.poll();
 
-            //Run the next task
-            AbstractTask.TaskState state = task.update(gameTime, partialTick);
+            //In case a subclass does state = INTERRUPTED in the interrupt() method. Shouldnt do this but oh well.
+            if(task.getState() != AbstractTask.TaskState.INTERRUPTED) {
+                //Run the next task
+                task.update(gameTime, partialTick);
+            }
 
-            processTaskResult(task, state, nextFrameTasks);
+            processTaskResult(task, currentFrameTasks, nextFrameTasks);
         }
 
         //Swap
@@ -108,7 +114,8 @@ public class TaskManager {
 
 
     // Processes the result of calling a task. Do stuff on complete, on fail, etc.
-    private void processTaskResult(AbstractTask<?> task, AbstractTask.TaskState state, Queue<AbstractTask<?>> nextQueue) {
+    private void processTaskResult(AbstractTask<?> task, Queue<AbstractTask<?>> currentQueue, Queue<AbstractTask<?>> nextQueue) {
+        AbstractTask.TaskState state = task.getState();
         switch(state) {
             case PENDING -> {
                 nextQueue.add(task);
@@ -116,19 +123,19 @@ public class TaskManager {
             case INTERRUPTED -> {
                 AbstractTask<?> onInterrupted = task.applyOnInterrupt();
                 if(onInterrupted != null) {
-                    nextQueue.add(onInterrupted);
+                    currentQueue.add(onInterrupted);
                 }
             }
             case COMPLETED -> {
                 AbstractTask<?> onCompleted = task.applyOnComplete();
                 if(onCompleted != null) {
-                    nextQueue.add(onCompleted);
+                    currentQueue.add(onCompleted);
                 }
             }
             case FAILURE -> {
                 AbstractTask<?> onFailed = task.applyOnFail();
                 if(onFailed != null) {
-                    nextQueue.add(onFailed);
+                    currentQueue.add(onFailed);
                 }
             }
         }

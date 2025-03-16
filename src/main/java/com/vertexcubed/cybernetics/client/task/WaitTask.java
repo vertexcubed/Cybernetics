@@ -16,9 +16,12 @@ public class WaitTask<T> extends AbstractTask<T> {
     }
 
     @Override
-    public @NotNull TaskState update(long gameTime, float partialTick) {
-        if(isInterrupted) return TaskState.INTERRUPTED;
-        return gameTime >= waitUntil ? TaskState.COMPLETED : TaskState.PENDING;
+    public void update(long gameTime, float partialTick) {
+        if(isInterrupted) {
+            state = TaskState.INTERRUPTED;
+            return;
+        }
+        state = gameTime >= waitUntil ? TaskState.COMPLETED : TaskState.PENDING;
     }
 
     @Override

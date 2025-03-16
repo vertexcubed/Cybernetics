@@ -35,21 +35,25 @@ public class TweenTask extends AbstractTask<AbstractTask.NoResult> {
 
 
     @Override
-    public @NotNull TaskState update(long gameTime, float partialTick) {
+    public void update(long gameTime, float partialTick) {
         if(gameTime < startTime) {
-            return TaskState.PENDING;
+            state = TaskState.PENDING;
+            return;
         }
         if(isInterrupted) {
-            return TaskState.INTERRUPTED;
+            state = TaskState.INTERRUPTED;
+            return;
         }
         float normalizedTime = (gameTime - startTime) + partialTick;
         float percent = normalizedTime / duration;
         if(percent >= 1.0f) {
-            return TaskState.COMPLETED;
+            state = TaskState.COMPLETED;
+            return;
         }
         float easedPercent = easing.ease(percent, 0, 1);
         setter.accept(Mth.lerp(easedPercent, oldValue, newValue));
-        return TaskState.PENDING;
+        state = TaskState.PENDING;
+        return;
     }
 
     @Override

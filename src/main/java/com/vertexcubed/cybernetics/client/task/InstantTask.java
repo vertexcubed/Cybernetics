@@ -13,9 +13,9 @@ public class InstantTask extends AbstractTask<AbstractTask.NoResult> {
     }
 
     @Override
-    public @NotNull TaskState update(long gameTime, float partialTick) {
+    public void update(long gameTime, float partialTick) {
         run.run();
-        return TaskState.COMPLETED;
+        state = TaskState.COMPLETED;
     }
 
     @Override

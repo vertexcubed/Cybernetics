@@ -5,6 +5,7 @@
     "mixins": [
     ],
     "client": [
+        "client.ScreenMixin"
     ],
     "injectors": {
         "defaultRequire": 1

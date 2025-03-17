@@ -1,9 +1,6 @@
 package com.vertexcubed.cybernetics;
 
-import com.vertexcubed.cybernetics.common.registry.CybAttachments;
-import com.vertexcubed.cybernetics.common.registry.CybKeyMappings;
-import com.vertexcubed.cybernetics.common.registry.CybMenus;
-import com.vertexcubed.cybernetics.common.registry.CybScreens;
+import com.vertexcubed.cybernetics.common.registry.*;
 import com.vertexcubed.cybernetics.server.network.CybPayloads;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -11,6 +8,7 @@ import net.minecraft.world.item.*;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -74,6 +72,13 @@ public class Cybernetics
     public void registerScreens(RegisterMenuScreensEvent event) {
         CybScreens.register(event);
     }
+
+    @SubscribeEvent
+    public void registerDPRegistries(DataPackRegistryEvent.NewRegistry event) {
+        CybDPRegistries.register(event);
+    }
+
+
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
     @EventBusSubscriber(modid = MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

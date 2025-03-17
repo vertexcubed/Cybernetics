@@ -1,17 +1,22 @@
 package com.vertexcubed.cybernetics.client.gui.cyberware;
 
 import com.vertexcubed.cybernetics.Cybernetics;
+import com.vertexcubed.cybernetics.client.gui.widget.BasicWidget;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
-import com.vertexcubed.cybernetics.client.task.AbstractTask;
-import com.vertexcubed.cybernetics.client.task.InstantRunTask;
-import com.vertexcubed.cybernetics.client.task.WaitTask;
+import com.vertexcubed.cybernetics.client.task.*;
+import com.vertexcubed.cybernetics.client.util.FakeLocalPlayer;
+import com.vertexcubed.cybernetics.client.util.RenderHelper;
 import com.vertexcubed.cybernetics.common.menu.CyberwareMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import team.lodestar.lodestone.systems.easing.Easing;
 
 import static com.vertexcubed.cybernetics.Cybernetics.modLoc;
 
@@ -21,7 +26,12 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
     public static final ResourceLocation SLOT_TEXTURE = modLoc("textures/gui/cyberware/slots.png");
 
 
+    private BasicWidget backButton;
+    private BasicWidget entityWidget;
+    private float entityRotation;
 
+
+    private LocalPlayer fakePlayer;
     public CyberwareScreen(CyberwareMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.imageWidth = 226;
@@ -33,19 +43,72 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
     protected void init() {
         super.init();
 
-        Cybernetics.LOGGER.info("Waiting 40 ticks...");
-        ScreenHelper.getTaskManager(this)
-                .addTickTask(
-                        new WaitTask<>(Minecraft.getInstance().level.getGameTime() + 40, AbstractTask.NONE)
-                                .onComplete(prev ->
-                                        new InstantRunTask(() -> Cybernetics.LOGGER.info("Task completed!"))
-                                ));
+        this.backButton = addRenderableWidget(BasicWidget
+                .texture(this, leftPos + 208, topPos + 9, 9, 9, 0, 23, 32, 32, modLoc("textures/gui/cyberware/buttons.png"))
+                .playSoundOnClick(true)
+                .lightOnHover(true)
+                .click((ctx, mouseX, mouseY, button) -> {
+
+                })
+        );
+
+        LocalPlayer player = Minecraft.getInstance().player;
+        this.fakePlayer = new FakeLocalPlayer(Minecraft.getInstance(), Minecraft.getInstance().level, player);
+
+
+        this.entityRotation = 0.0f;
+        this.entityWidget = addRenderableWidget(BasicWidget
+                .create(this, leftPos + 91, topPos - 136, 60, 120,
+                        (context, graphics, mouseX, mouseY, partialTick) -> {
+                            graphics.pose().pushPose();
+                            graphics.pose().translate(0, 0, context.getZOffset());
+                            scissor(graphics);
+                            RenderHelper.renderEntity(fakePlayer, graphics.pose(), context.getX() + context.getScale()/2, context.getY() + context.getScale()*2, 20, context.getScale(), entityRotation);
+                            graphics.pose().popPose();
+                            graphics.disableScissor();
+                        })
+                .zOffset(150)
+        );
+        entityWidget.setScale(60);
+
+        ScreenHelper.getTaskManager(this).addFrameTask(moveWidget(entityWidget, leftPos + 91, topPos + 16, gameTime(), 20, Easing.QUARTIC_OUT));
+
+
+    }
+
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+        fakePlayer.tickCount++;
+    }
+
+    @Override
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+
+        //THIS IS EXTREMELY DANGEROUS, BUT ITS A HACK TO AVOID HAVING TO COPY PASTE THE WHOLE RENDER METHOD.
+//        guiGraphics.disableScissor();
     }
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
         guiGraphics.blit(TEXTURE, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
 
+        //THIS IS EXTREMELY DANGEROUS, BUT ITS A HACK TO AVOID HAVING TO COPY PASTE THE WHOLE RENDER METHOD.
+//        guiGraphics.enableScissor(leftPos + 5, leftPos + 221, topPos + 5, topPos + 149);
+    }
 
+    private void scissor(GuiGraphics guiGraphics) {
+        guiGraphics.enableScissor(leftPos + 5, topPos + 5, leftPos + 221, topPos + 149);
+    }
+
+    //make sure to add the task thats returned by this function too!!!
+    private AbstractTask<?> moveWidget(AbstractWidget widget, int newX, int newY, long startTime, int duration, Easing easing) {
+        AbstractTask<Float> moveX = ScreenHelper.getTaskManager(this).addFrameTask(new TweenTask(() -> (float) widget.getX(), (x) -> widget.setX((int) (float) x), newX, startTime, duration, easing));
+        AbstractTask<Float> moveY = ScreenHelper.getTaskManager(this).addFrameTask(new TweenTask(() -> (float) widget.getY(), (y) -> widget.setY((int) (float) y), newY, startTime, duration, easing));
+        return new AfterAllTask<>(moveX, moveY);
+    }
+   private long gameTime() {
+        return Minecraft.getInstance().level.getGameTime();
     }
 }

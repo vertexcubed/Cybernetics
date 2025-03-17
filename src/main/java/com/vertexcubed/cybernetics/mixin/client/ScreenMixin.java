@@ -1,5 +1,6 @@
 package com.vertexcubed.cybernetics.mixin.client;
 
+import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.client.gui.util.ICybScreen;
 import com.vertexcubed.cybernetics.client.task.TaskManager;
 import net.minecraft.client.Minecraft;
@@ -36,11 +37,12 @@ public class ScreenMixin implements ICybScreen {
         cybernetics$tasks.tick(Minecraft.getInstance().level.getGameTime());
     }
 
-    @Inject(method = "render", at=@At("HEAD"))
-    public void cybernetics$onRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
-        if(Minecraft.getInstance().level == null) {
-            return;
-        }
-        cybernetics$tasks.tickFrame(Minecraft.getInstance().level.getGameTime(), partialTick);
-    }
+//    @Inject(method = "render", at=@At("HEAD"))
+//    public void cybernetics$onRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+//        if(Minecraft.getInstance().level == null) {
+//            return;
+//        }
+//        Cybernetics.LOGGER.info("Ticking frame for screens?");
+//        cybernetics$tasks.tickFrame(Minecraft.getInstance().level.getGameTime(), partialTick);
+//    }
 }

@@ -1,9 +1,27 @@
 package com.vertexcubed.cybernetics.client.task;
 
+import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
+import net.minecraft.client.gui.screens.Screen;
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.UUID;
+import java.util.function.Function;
 
+/**
+ * <p>
+ *    A TaskManager manages, well, tasks. It processes tasks in the queue,
+ *  decides what to do with them based on their status after updating,
+ *  and handles adding and interrupting tasks. You can have
+ *  multiple task managers that exist at the same time!
+ * </p>
+ * <p>
+ *    To make a new TaskManager, just call its no argument constructor
+ *  and go nuts. By default, all Screens have a TaskManager associated
+ *  with them, which can be obtained by calling {@link ScreenHelper#getTaskManager(Screen)}
+ * </p>
+ *
+ */
 public class TaskManager {
 
     private Queue<AbstractTask<?>> currentFrameTasks = new LinkedList<>();
@@ -54,35 +72,78 @@ public class TaskManager {
         nextFrameTasks = new LinkedList<>();
     }
 
-    public void addFrameTask(AbstractTask<?> task) {
+    /**
+     * Adds a "frame" task to this task manager. Frame tasks are updated every frame.
+     * If you want a task that's updated every tick instead, use {@link TaskManager#addTickTask}
+     * @param task the task you want to add.
+     * @return the task you just added. Make sure to NOT modify it at this point! (i.e. do not call
+     * {@link AbstractTask#onComplete} after returning.)
+     */
+    public <T> AbstractTask<T> addFrameTask(AbstractTask<T> task) {
         nextFrameTasks.add(task);
+        return task;
     }
 
-    public void addTickTask(AbstractTask<?> task) {
+    /**
+     * Adds a "tick" task to this task manager. Tick tasks are updated every tick.
+     * If you want a task that's updated every frame instead, use {@link TaskManager#addFrameTask}
+     * @param task the task you want to add.
+     * @return the task you just added. Make sure to NOT modify it at this point! (i.e. do not call
+     * {@link AbstractTask#onComplete} after returning.)
+     */
+    public <T> AbstractTask<T> addTickTask(AbstractTask<T> task) {
         nextTickTasks.add(task);
+        return task;
     }
 
+    /**
+     * Interrupts a frame task by its uuid. UUIDs can be obtained by calling
+     * {@link AbstractTask#uuid()}
+     * @return whether a task was found to interrupt.
+     */
     public boolean interruptFrameTask(UUID uuid) {
         return interruptTaskInternal(uuid, nextFrameTasks);
     }
 
+    /**
+     * Interrupts a tick task by its uuid. UUIDs can be obtained by calling
+     * {@link AbstractTask#uuid()}
+     * @return whether a task was found to interrupt.
+     */
     public boolean interruptTickTask(UUID uuid) {
         return interruptTaskInternal(uuid, nextTickTasks);
     }
 
+    /**
+     * Interrupts all frame tasks containing this tag. Tags can be set by calling
+     * {@link AbstractTask#withTag} when constructing the task.
+     * @return whether a task was found to interrupt.
+     */
     public boolean interruptFrameTask(String tag) {
         return interruptTaskInternal(tag, nextFrameTasks);
     }
 
+    /**
+     * Interrupts all tick tasks containing this tag. Tags can be set by calling
+     * {@link AbstractTask#withTag} when constructing the task.
+     * @return whether a task was found to interrupt.
+     */
     public boolean interruptTickTask(String tag) {
         return interruptTaskInternal(tag, nextTickTasks);
     }
 
+    /**
+     * Interrupts all tasks in the task queues.
+     */
     public void interruptAll() {
         nextFrameTasks.forEach(AbstractTask::interrupt);
         nextTickTasks.forEach(AbstractTask::interrupt);
     }
 
+    /**
+     * Clears all tasks in the task queues. Generally, you should interrupt them all first
+     * by calling {@link TaskManager#interruptAll}.
+     */
     public void clear() {
         nextTickTasks.clear();
         nextFrameTasks.clear();

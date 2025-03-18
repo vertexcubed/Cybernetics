@@ -36,7 +36,7 @@ public class BasicWidget extends CybAbstractWidget {
         return create(parent, x, y, width, height, (context, graphics, mouseX, mouseY, partialTick) -> {
             graphics.pose().pushPose();
             graphics.pose().scale(context.getScale(), context.getScale(), context.getScale());
-            graphics.blit(texture, x, y, context.zOffset, uOffset, vOffset, width, height, textureWidth, textureHeight);
+            graphics.blit(texture, context.getX(), context.getY(), context.zOffset, uOffset, vOffset, width, height, textureWidth, textureHeight);
             graphics.pose().popPose();
         });
     }
@@ -45,7 +45,7 @@ public class BasicWidget extends CybAbstractWidget {
         return create(parent, x, y, width, height, (context, graphics, mouseX, mouseY, partialTick) -> {
             graphics.pose().pushPose();
             graphics.pose().scale(context.getScale(), context.getScale(), context.getScale());
-            graphics.blit(texture, x, y, context.zOffset, 0, 0, width, height, width, height);
+            graphics.blit(texture, context.getX(), context.getY(), context.zOffset, 0, 0, width, height, width, height);
             graphics.pose().popPose();
         });
     }

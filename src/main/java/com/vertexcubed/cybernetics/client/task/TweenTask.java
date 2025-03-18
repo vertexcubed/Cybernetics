@@ -1,9 +1,11 @@
 package com.vertexcubed.cybernetics.client.task;
 
+import com.vertexcubed.cybernetics.Cybernetics;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import team.lodestar.lodestone.systems.easing.Easing;
 
+import java.util.Queue;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -18,30 +20,28 @@ public class TweenTask extends AbstractTask<Float> {
     private final Float oldValue;
     private final float newValue;
     private final int duration;
-    private final long startTime;
+    private long startTime;
     private boolean isInterrupted = false;
 
     /**
      * @param getter A getter function for the float to tween.
      * @param setter A setter function to tween.
      * @param newValue The new value to tween to.
-     * @param startTime The start time in gameTime.
      * @param duration The duration.
      */
-    public TweenTask(Supplier<Float> getter, Consumer<Float> setter, float newValue, long startTime, int duration) {
-        this(true, getter, setter, newValue, startTime, duration, Easing.LINEAR);
+    public TweenTask(Supplier<Float> getter, Consumer<Float> setter, float newValue, int duration) {
+        this(true, getter, setter, newValue, duration, Easing.LINEAR);
     }
 
     /**
      * @param getter A getter function for the float to tween.
      * @param setter A setter function to tween.
      * @param newValue The new value to tween to.
-     * @param startTime The start time in gameTime.
      * @param duration The duration.
      * @param easing An Easing.
      */
-    public TweenTask(Supplier<Float> getter, Consumer<Float> setter, float newValue, long startTime, int duration, Easing easing) {
-        this(true, getter, setter, newValue, startTime, duration, easing);
+    public TweenTask(Supplier<Float> getter, Consumer<Float> setter, float newValue, int duration, Easing easing) {
+        this(true, getter, setter, newValue, duration, easing);
     }
 
     /**
@@ -49,11 +49,10 @@ public class TweenTask extends AbstractTask<Float> {
      * @param getter A getter function for the float to tween.
      * @param setter A setter function to tween.
      * @param newValue The new value to tween to.
-     * @param startTime The start time in gameTime.
      * @param duration The duration.
      */
-    public TweenTask(boolean maxOnInterrupt, Supplier<Float> getter, Consumer<Float> setter, float newValue, long startTime, int duration) {
-        this(maxOnInterrupt, getter, setter, newValue, startTime, duration, Easing.LINEAR);
+    public TweenTask(boolean maxOnInterrupt, Supplier<Float> getter, Consumer<Float> setter, float newValue, int duration) {
+        this(maxOnInterrupt, getter, setter, newValue, duration, Easing.LINEAR);
     }
 
     /**
@@ -61,22 +60,20 @@ public class TweenTask extends AbstractTask<Float> {
      * @param getter A getter function for the float to tween.
      * @param setter A setter function to tween.
      * @param newValue The new value to tween to.
-     * @param startTime The start time in gameTime.
      * @param duration The duration.
      * @param easing An Easing.
      */
-    public TweenTask(boolean maxOnInterrupt, Supplier<Float> getter, Consumer<Float> setter, float newValue, long startTime, int duration, Easing easing) {
+    public TweenTask(boolean maxOnInterrupt, Supplier<Float> getter, Consumer<Float> setter, float newValue, int duration, Easing easing) {
         super(UUID.randomUUID());
         this.maxOnInterrupt = maxOnInterrupt;
         this.setter = setter;
         this.getter = getter;
         this.oldValue = getter.get();
         this.newValue = newValue;
-        this.startTime = startTime;
+//        this.startTime = startTime;
         this.duration = duration;
         this.easing = easing;
     }
-
 
     @Override
     public void update(long gameTime, float partialTick) {
@@ -98,6 +95,12 @@ public class TweenTask extends AbstractTask<Float> {
         setter.accept(Mth.lerp(easedPercent, oldValue, newValue));
         state = TaskState.PENDING;
         return;
+    }
+
+    @Override
+    public void init(TaskManager context, long gameTime) {
+        Cybernetics.LOGGER.debug("Initializing tween.");
+        this.startTime = gameTime;
     }
 
     @Override

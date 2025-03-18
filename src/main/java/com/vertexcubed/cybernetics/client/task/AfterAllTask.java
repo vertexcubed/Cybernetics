@@ -1,7 +1,10 @@
 package com.vertexcubed.cybernetics.client.task;
 
+import com.vertexcubed.cybernetics.Cybernetics;
+
 import java.util.Arrays;
 import java.util.List;
+import java.util.Queue;
 import java.util.UUID;
 
 
@@ -11,20 +14,17 @@ import java.util.UUID;
 public class AfterAllTask<T> extends AbstractTask<List<T>> {
     private final boolean allowInterrupted;
     private final boolean allowFailed;
-    private final AbstractTask<T>[] tasks;
+    private final List<AbstractTask<T>> tasks;
     private boolean isInterrupted = false;
-    @SafeVarargs
-    public AfterAllTask(AbstractTask<T>... tasks) {
+    public AfterAllTask(List<AbstractTask<T>> tasks) {
         this(false, false, tasks);
     }
 
-    @SafeVarargs
-    public AfterAllTask(boolean allowInterrupted, AbstractTask<T>... tasks) {
+    public AfterAllTask(boolean allowInterrupted, List<AbstractTask<T>> tasks) {
         this(allowInterrupted, false, tasks);
     }
 
-    @SafeVarargs
-    public AfterAllTask(boolean allowInterrupted, boolean allowFailed, AbstractTask<T>... tasks) {
+    public AfterAllTask(boolean allowInterrupted, boolean allowFailed, List<AbstractTask<T>> tasks) {
         super(UUID.randomUUID());
         this.allowInterrupted = allowInterrupted;
         this.allowFailed = allowFailed;
@@ -63,8 +63,18 @@ public class AfterAllTask<T> extends AbstractTask<List<T>> {
     }
 
     @Override
+    public void init(TaskManager context, long gameTime) {
+        context.findQueueWith(this).ifPresent(queue -> {
+            for(AbstractTask<?> t : tasks) {{
+                queue.add(t);
+                t.init(context, gameTime);
+            }}
+        });
+    }
+
+    @Override
     public List<T> getResult() {
-        return Arrays.stream(tasks).map(AbstractTask::getResult).toList();
+        return tasks.stream().map(AbstractTask::getResult).toList();
     }
 
     @Override

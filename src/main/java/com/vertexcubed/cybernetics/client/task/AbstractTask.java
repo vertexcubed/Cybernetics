@@ -1,10 +1,7 @@
 package com.vertexcubed.cybernetics.client.task;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 
 public abstract class AbstractTask<T> {
@@ -39,6 +36,9 @@ public abstract class AbstractTask<T> {
 
 
     public abstract void update(long gameTime, float partialTick);
+
+    public abstract void init(TaskManager context, long gameTime);
+
 
     public TaskState getState() {
         return state;

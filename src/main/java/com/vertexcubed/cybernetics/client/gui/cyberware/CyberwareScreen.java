@@ -1,10 +1,12 @@
 package com.vertexcubed.cybernetics.client.gui.cyberware;
 
+import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
 import com.vertexcubed.cybernetics.client.gui.widget.BasicWidget;
 import com.vertexcubed.cybernetics.client.task.AbstractTask;
 import com.vertexcubed.cybernetics.client.task.AfterAllTask;
 import com.vertexcubed.cybernetics.client.task.TweenTask;
+import com.vertexcubed.cybernetics.client.task.WaitTask;
 import com.vertexcubed.cybernetics.client.util.FakeLocalPlayer;
 import com.vertexcubed.cybernetics.client.util.RenderHelper;
 import com.vertexcubed.cybernetics.common.menu.CyberwareMenu;
@@ -75,15 +77,33 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         );
         entityWidget.setScale(60);
 
-        ScreenHelper.getTaskManager(this).addFrameTask(moveWidget(entityWidget, leftPos + 91, topPos + 16, gameTime(), 20, Easing.QUARTIC_OUT));
+        ScreenHelper.getTaskManager(this).addFrameTask(gameTime(), moveWidget(entityWidget, leftPos + 91, topPos + 16, gameTime(), 20, Easing.QUARTIC_OUT));
 
+
+        List<AbstractTask<Float>> moveSections = new ArrayList<>();
         menu.getCyberware().getSections().forEach(section -> {
-            this.sectionButtons.add(addRenderableWidget(BasicWidget
-                    .texture(this, leftPos + section.getType().x(), topPos + section.getType().y(), 24, 24, section.getType().texture()))
+            int pos = topPos + section.getType().y();
+            BasicWidget widget = addRenderableWidget(BasicWidget
+                    .texture(this, leftPos + section.getType().x(), pos + 20, 24, 24, section.getType().texture()))
                     .lightOnHover(true)
                     .playSoundOnClick(true)
-            );
+            ;
+            this.sectionButtons.add(widget);
+            moveSections.add(new TweenTask(() -> (float) widget.getY(), (f) -> widget.setY((int) (float )f), pos, 10, Easing.CUBIC_OUT));
+
         });
+
+//        if(true) return;
+
+        ScreenHelper.getTaskManager(this).addFrameTask(gameTime(),
+                new WaitTask<>(gameTime() + 20, AbstractTask.NONE)
+                        .onComplete(res -> {
+//                            Cybernetics.LOGGER.debug("Moving section buttons");
+//                            Cybernetics.LOGGER.debug("moveSections size: " + moveSections.size());
+                            return new AfterAllTask<>(moveSections);
+                        })
+        );
+
 
 
     }
@@ -112,9 +132,9 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
 
     //make sure to add the task thats returned by this function too!!!
     private AbstractTask<?> moveWidget(AbstractWidget widget, int newX, int newY, long startTime, int duration, Easing easing) {
-        AbstractTask<Float> moveX = ScreenHelper.getTaskManager(this).addFrameTask(new TweenTask(() -> (float) widget.getX(), (x) -> widget.setX((int) (float) x), newX, startTime, duration, easing));
-        AbstractTask<Float> moveY = ScreenHelper.getTaskManager(this).addFrameTask(new TweenTask(() -> (float) widget.getY(), (y) -> widget.setY((int) (float) y), newY, startTime, duration, easing));
-        return new AfterAllTask<>(moveX, moveY);
+        AbstractTask<Float> moveX = new TweenTask(() -> (float) widget.getX(), (x) -> widget.setX((int) (float) x), newX, duration, easing);
+        AbstractTask<Float> moveY = new TweenTask(() -> (float) widget.getY(), (y) -> widget.setY((int) (float) y), newY, duration, easing);
+        return new AfterAllTask<>(List.of(moveX, moveY));
     }
    private long gameTime() {
         return Minecraft.getInstance().level.getGameTime();

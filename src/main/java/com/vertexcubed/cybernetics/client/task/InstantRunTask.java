@@ -17,6 +17,11 @@ public class InstantRunTask extends AbstractTask<AbstractTask.NoResult> {
     }
 
     @Override
+    public void init(TaskManager context, long gameTime) {
+
+    }
+
+    @Override
     public NoResult getResult() {
         return NONE;
     }

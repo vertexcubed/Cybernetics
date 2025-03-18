@@ -1,9 +1,11 @@
 package com.vertexcubed.cybernetics.client.task;
 
+import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
 import net.minecraft.client.gui.screens.Screen;
 
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.function.Function;
@@ -43,7 +45,7 @@ public class TaskManager {
                 task.update(gameTime, 0);
             }
 
-            processTaskResult(task, currentTickTasks, nextTickTasks);
+            processTaskResult(gameTime, task, currentTickTasks, nextTickTasks);
         }
 
         //Swap
@@ -64,12 +66,27 @@ public class TaskManager {
                 task.update(gameTime, partialTick);
             }
 
-            processTaskResult(task, currentFrameTasks, nextFrameTasks);
+            processTaskResult(gameTime, task, currentFrameTasks, nextFrameTasks);
         }
 
         //Swap
         currentFrameTasks = nextFrameTasks;
         nextFrameTasks = new LinkedList<>();
+    }
+
+    public Optional<Queue<AbstractTask<?>>> findQueueWith(AbstractTask<?> task) {
+        if(queueHas(currentFrameTasks, task)) return Optional.of(currentFrameTasks);
+        if(queueHas(nextFrameTasks, task)) return Optional.of(nextFrameTasks);
+        return Optional.empty();
+    }
+
+    private boolean queueHas(Queue<AbstractTask<?>> queue, AbstractTask<?> task) {
+        for(AbstractTask<?> t : queue) {
+            if(t == task) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -79,8 +96,9 @@ public class TaskManager {
      * @return the task you just added. Make sure to NOT modify it at this point! (i.e. do not call
      * {@link AbstractTask#onComplete} after returning.)
      */
-    public <T> AbstractTask<T> addFrameTask(AbstractTask<T> task) {
+    public <T> AbstractTask<T> addFrameTask(long gameTime, AbstractTask<T> task) {
         nextFrameTasks.add(task);
+        task.init(this, gameTime);
         return task;
     }
 
@@ -91,8 +109,9 @@ public class TaskManager {
      * @return the task you just added. Make sure to NOT modify it at this point! (i.e. do not call
      * {@link AbstractTask#onComplete} after returning.)
      */
-    public <T> AbstractTask<T> addTickTask(AbstractTask<T> task) {
+    public <T> AbstractTask<T> addTickTask(long gameTime, AbstractTask<T> task) {
         nextTickTasks.add(task);
+        task.init(this, gameTime);
         return task;
     }
 
@@ -175,7 +194,7 @@ public class TaskManager {
 
 
     // Processes the result of calling a task. Do stuff on complete, on fail, etc.
-    private void processTaskResult(AbstractTask<?> task, Queue<AbstractTask<?>> currentQueue, Queue<AbstractTask<?>> nextQueue) {
+    private void processTaskResult(long gameTime, AbstractTask<?> task, Queue<AbstractTask<?>> currentQueue, Queue<AbstractTask<?>> nextQueue) {
         AbstractTask.TaskState state = task.getState();
         switch(state) {
             case PENDING -> {
@@ -185,18 +204,21 @@ public class TaskManager {
                 AbstractTask<?> onInterrupted = task.applyOnInterrupt();
                 if(onInterrupted != null) {
                     currentQueue.add(onInterrupted);
+                    onInterrupted.init(this, gameTime);
                 }
             }
             case COMPLETED -> {
                 AbstractTask<?> onCompleted = task.applyOnComplete();
                 if(onCompleted != null) {
                     currentQueue.add(onCompleted);
+                    onCompleted.init(this, gameTime);
                 }
             }
             case FAILURE -> {
                 AbstractTask<?> onFailed = task.applyOnFail();
                 if(onFailed != null) {
                     currentQueue.add(onFailed);
+                    onFailed.init(this, gameTime);
                 }
             }
         }

@@ -19,6 +19,11 @@ public class InstantSupplyTask<T> extends AbstractTask<T> {
     }
 
     @Override
+    public void init(TaskManager context, long gameTime) {
+
+    }
+
+    @Override
     public T getResult() {
         return value;
     }

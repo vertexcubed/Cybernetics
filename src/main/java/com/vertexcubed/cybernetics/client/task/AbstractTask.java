@@ -3,8 +3,9 @@ package com.vertexcubed.cybernetics.client.task;
 import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
-public abstract class AbstractTask<T> {
+public abstract class AbstractTask {
     public enum TaskState {
         PENDING,
         INTERRUPTED,
@@ -22,17 +23,13 @@ public abstract class AbstractTask<T> {
     /**
      * Use this value to represent a task that does not return a result, or just an empty result in general. Don't use null.
      */
-    public static final NoResult NONE = new NoResult();
-
-    public static class NoResult {
-        private NoResult() {}
-    }
+//    public static final NoResult NONE = new NoResult();
+//
+//    public static class NoResult {
+//        private NoResult() {}
+//    }
 
     protected final Set<String> tags = new HashSet<>();
-
-    protected @Nonnull Function<T, AbstractTask<?>> onCompleteFunc = (prev -> null);
-    protected @Nonnull Function<T, AbstractTask<?>> onFailFunc = (prev -> null);
-    protected @Nonnull Function<T, AbstractTask<?>> onInterruptFunc = (prev -> null);
 
 
     public abstract void update(TaskManager context, long gameTime, float partialTick);
@@ -44,12 +41,12 @@ public abstract class AbstractTask<T> {
         return state;
     }
 
-    public AbstractTask<T> withTag(String tag) {
+    public AbstractTask withTag(String tag) {
         tags.add(tag);
         return this;
     }
 
-    public AbstractTask<T> withTags(String... tag) {
+    public AbstractTask withTags(String... tag) {
         tags.addAll(Arrays.asList(tag));
         return this;
     }
@@ -63,21 +60,21 @@ public abstract class AbstractTask<T> {
     }
 
 
-    public <U> WrappedTask<T, U> then(Function<T, AbstractTask<U>> onComplete) {
-        return then((s, r) -> {
+    public WrappedTask then(Supplier<AbstractTask> onComplete) {
+        return then((s) -> {
             if(s != TaskState.COMPLETED) return null;
-            return onComplete.apply(r);
+            return onComplete.get();
         });
     }
 
-    public <U> WrappedTask<T, U> then(Function<T, AbstractTask<U>> onComplete, Function<T, AbstractTask<U>> onFail) {
-        return then((s, r) -> {
+    public WrappedTask then(Supplier<AbstractTask> onComplete, Supplier<AbstractTask> onFail) {
+        return then((s) -> {
             switch(s) {
                 case COMPLETED -> {
-                    return onComplete.apply(r);
+                    return onComplete.get();
                 }
                 case FAILURE -> {
-                    return onFail.apply(r);
+                    return onFail.get();
                 }
                 default -> {
                     return null;
@@ -86,17 +83,17 @@ public abstract class AbstractTask<T> {
         });
     }
 
-    public <U> WrappedTask<T, U> then(Function<T, AbstractTask<U>> onComplete, Function<T, AbstractTask<U>> onFail, Function<T, AbstractTask<U>> onInterrupt) {
-        return then((s, r) -> {
+    public WrappedTask then(Supplier<AbstractTask> onComplete, Supplier<AbstractTask> onFail, Supplier<AbstractTask> onInterrupt) {
+        return then((s) -> {
             switch(s) {
                 case COMPLETED -> {
-                    return onComplete.apply(r);
+                    return onComplete.get();
                 }
                 case FAILURE -> {
-                    return onFail.apply(r);
+                    return onFail.get();
                 }
                 case INTERRUPTED -> {
-                    return onInterrupt.apply(r);
+                    return onInterrupt.get();
                 }
                 default -> {
                     return null;
@@ -105,26 +102,10 @@ public abstract class AbstractTask<T> {
         });
     }
 
-    public <U> WrappedTask<T, U> then(WrappedTask.ChildFactory<T, U> factory) {
-        return new WrappedTask<>(this, factory);
+    public WrappedTask then(WrappedTask.ChildFactory factory) {
+        return new WrappedTask(this, factory);
     }
-
-    /**
-     * Note: result may not be accurate if getResult() is called before the task is finished.
-     */
-    public abstract T getResult();
 
     public abstract void interrupt();
-
-    public AbstractTask<?> applyOnComplete() {
-        return onCompleteFunc.apply(getResult());
-    }
-    public AbstractTask<?> applyOnFail() {
-        return onFailFunc.apply(getResult());
-    }
-
-    public AbstractTask<?> applyOnInterrupt() {
-        return onInterruptFunc.apply(getResult());
-    }
 
 }

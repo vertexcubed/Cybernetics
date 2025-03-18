@@ -13,7 +13,6 @@ public class BasicWidget extends CybAbstractWidget {
     private ClickHandler clickHandler = null;
     private boolean lightOnHover;
     private float scale;
-    private float alpha;
     private int zOffset;
 
     private BasicWidget(Screen parent, int x, int y, int width, int height, WidgetRenderer renderer) {

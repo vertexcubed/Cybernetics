@@ -4,15 +4,13 @@ import com.vertexcubed.cybernetics.Cybernetics;
 
 import java.util.UUID;
 
-public class WaitTask<T> extends AbstractTask<T> {
+public class WaitTask extends AbstractTask {
 
-    private final T value;
     private final long duration;
     private long startTime;
     private boolean isInterrupted = false;
-    public WaitTask(long duration, T value) {
+    public WaitTask(long duration) {
         super(UUID.randomUUID());
-        this.value = value;
         this.duration = duration;
     }
 
@@ -27,13 +25,7 @@ public class WaitTask<T> extends AbstractTask<T> {
 
     @Override
     public void init(TaskManager context) {
-        Cybernetics.LOGGER.debug("WaitTask init! UUID: " + this.uuid());
         this.startTime = context.gameTime();
-    }
-
-    @Override
-    public T getResult() {
-        return value;
     }
 
     @Override

@@ -24,10 +24,10 @@ import java.util.UUID;
  */
 public class TaskManager {
 
-    private Queue<AbstractTask<?>> currentFrameTasks = new LinkedList<>();
-    private Queue<AbstractTask<?>> nextFrameTasks = new LinkedList<>();
-    private Queue<AbstractTask<?>> currentTickTasks = new LinkedList<>();
-    private Queue<AbstractTask<?>> nextTickTasks = new LinkedList<>();
+    private Queue<AbstractTask> currentFrameTasks = new LinkedList<>();
+    private Queue<AbstractTask> nextFrameTasks = new LinkedList<>();
+    private Queue<AbstractTask> currentTickTasks = new LinkedList<>();
+    private Queue<AbstractTask> nextTickTasks = new LinkedList<>();
 
     private long gameTime;
 
@@ -43,7 +43,7 @@ public class TaskManager {
     public void tick(long gameTime) {
         this.gameTime = gameTime;
         while(!currentTickTasks.isEmpty()) {
-            AbstractTask<?> task = currentTickTasks.poll();
+            AbstractTask task = currentTickTasks.poll();
 
             //In case a subclass does state = INTERRUPTED in the interrupt() method. Shouldnt do this but oh well.
             if(task.getState() != AbstractTask.TaskState.INTERRUPTED) {
@@ -65,7 +65,7 @@ public class TaskManager {
     public void tickFrame(long gameTime, float partialTick) {
         this.gameTime = gameTime;
         while(!currentFrameTasks.isEmpty()) {
-            AbstractTask<?> task = currentFrameTasks.poll();
+            AbstractTask task = currentFrameTasks.poll();
 
             //In case a subclass does state = INTERRUPTED in the interrupt() method. Shouldnt do this but oh well.
             if(task.getState() != AbstractTask.TaskState.INTERRUPTED) {
@@ -81,14 +81,14 @@ public class TaskManager {
         nextFrameTasks = new LinkedList<>();
     }
 
-    public Optional<Queue<AbstractTask<?>>> findQueueWith(AbstractTask<?> task) {
+    public Optional<Queue<AbstractTask>> findQueueWith(AbstractTask task) {
         if(queueHas(currentFrameTasks, task)) return Optional.of(currentFrameTasks);
         if(queueHas(nextFrameTasks, task)) return Optional.of(nextFrameTasks);
         return Optional.empty();
     }
 
-    private boolean queueHas(Queue<AbstractTask<?>> queue, AbstractTask<?> task) {
-        for(AbstractTask<?> t : queue) {
+    private boolean queueHas(Queue<AbstractTask> queue, AbstractTask task) {
+        for(AbstractTask t : queue) {
             if(t == task) {
                 return true;
             }
@@ -101,9 +101,9 @@ public class TaskManager {
      * If you want a task that's updated every frame instead, use {@link TaskManager#addFrameTask}
      * @param task the task you want to add.
      * @return the task you just added. Make sure to NOT modify it at this point! (i.e. do not call
-     * {@link AbstractTask#onComplete} after returning.)
+     * {@link AbstractTask#then} after returning.)
      */
-    public <T> AbstractTask<T> addTickTask(AbstractTask<T> task) {
+    public  AbstractTask addTickTask(AbstractTask task) {
         nextTickTasks.add(task);
         task.init(this);
         return task;
@@ -114,9 +114,9 @@ public class TaskManager {
      * If you want a task that's updated every tick instead, use {@link TaskManager#addTickTask}
      * @param task the task you want to add.
      * @return the task you just added. Make sure to NOT modify it at this point! (i.e. do not call
-     * {@link AbstractTask#onComplete} after returning.)
+     * {@link AbstractTask#then} after returning.)
      */
-    public <T> AbstractTask<T> addFrameTask(AbstractTask<T> task) {
+    public  AbstractTask addFrameTask(AbstractTask task) {
         nextFrameTasks.add(task);
         task.init(this);
         return task;
@@ -179,9 +179,9 @@ public class TaskManager {
         return gameTime;
     }
 
-    private boolean interruptTaskInternal(UUID uuid, Queue<AbstractTask<?>> queue) {
+    private boolean interruptTaskInternal(UUID uuid, Queue<AbstractTask> queue) {
         boolean ret = false;
-        for (AbstractTask<?> task : queue) {
+        for (AbstractTask task : queue) {
             if (task.uuid().equals(uuid)) {
                 task.interrupt();
                 ret = true;
@@ -190,9 +190,9 @@ public class TaskManager {
         return ret;
     }
 
-    private boolean interruptTaskInternal(String tag, Queue<AbstractTask<?>> queue) {
+    private boolean interruptTaskInternal(String tag, Queue<AbstractTask> queue) {
         boolean ret = false;
-        for (AbstractTask<?> task : queue) {
+        for (AbstractTask task : queue) {
             if (task.hasTag(tag)) {
                 task.interrupt();
                 ret = true;
@@ -205,32 +205,17 @@ public class TaskManager {
 
 
     // Processes the result of calling a task. Do stuff on complete, on fail, etc.
-    private void processTaskResult(long gameTime, AbstractTask<?> task, Queue<AbstractTask<?>> currentQueue, Queue<AbstractTask<?>> nextQueue) {
+    private void processTaskResult(long gameTime, AbstractTask task, Queue<AbstractTask> currentQueue, Queue<AbstractTask> nextQueue) {
         AbstractTask.TaskState state = task.getState();
         switch(state) {
             case PENDING -> {
                 nextQueue.add(task);
             }
             case INTERRUPTED -> {
-                AbstractTask<?> onInterrupted = task.applyOnInterrupt();
-                if(onInterrupted != null) {
-                    currentQueue.add(onInterrupted);
-                    onInterrupted.init(this);
-                }
             }
             case COMPLETED -> {
-                AbstractTask<?> onCompleted = task.applyOnComplete();
-                if(onCompleted != null) {
-                    currentQueue.add(onCompleted);
-                    onCompleted.init(this);
-                }
             }
             case FAILURE -> {
-                AbstractTask<?> onFailed = task.applyOnFail();
-                if(onFailed != null) {
-                    currentQueue.add(onFailed);
-                    onFailed.init(this);
-                }
             }
         }
     }

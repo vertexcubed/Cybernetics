@@ -5,13 +5,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class WrappedTask<T, U> extends AbstractTask<U> {
+public class WrappedTask extends AbstractTask {
 
-    private AbstractTask<U> child;
-    private final AbstractTask<T> parent;
-    private final ChildFactory<T, U> childFactory;
+    private AbstractTask child;
+    private final AbstractTask parent;
+    private final ChildFactory childFactory;
 
-    public WrappedTask(AbstractTask<T> parent, ChildFactory<T, U> childFactory) {
+    public WrappedTask(AbstractTask parent, ChildFactory childFactory) {
         super(UUID.randomUUID());
 
         this.parent = parent;
@@ -39,7 +39,7 @@ public class WrappedTask<T, U> extends AbstractTask<U> {
         }
 
         //Make child. Did it not work?
-        this.child = childFactory.create(parent.getState(), parent.getResult());
+        this.child = childFactory.create(parent.getState());
         if(this.child == null) {
             state = parent.getState();
             return;
@@ -57,10 +57,6 @@ public class WrappedTask<T, U> extends AbstractTask<U> {
         parent.init(context);
     }
 
-    @Override
-    public U getResult() {
-        return child == null ? null : child.getResult();
-    }
 
     @Override
     public void interrupt() {
@@ -72,7 +68,7 @@ public class WrappedTask<T, U> extends AbstractTask<U> {
     }
 
     @FunctionalInterface
-    public interface ChildFactory<T, U> {
-        AbstractTask<U> create(TaskState parentResult, T result);
+    public interface ChildFactory {
+        AbstractTask create(TaskState parentResult);
     }
 }

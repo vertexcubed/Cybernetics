@@ -7,20 +7,20 @@ import java.util.UUID;
 /**
  * Task that is instantly completed after all of its previous tasks are completed.
  */
-public class AfterAllTask<T> extends AbstractTask<List<T>> {
+public class AfterAllTask extends AbstractTask {
     private final boolean allowInterrupted;
     private final boolean allowFailed;
-    private final List<AbstractTask<T>> tasks;
+    private final List<AbstractTask> tasks;
     private boolean isInterrupted = false;
-    public AfterAllTask(List<AbstractTask<T>> tasks) {
+    public AfterAllTask(List<AbstractTask> tasks) {
         this(false, false, tasks);
     }
 
-    public AfterAllTask(boolean allowInterrupted, List<AbstractTask<T>> tasks) {
+    public AfterAllTask(boolean allowInterrupted, List<AbstractTask> tasks) {
         this(allowInterrupted, false, tasks);
     }
 
-    public AfterAllTask(boolean allowInterrupted, boolean allowFailed, List<AbstractTask<T>> tasks) {
+    public AfterAllTask(boolean allowInterrupted, boolean allowFailed, List<AbstractTask> tasks) {
         super(UUID.randomUUID());
         this.allowInterrupted = allowInterrupted;
         this.allowFailed = allowFailed;
@@ -33,10 +33,10 @@ public class AfterAllTask<T> extends AbstractTask<List<T>> {
             state = TaskState.INTERRUPTED;
             return;
         }
-        for(AbstractTask<?> task : tasks) {
+        for(AbstractTask task : tasks) {
             task.update(context, gameTime, partialTick);
         }
-        for(AbstractTask<?> task : tasks) {
+        for(AbstractTask task : tasks) {
             switch(task.getState()) {
                 case PENDING -> {
                     state = TaskState.PENDING;
@@ -63,20 +63,15 @@ public class AfterAllTask<T> extends AbstractTask<List<T>> {
 
     @Override
     public void init(TaskManager context) {
-        for(AbstractTask<?> t : tasks) {
+        for(AbstractTask t : tasks) {
             t.init(context);
         }
     }
 
     @Override
-    public List<T> getResult() {
-        return tasks.stream().map(AbstractTask::getResult).toList();
-    }
-
-    @Override
     public void interrupt() {
         isInterrupted = true;
-        for(AbstractTask<?> t : tasks) {
+        for(AbstractTask t : tasks) {
             t.interrupt();
         }
     }

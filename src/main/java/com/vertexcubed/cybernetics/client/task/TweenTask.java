@@ -8,7 +8,7 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class TweenTask extends AbstractTask<Float> {
+public class TweenTask extends AbstractTask{
 
 
     private final boolean maxOnInterrupt;
@@ -97,13 +97,7 @@ public class TweenTask extends AbstractTask<Float> {
 
     @Override
     public void init(TaskManager context) {
-        Cybernetics.LOGGER.info("Tween called! UUID: " + this.uuid());
         this.startTime = context.gameTime();
-    }
-
-    @Override
-    public Float getResult() {
-        return getter.get();
     }
 
     @Override

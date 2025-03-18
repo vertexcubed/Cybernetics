@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component;
 
 public abstract class CybAbstractWidget extends AbstractWidget {
 
-    protected boolean playSound = true;
+    protected boolean playSound = false;
     public CybAbstractWidget(int x, int y, int width, int height) {
         super(x, y, width, height, Component.empty());
     }
@@ -22,7 +22,7 @@ public abstract class CybAbstractWidget extends AbstractWidget {
      */
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        if (!this.active || !this.visible) return false;
+        if (!this.active || !this.visible || this.alpha <= 0.0f) return false;
 
         if (this.isValidClickButton(pButton)) {
             boolean flag = this.clicked(pMouseX, pMouseY);

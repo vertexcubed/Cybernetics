@@ -103,7 +103,7 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         // Section Buttons
         // ===============
 
-        List<AbstractTask<Float>> moveSections = new ArrayList<>();
+        List<AbstractTask> moveSections = new ArrayList<>();
         List<CyberwareSection> sections = menu.getCyberware().getSections();
         sections.forEach(section -> {
             int pos = topPos + section.getType().y();
@@ -132,7 +132,7 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         for (int i = 0; i < sectionButtons.size(); i++) {
             BasicWidget widget = sectionButtons.get(i);
             int pos = widget.getY() - 20;
-            moveSections.add(new WaitTask<>(i, AbstractTask.NONE).then(r -> new TweenTask(
+            moveSections.add(new WaitTask(i).then(r -> new TweenTask(
                     () -> (float) widget.getY(),
                     (f) -> widget.setY((int) (float) f),
                     pos,
@@ -140,7 +140,7 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
                     Easing.CUBIC_OUT)
             ));
 
-            moveSections.add(new WaitTask<>(i, AbstractTask.NONE)
+            moveSections.add(new WaitTask(i)
                     .then(
                             r -> new TweenTask(
                                     widget::getAlpha,
@@ -153,8 +153,8 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         }
 
         ScreenHelper.getTaskManager(this).addFrameTask(
-                new WaitTask<>(10, AbstractTask.NONE)
-                        .then(res -> new AfterAllTask<>(moveSections))
+                new WaitTask(10)
+                        .then(res -> new AfterAllTask(moveSections))
         );
     }
 
@@ -196,10 +196,10 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
     }
 
     //make sure to add the task thats returned by this function too!!!
-    private AbstractTask<?> moveWidget(AbstractWidget widget, int newX, int newY, long startTime, int duration, Easing easing) {
-        AbstractTask<Float> moveX = new TweenTask(() -> (float) widget.getX(), (x) -> widget.setX((int) (float) x), newX, duration, easing);
-        AbstractTask<Float> moveY = new TweenTask(() -> (float) widget.getY(), (y) -> widget.setY((int) (float) y), newY, duration, easing);
-        return new AfterAllTask<>(List.of(moveX, moveY));
+    private AbstractTask moveWidget(AbstractWidget widget, int newX, int newY, long startTime, int duration, Easing easing) {
+        AbstractTask moveX = new TweenTask(() -> (float) widget.getX(), (x) -> widget.setX((int) (float) x), newX, duration, easing);
+        AbstractTask moveY = new TweenTask(() -> (float) widget.getY(), (y) -> widget.setY((int) (float) y), newY, duration, easing);
+        return new AfterAllTask(List.of(moveX, moveY));
     }
     private long gameTime() {
         return Minecraft.getInstance().level.getGameTime();

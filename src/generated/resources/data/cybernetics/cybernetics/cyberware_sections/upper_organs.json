@@ -1,0 +1,13 @@
+{
+  "inventory_properties": {
+    "size": 7,
+    "tag": "cybernetics:cyberware_section/upper_organs"
+  },
+  "menu_properties": {
+    "player_x": 0,
+    "player_y": -30,
+    "texture": "cybernetics:textures/gui/cyberware/section/upper_organs.png",
+    "x": 37,
+    "y": 46
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "inventory_properties": {
+    "size": 4,
+    "tag": "cybernetics:cyberware_section/head"
+  },
+  "menu_properties": {
+    "player_x": 0,
+    "player_y": -40,
+    "texture": "cybernetics:textures/gui/cyberware/section/arms.png",
+    "x": 182,
+    "y": 46
+  }
+}

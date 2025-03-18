@@ -1,12 +1,14 @@
 package com.vertexcubed.cybernetics;
 
 import com.vertexcubed.cybernetics.common.registry.*;
+import com.vertexcubed.cybernetics.datagen.DataGenerators;
 import com.vertexcubed.cybernetics.server.network.CybPayloads;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.item.*;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import org.slf4j.Logger;
@@ -76,6 +78,11 @@ public class Cybernetics
     @SubscribeEvent
     public void registerDPRegistries(DataPackRegistryEvent.NewRegistry event) {
         CybDPRegistries.register(event);
+    }
+
+    @SubscribeEvent
+    public void gatherData(GatherDataEvent event) {
+        DataGenerators.gatherData(event);
     }
 
 

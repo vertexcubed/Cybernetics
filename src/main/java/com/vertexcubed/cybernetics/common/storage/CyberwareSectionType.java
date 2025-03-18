@@ -20,6 +20,10 @@ public class CyberwareSectionType {
     private final MenuProperties menuProp;
     private final InventoryProperties invProp;
 
+    public static CyberwareSectionType fromRaw(ResourceLocation texture, int x, int y, int playerX, int playerY, TagKey<Item> tag, int size) {
+        return new CyberwareSectionType(new MenuProperties(texture, x, y, playerX, playerY), new InventoryProperties(tag, size));
+    }
+
     public CyberwareSectionType(MenuProperties menuProp, InventoryProperties invProp) {
         this.menuProp = menuProp;
         this.invProp = invProp;

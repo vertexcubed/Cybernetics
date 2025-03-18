@@ -7,7 +7,6 @@ import java.util.UUID;
 /**
  * Task that is instantly completed after all of its previous tasks are completed.
  */
-//TODO: fix AfterAll not accounting for Task#onComplete()
 public class AfterAllTask<T> extends AbstractTask<List<T>> {
     private final boolean allowInterrupted;
     private final boolean allowFailed;

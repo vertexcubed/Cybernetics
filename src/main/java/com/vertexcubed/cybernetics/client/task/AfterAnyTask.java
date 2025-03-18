@@ -6,25 +6,22 @@ import java.util.UUID;
 
 
 /**
- * Task that is instantly completed after any of its previous tasks are completed.
+ * Task that is instantly completed after any of its previous tasks are completed. Uncompleted tasks will not continue to process.
  */
 public class AfterAnyTask<T> extends AbstractTask<List<T>> {
     private final boolean allowInterrupted;
     private final boolean allowFailed;
-    private final AbstractTask<T>[] tasks;
+    private final List<AbstractTask<T>> tasks;
     private boolean isInterrupted = false;
-    @SafeVarargs
-    public AfterAnyTask(AbstractTask<T>... tasks) {
+    public AfterAnyTask(List<AbstractTask<T>> tasks) {
         this(false, false, tasks);
     }
 
-    @SafeVarargs
-    public AfterAnyTask(boolean allowInterrupted, AbstractTask<T>... tasks) {
+    public AfterAnyTask(boolean allowInterrupted, List<AbstractTask<T>> tasks) {
         this(allowInterrupted, false, tasks);
     }
 
-    @SafeVarargs
-    public AfterAnyTask(boolean allowInterrupted, boolean allowFailed, AbstractTask<T>... tasks) {
+    public AfterAnyTask(boolean allowInterrupted, boolean allowFailed, List<AbstractTask<T>> tasks) {
         super(UUID.randomUUID());
         this.allowInterrupted = allowInterrupted;
         this.allowFailed = allowFailed;
@@ -34,11 +31,9 @@ public class AfterAnyTask<T> extends AbstractTask<List<T>> {
 
     @Override
     public void init(TaskManager context) {
-        context.findQueueWith(this).ifPresent(queue -> {
-            for(AbstractTask<?> t : tasks) {{
-                queue.add(t);
-            }}
-        });
+        for(AbstractTask<?> t : tasks) {
+            t.init(context);
+        }
     }
 
     @Override
@@ -46,6 +41,9 @@ public class AfterAnyTask<T> extends AbstractTask<List<T>> {
         if(isInterrupted) {
             state = TaskState.INTERRUPTED;
             return;
+        }
+        for(AbstractTask<?> task : tasks) {
+            task.update(context, gameTime, partialTick);
         }
         boolean anyPending = false;
         for(AbstractTask<?> task : tasks) {
@@ -79,7 +77,7 @@ public class AfterAnyTask<T> extends AbstractTask<List<T>> {
 
     @Override
     public List<T> getResult() {
-        return Arrays.stream(tasks).map(AbstractTask::getResult).toList();
+        return tasks.stream().map(AbstractTask::getResult).toList();
     }
 
     @Override

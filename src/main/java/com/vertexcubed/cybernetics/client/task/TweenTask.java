@@ -2,10 +2,8 @@ package com.vertexcubed.cybernetics.client.task;
 
 import com.vertexcubed.cybernetics.Cybernetics;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
 import team.lodestar.lodestone.systems.easing.Easing;
 
-import java.util.Queue;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -76,7 +74,7 @@ public class TweenTask extends AbstractTask<Float> {
     }
 
     @Override
-    public void update(long gameTime, float partialTick) {
+    public void update(TaskManager context, long gameTime, float partialTick) {
         if(gameTime < startTime) {
             state = TaskState.PENDING;
             return;
@@ -98,9 +96,8 @@ public class TweenTask extends AbstractTask<Float> {
     }
 
     @Override
-    public void init(TaskManager context, long gameTime) {
-        Cybernetics.LOGGER.debug("Initializing tween.");
-        this.startTime = gameTime;
+    public void init(TaskManager context) {
+        this.startTime = context.gameTime();
     }
 
     @Override

@@ -13,13 +13,13 @@ public class InstantSupplyTask<T> extends AbstractTask<T> {
     }
 
     @Override
-    public void update(long gameTime, float partialTick) {
+    public void update(TaskManager context, long gameTime, float partialTick) {
         value = sup.get();
         state = TaskState.COMPLETED;
     }
 
     @Override
-    public void init(TaskManager context, long gameTime) {
+    public void init(TaskManager context) {
 
     }
 

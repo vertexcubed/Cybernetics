@@ -1,32 +1,31 @@
 package com.vertexcubed.cybernetics.client.task;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.UUID;
 
 public class WaitTask<T> extends AbstractTask<T> {
 
     private final T value;
-    private final long waitUntil;
+    private final long duration;
+    private long startTime;
     private boolean isInterrupted = false;
-    public WaitTask(long waitUntil, T value) {
+    public WaitTask(long duration, T value) {
         super(UUID.randomUUID());
         this.value = value;
-        this.waitUntil = waitUntil;
+        this.duration = duration;
     }
 
     @Override
-    public void update(long gameTime, float partialTick) {
+    public void update(TaskManager context, long gameTime, float partialTick) {
         if(isInterrupted) {
             state = TaskState.INTERRUPTED;
             return;
         }
-        state = gameTime >= waitUntil ? TaskState.COMPLETED : TaskState.PENDING;
+        state = gameTime >= (startTime + duration) ? TaskState.COMPLETED : TaskState.PENDING;
     }
 
     @Override
-    public void init(TaskManager context, long gameTime) {
-
+    public void init(TaskManager context) {
+        this.startTime = context.gameTime();
     }
 
     @Override

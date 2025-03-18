@@ -1,5 +1,6 @@
 package com.vertexcubed.cybernetics.client.gui.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
@@ -12,13 +13,16 @@ public class BasicWidget extends CybAbstractWidget {
     private ClickHandler clickHandler = null;
     private boolean lightOnHover;
     private float scale;
+    private float alpha;
     private int zOffset;
+
     private BasicWidget(Screen parent, int x, int y, int width, int height, WidgetRenderer renderer) {
         super(x, y, width, height);
         this.renderer = renderer;
         this.scale = 1.0f;
         this.parent = parent;
         this.zOffset = 0;
+        this.alpha = 1.0f;
     }
 
     @Override
@@ -27,9 +31,11 @@ public class BasicWidget extends CybAbstractWidget {
         if(lightOnHover) {
             color = (this.isHovered) ? 1.0f : 0.65f;
         }
-        guiGraphics.setColor(color, color, color, 1);
+        RenderSystem.enableBlend();
+        guiGraphics.setColor(color, color, color, alpha);
         renderer.render(this, guiGraphics, mouseX, mouseY, partialTick);
         guiGraphics.setColor(1, 1, 1, 1);
+        RenderSystem.disableBlend();
     }
 
     public static BasicWidget texture(Screen parent, int x, int y, int width, int height, int uOffset, int vOffset, int textureWidth, int textureHeight, ResourceLocation texture) {
@@ -74,6 +80,15 @@ public class BasicWidget extends CybAbstractWidget {
         return this;
     }
 
+    public BasicWidget alpha(float alpha) {
+        this.alpha = alpha;
+        return this;
+    }
+
+    public float getAlpha() {
+        return alpha;
+    }
+
     public float getScale() {
         return scale;
     }
@@ -88,6 +103,11 @@ public class BasicWidget extends CybAbstractWidget {
 
     public void setScale(float scale) {
         this.scale = scale;
+    }
+
+    @Override
+    public void setAlpha(float alpha) {
+        this.alpha = alpha;
     }
 
     @Override

@@ -35,9 +35,9 @@ public abstract class AbstractTask<T> {
     protected @Nonnull Function<T, AbstractTask<?>> onInterruptFunc = (prev -> null);
 
 
-    public abstract void update(long gameTime, float partialTick);
+    public abstract void update(TaskManager context, long gameTime, float partialTick);
 
-    public abstract void init(TaskManager context, long gameTime);
+    public abstract void init(TaskManager context);
 
 
     public TaskState getState() {

@@ -1,6 +1,5 @@
 package com.vertexcubed.cybernetics.client.task;
 
-import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
 import net.minecraft.client.gui.screens.Screen;
 
@@ -8,7 +7,6 @@ import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.UUID;
-import java.util.function.Function;
 
 /**
  * <p>
@@ -31,18 +29,26 @@ public class TaskManager {
     private Queue<AbstractTask<?>> currentTickTasks = new LinkedList<>();
     private Queue<AbstractTask<?>> nextTickTasks = new LinkedList<>();
 
+    private long gameTime;
+
+
+    public TaskManager(long gameTime) {
+        this.gameTime = gameTime;
+    }
+
 
     /**
      * Make sure you call this at the START of a tick, or whatever the "start" is in your context.
      */
     public void tick(long gameTime) {
+        this.gameTime = gameTime;
         while(!currentTickTasks.isEmpty()) {
             AbstractTask<?> task = currentTickTasks.poll();
 
             //In case a subclass does state = INTERRUPTED in the interrupt() method. Shouldnt do this but oh well.
             if(task.getState() != AbstractTask.TaskState.INTERRUPTED) {
                 //Run the next task
-                task.update(gameTime, 0);
+                task.update(this, gameTime, 0);
             }
 
             processTaskResult(gameTime, task, currentTickTasks, nextTickTasks);
@@ -57,13 +63,14 @@ public class TaskManager {
      * Make sure you call this at the START of a frame, or whatever the "start" is in your context.
      */
     public void tickFrame(long gameTime, float partialTick) {
+        this.gameTime = gameTime;
         while(!currentFrameTasks.isEmpty()) {
             AbstractTask<?> task = currentFrameTasks.poll();
 
             //In case a subclass does state = INTERRUPTED in the interrupt() method. Shouldnt do this but oh well.
             if(task.getState() != AbstractTask.TaskState.INTERRUPTED) {
                 //Run the next task
-                task.update(gameTime, partialTick);
+                task.update(this, gameTime, partialTick);
             }
 
             processTaskResult(gameTime, task, currentFrameTasks, nextFrameTasks);
@@ -90,28 +97,28 @@ public class TaskManager {
     }
 
     /**
-     * Adds a "frame" task to this task manager. Frame tasks are updated every frame.
-     * If you want a task that's updated every tick instead, use {@link TaskManager#addTickTask}
-     * @param task the task you want to add.
-     * @return the task you just added. Make sure to NOT modify it at this point! (i.e. do not call
-     * {@link AbstractTask#onComplete} after returning.)
-     */
-    public <T> AbstractTask<T> addFrameTask(long gameTime, AbstractTask<T> task) {
-        nextFrameTasks.add(task);
-        task.init(this, gameTime);
-        return task;
-    }
-
-    /**
      * Adds a "tick" task to this task manager. Tick tasks are updated every tick.
      * If you want a task that's updated every frame instead, use {@link TaskManager#addFrameTask}
      * @param task the task you want to add.
      * @return the task you just added. Make sure to NOT modify it at this point! (i.e. do not call
      * {@link AbstractTask#onComplete} after returning.)
      */
-    public <T> AbstractTask<T> addTickTask(long gameTime, AbstractTask<T> task) {
+    public <T> AbstractTask<T> addTickTask(AbstractTask<T> task) {
         nextTickTasks.add(task);
-        task.init(this, gameTime);
+        task.init(this);
+        return task;
+    }
+
+    /**
+     * Adds a "frame" task to this task manager. Frame tasks are updated every frame.
+     * If you want a task that's updated every tick instead, use {@link TaskManager#addTickTask}
+     * @param task the task you want to add.
+     * @return the task you just added. Make sure to NOT modify it at this point! (i.e. do not call
+     * {@link AbstractTask#onComplete} after returning.)
+     */
+    public <T> AbstractTask<T> addFrameTask(AbstractTask<T> task) {
+        nextFrameTasks.add(task);
+        task.init(this);
         return task;
     }
 
@@ -168,6 +175,10 @@ public class TaskManager {
         nextFrameTasks.clear();
     }
 
+    public long gameTime() {
+        return gameTime;
+    }
+
     private boolean interruptTaskInternal(UUID uuid, Queue<AbstractTask<?>> queue) {
         boolean ret = false;
         for (AbstractTask<?> task : queue) {
@@ -204,21 +215,21 @@ public class TaskManager {
                 AbstractTask<?> onInterrupted = task.applyOnInterrupt();
                 if(onInterrupted != null) {
                     currentQueue.add(onInterrupted);
-                    onInterrupted.init(this, gameTime);
+                    onInterrupted.init(this);
                 }
             }
             case COMPLETED -> {
                 AbstractTask<?> onCompleted = task.applyOnComplete();
                 if(onCompleted != null) {
                     currentQueue.add(onCompleted);
-                    onCompleted.init(this, gameTime);
+                    onCompleted.init(this);
                 }
             }
             case FAILURE -> {
                 AbstractTask<?> onFailed = task.applyOnFail();
                 if(onFailed != null) {
                     currentQueue.add(onFailed);
-                    onFailed.init(this, gameTime);
+                    onFailed.init(this);
                 }
             }
         }

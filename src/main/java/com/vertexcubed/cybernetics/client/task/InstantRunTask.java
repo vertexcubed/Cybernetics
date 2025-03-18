@@ -11,13 +11,13 @@ public class InstantRunTask extends AbstractTask<AbstractTask.NoResult> {
     }
 
     @Override
-    public void update(long gameTime, float partialTick) {
+    public void update(TaskManager context, long gameTime, float partialTick) {
         run.run();
         state = TaskState.COMPLETED;
     }
 
     @Override
-    public void init(TaskManager context, long gameTime) {
+    public void init(TaskManager context) {
 
     }
 

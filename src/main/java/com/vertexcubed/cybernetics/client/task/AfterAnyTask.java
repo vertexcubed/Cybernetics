@@ -2,7 +2,6 @@ package com.vertexcubed.cybernetics.client.task;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Queue;
 import java.util.UUID;
 
 
@@ -34,7 +33,7 @@ public class AfterAnyTask<T> extends AbstractTask<List<T>> {
 
 
     @Override
-    public void init(TaskManager context, long gameTime) {
+    public void init(TaskManager context) {
         context.findQueueWith(this).ifPresent(queue -> {
             for(AbstractTask<?> t : tasks) {{
                 queue.add(t);
@@ -43,7 +42,7 @@ public class AfterAnyTask<T> extends AbstractTask<List<T>> {
     }
 
     @Override
-    public void update(long gameTime, float partialTick) {
+    public void update(TaskManager context, long gameTime, float partialTick) {
         if(isInterrupted) {
             state = TaskState.INTERRUPTED;
             return;

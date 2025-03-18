@@ -14,7 +14,7 @@ public class CybAttachments {
     public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, Cybernetics.MOD_ID);
 
     public static final Supplier<AttachmentType<CyberwareInventory>> CYBERWARE_INVENTORY = ATTACHMENT_TYPES.register(
-            "cyberware_inventory", () -> AttachmentType.serializable(CyberwareInventory::create).build()
+            "cyberware_inventory", () -> AttachmentType.serializable(CyberwareInventory::create).copyOnDeath().build()
     );
 
 

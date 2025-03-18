@@ -1,22 +1,25 @@
 package com.vertexcubed.cybernetics.client.gui.cyberware;
 
-import com.vertexcubed.cybernetics.Cybernetics;
-import com.vertexcubed.cybernetics.client.gui.widget.BasicWidget;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
-import com.vertexcubed.cybernetics.client.task.*;
+import com.vertexcubed.cybernetics.client.gui.widget.BasicWidget;
+import com.vertexcubed.cybernetics.client.task.AbstractTask;
+import com.vertexcubed.cybernetics.client.task.AfterAllTask;
+import com.vertexcubed.cybernetics.client.task.TweenTask;
 import com.vertexcubed.cybernetics.client.util.FakeLocalPlayer;
 import com.vertexcubed.cybernetics.client.util.RenderHelper;
 import com.vertexcubed.cybernetics.common.menu.CyberwareMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import team.lodestar.lodestone.systems.easing.Easing;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.vertexcubed.cybernetics.Cybernetics.modLoc;
 
@@ -28,6 +31,7 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
 
     private BasicWidget backButton;
     private BasicWidget entityWidget;
+    private final List<BasicWidget> sectionButtons = new ArrayList<>();
     private float entityRotation;
 
 
@@ -73,6 +77,14 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
 
         ScreenHelper.getTaskManager(this).addFrameTask(moveWidget(entityWidget, leftPos + 91, topPos + 16, gameTime(), 20, Easing.QUARTIC_OUT));
 
+        menu.getCyberware().getSections().forEach(section -> {
+            this.sectionButtons.add(addRenderableWidget(BasicWidget
+                    .texture(this, leftPos + section.getType().x(), topPos + section.getType().y(), 24, 24, section.getType().texture()))
+                    .lightOnHover(true)
+                    .playSoundOnClick(true)
+            );
+        });
+
 
     }
 
@@ -86,16 +98,12 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        //THIS IS EXTREMELY DANGEROUS, BUT ITS A HACK TO AVOID HAVING TO COPY PASTE THE WHOLE RENDER METHOD.
-//        guiGraphics.disableScissor();
     }
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
         guiGraphics.blit(TEXTURE, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
 
-        //THIS IS EXTREMELY DANGEROUS, BUT ITS A HACK TO AVOID HAVING TO COPY PASTE THE WHOLE RENDER METHOD.
-//        guiGraphics.enableScissor(leftPos + 5, leftPos + 221, topPos + 5, topPos + 149);
     }
 
     private void scissor(GuiGraphics guiGraphics) {

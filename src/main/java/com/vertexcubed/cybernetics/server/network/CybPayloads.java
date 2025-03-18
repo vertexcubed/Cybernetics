@@ -9,6 +9,6 @@ public class CybPayloads {
     public static void regsiter(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar main = event.registrar("1");
         C2SOpenCyberwarePayload.register(main);
-
+        S2CSyncCyberwarePayload.register(main);
     }
 }

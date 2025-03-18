@@ -3,14 +3,9 @@ package com.vertexcubed.cybernetics.common.storage;
 import com.vertexcubed.cybernetics.common.registry.CybDPRegistries;
 import com.vertexcubed.cybernetics.common.util.CombinedInvWrapperModifiable;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.server.MinecraftServer;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import net.neoforged.neoforge.items.wrapper.CombinedInvWrapper;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -29,8 +24,18 @@ public class CyberwareInventory extends CombinedInvWrapperModifiable implements 
     }
 
     public static CyberwareInventory create() {
-
         return new CyberwareInventory();
+    }
+
+    public void init(HolderLookup.Provider provider) {
+        List<CyberwareSection> sections = new ArrayList<>();
+        provider.lookupOrThrow(CybDPRegistries.CYBERWARE_SECTION_KEY).listElements().forEach(holder -> {
+            sections.add(new CyberwareSection(holder.value(), holder.key().location()));
+        });
+        clearHandlers();
+        for(CyberwareSection section : sections) {
+            addItemHandler(section);
+        }
     }
 
 
@@ -39,7 +44,22 @@ public class CyberwareInventory extends CombinedInvWrapperModifiable implements 
         //TODO: implement copy
         copy.capacity = capacity;
         copy.maxCapacity = maxCapacity;
+        copy.clearHandlers();
+        for(IItemHandlerModifiable handler : this.itemHandlers) {
+            CyberwareSection s = (CyberwareSection) handler;
+            copy.addItemHandler(s.copy());
+        }
         return copy;
+    }
+
+    public void copyFrom(CyberwareInventory other) {
+        this.capacity = other.capacity;
+        this.maxCapacity = other.maxCapacity;
+        this.clearHandlers();
+        for(IItemHandlerModifiable handler : other.itemHandlers) {
+            CyberwareSection s = (CyberwareSection) handler;
+            this.addItemHandler(s.copy());
+        }
     }
 
 
@@ -65,15 +85,7 @@ public class CyberwareInventory extends CombinedInvWrapperModifiable implements 
 
     @Override
     public void deserializeNBT(@NotNull HolderLookup.Provider provider, CompoundTag tag) {
-
-        List<CyberwareSection> sections = new ArrayList<>();
-        provider.lookupOrThrow(CybDPRegistries.CYBERWARE_SECTION_KEY).listElements().forEach(holder -> {
-            sections.add(new CyberwareSection(holder.value(), holder.key().location()));
-        });
-        clearHandlers();
-        for(CyberwareSection section : sections) {
-            addItemHandler(section);
-        }
+        init(provider);
 
         CompoundTag contents = tag.getCompound("contents");
         for(IItemHandlerModifiable handler : this.itemHandlers) {
@@ -83,5 +95,13 @@ public class CyberwareInventory extends CombinedInvWrapperModifiable implements 
 
         this.capacity = tag.getInt("capacity");
         this.maxCapacity = tag.getInt("maxCapacity");
+    }
+
+    public List<CyberwareSection> getSections() {
+        List<CyberwareSection> output = new ArrayList<>();
+        for (IItemHandlerModifiable itemHandler : itemHandlers) {
+            output.add(((CyberwareSection) itemHandler).copy());
+        }
+        return output;
     }
 }

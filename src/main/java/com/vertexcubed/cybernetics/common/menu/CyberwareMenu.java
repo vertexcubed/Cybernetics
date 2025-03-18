@@ -1,7 +1,10 @@
 package com.vertexcubed.cybernetics.common.menu;
 
+import com.vertexcubed.cybernetics.Cybernetics;
+import com.vertexcubed.cybernetics.common.registry.CybAttachments;
 import com.vertexcubed.cybernetics.common.registry.CybMenus;
 import com.vertexcubed.cybernetics.common.storage.CyberwareInventory;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -33,7 +36,14 @@ public class CyberwareMenu extends AbstractContainerMenu {
             //TODO: only cyberware can be inserted.
             this.inventoryClone.insertItem(counter++, inventory.getItem(i).copy(), false);
         }
+
+
+        RegistryAccess r = inventory.player.level().registryAccess();
         this.cyberwareInventoryClone = cyberwareInventory.copy();
+    }
+
+    public CyberwareInventory getCyberware() {
+        return cyberwareInventoryClone;
     }
 
     @Override

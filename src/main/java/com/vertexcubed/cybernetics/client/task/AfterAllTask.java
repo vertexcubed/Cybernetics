@@ -70,5 +70,8 @@ public class AfterAllTask<T> extends AbstractTask<List<T>> {
     @Override
     public void interrupt() {
         isInterrupted = true;
+        for(AbstractTask<?> t : tasks) {
+            t.interrupt();
+        }
     }
 }

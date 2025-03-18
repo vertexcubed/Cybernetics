@@ -36,4 +36,16 @@ public class CyberwareSection extends ItemStackHandler {
         if (!id.equals(that.id)) return false;
         return type.equals(that.type);
     }
+
+    public CyberwareSection copy() {
+        CyberwareSection ret = new CyberwareSection(type, id);
+        for(int i = 0; i < getSlots(); i++) {
+            ret.setStackInSlot(i, this.getStackInSlot(i).copy());
+        }
+        return ret;
+    }
+
+    public CyberwareSectionType getType() {
+        return type;
+    }
 }

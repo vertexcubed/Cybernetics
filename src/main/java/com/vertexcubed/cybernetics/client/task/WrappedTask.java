@@ -1,0 +1,78 @@
+package com.vertexcubed.cybernetics.client.task;
+
+import com.vertexcubed.cybernetics.Cybernetics;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
+
+public class WrappedTask<T, U> extends AbstractTask<U> {
+
+    private AbstractTask<U> child;
+    private final AbstractTask<T> parent;
+    private final ChildFactory<T, U> childFactory;
+
+    public WrappedTask(AbstractTask<T> parent, ChildFactory<T, U> childFactory) {
+        super(UUID.randomUUID());
+
+        this.parent = parent;
+        this.child = null;
+        this.childFactory = childFactory;
+    }
+
+    @Override
+    public void update(TaskManager context, long gameTime, float partialTick) {
+
+        int i = 1;
+
+        //Made child?
+        if(child != null) {
+            child.update(context, gameTime, partialTick);
+            state = child.getState();
+            return;
+        }
+
+        //Update parent. Maybe make child.
+        parent.update(context, gameTime, partialTick);
+        if(parent.getState() == TaskState.PENDING) {
+            state = TaskState.PENDING;
+            return;
+        }
+
+        //Make child. Did it not work?
+        this.child = childFactory.create(parent.getState(), parent.getResult());
+        if(this.child == null) {
+            state = parent.getState();
+            return;
+        }
+        this.child.init(context);
+
+        //Update child.
+        child.update(context, gameTime, partialTick);
+        state = child.getState();
+
+    }
+
+    @Override
+    public void init(TaskManager context) {
+        parent.init(context);
+    }
+
+    @Override
+    public U getResult() {
+        return child == null ? null : child.getResult();
+    }
+
+    @Override
+    public void interrupt() {
+        if(child == null) {
+            parent.interrupt();
+            return;
+        }
+        child.interrupt();
+    }
+
+    @FunctionalInterface
+    public interface ChildFactory<T, U> {
+        AbstractTask<U> create(TaskState parentResult, T result);
+    }
+}

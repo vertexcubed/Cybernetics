@@ -103,7 +103,7 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         // Section Buttons
         // ===============
 
-        List<AbstractTask<AbstractTask.NoResult>> moveSections = new ArrayList<>();
+        List<AbstractTask<Float>> moveSections = new ArrayList<>();
         List<CyberwareSection> sections = menu.getCyberware().getSections();
         sections.forEach(section -> {
             int pos = topPos + section.getType().y();
@@ -132,26 +132,29 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         for (int i = 0; i < sectionButtons.size(); i++) {
             BasicWidget widget = sectionButtons.get(i);
             int pos = widget.getY() - 20;
-            moveSections.add(new WaitTask<>(i, AbstractTask.NONE).onComplete(r -> new TweenTask(
+            moveSections.add(new WaitTask<>(i, AbstractTask.NONE).then(r -> new TweenTask(
                     () -> (float) widget.getY(),
                     (f) -> widget.setY((int) (float) f),
                     pos,
                     10,
-                    Easing.CUBIC_OUT)));
+                    Easing.CUBIC_OUT)
+            ));
 
-            moveSections.add(new WaitTask<>(i, AbstractTask.NONE).onComplete(r -> new TweenTask(
-                    widget::getAlpha,
-                    widget::setAlpha,
-                    1.0f,
-                    10,
-                    Easing.CUBIC_OUT)));
+            moveSections.add(new WaitTask<>(i, AbstractTask.NONE)
+                    .then(
+                            r -> new TweenTask(
+                                    widget::getAlpha,
+                                    widget::setAlpha,
+                                    1.0f,
+                                    10,
+                                    Easing.CUBIC_OUT)
+                    )
+            );
         }
 
         ScreenHelper.getTaskManager(this).addFrameTask(
                 new WaitTask<>(10, AbstractTask.NONE)
-                        .onComplete(res -> new AfterAllTask<>(moveSections)
-                                .onComplete(r -> new InstantRunTask(() -> canClickSectionButtons = true))
-                        )
+                        .then(res -> new AfterAllTask<>(moveSections))
         );
     }
 

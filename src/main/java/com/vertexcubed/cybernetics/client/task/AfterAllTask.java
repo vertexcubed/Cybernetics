@@ -7,7 +7,7 @@ import java.util.UUID;
 /**
  * Task that is instantly completed after all of its previous tasks are completed.
  */
-//TODO: fix AfterAll not accounting for Task#onComplete(). Needs to traverse the whole damn tree to know if everything's done lmao.
+//TODO: fix AfterAll not accounting for Task#onComplete()
 public class AfterAllTask<T> extends AbstractTask<List<T>> {
     private final boolean allowInterrupted;
     private final boolean allowFailed;
@@ -33,6 +33,9 @@ public class AfterAllTask<T> extends AbstractTask<List<T>> {
         if(isInterrupted) {
             state = TaskState.INTERRUPTED;
             return;
+        }
+        for(AbstractTask<?> task : tasks) {
+            task.update(context, gameTime, partialTick);
         }
         for(AbstractTask<?> task : tasks) {
             switch(task.getState()) {
@@ -61,12 +64,9 @@ public class AfterAllTask<T> extends AbstractTask<List<T>> {
 
     @Override
     public void init(TaskManager context) {
-        context.findQueueWith(this).ifPresent(queue -> {
-            for(AbstractTask<?> t : tasks) {{
-                queue.add(t);
-                t.init(context);
-            }}
-        });
+        for(AbstractTask<?> t : tasks) {
+            t.init(context);
+        }
     }
 
     @Override

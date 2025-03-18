@@ -63,17 +63,50 @@ public abstract class AbstractTask<T> {
     }
 
 
-    public AbstractTask<T> onComplete(Function<T, AbstractTask<?>> func) {
-        this.onCompleteFunc = func;
-        return this;
+    public <U> WrappedTask<T, U> then(Function<T, AbstractTask<U>> onComplete) {
+        return then((s, r) -> {
+            if(s != TaskState.COMPLETED) return null;
+            return onComplete.apply(r);
+        });
     }
-    public AbstractTask<T> onFail(Function<T, AbstractTask<?>> func) {
-        this.onFailFunc = func;
-        return this;
+
+    public <U> WrappedTask<T, U> then(Function<T, AbstractTask<U>> onComplete, Function<T, AbstractTask<U>> onFail) {
+        return then((s, r) -> {
+            switch(s) {
+                case COMPLETED -> {
+                    return onComplete.apply(r);
+                }
+                case FAILURE -> {
+                    return onFail.apply(r);
+                }
+                default -> {
+                    return null;
+                }
+            }
+        });
     }
-    public AbstractTask<T> onInterrupt(Function<T, AbstractTask<?>> func) {
-        this.onInterruptFunc = func;
-        return this;
+
+    public <U> WrappedTask<T, U> then(Function<T, AbstractTask<U>> onComplete, Function<T, AbstractTask<U>> onFail, Function<T, AbstractTask<U>> onInterrupt) {
+        return then((s, r) -> {
+            switch(s) {
+                case COMPLETED -> {
+                    return onComplete.apply(r);
+                }
+                case FAILURE -> {
+                    return onFail.apply(r);
+                }
+                case INTERRUPTED -> {
+                    return onInterrupt.apply(r);
+                }
+                default -> {
+                    return null;
+                }
+            }
+        });
+    }
+
+    public <U> WrappedTask<T, U> then(WrappedTask.ChildFactory<T, U> factory) {
+        return new WrappedTask<>(this, factory);
     }
 
     /**

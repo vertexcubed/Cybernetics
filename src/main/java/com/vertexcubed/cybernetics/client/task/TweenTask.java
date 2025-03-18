@@ -97,6 +97,7 @@ public class TweenTask extends AbstractTask<Float> {
 
     @Override
     public void init(TaskManager context) {
+        Cybernetics.LOGGER.info("Tween called! UUID: " + this.uuid());
         this.startTime = context.gameTime();
     }
 

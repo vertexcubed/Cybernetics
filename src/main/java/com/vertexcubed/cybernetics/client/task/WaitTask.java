@@ -1,5 +1,7 @@
 package com.vertexcubed.cybernetics.client.task;
 
+import com.vertexcubed.cybernetics.Cybernetics;
+
 import java.util.UUID;
 
 public class WaitTask<T> extends AbstractTask<T> {
@@ -25,6 +27,7 @@ public class WaitTask<T> extends AbstractTask<T> {
 
     @Override
     public void init(TaskManager context) {
+        Cybernetics.LOGGER.debug("WaitTask init! UUID: " + this.uuid());
         this.startTime = context.gameTime();
     }
 

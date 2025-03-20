@@ -4,7 +4,7 @@
     "tag": "cybernetics:cyberware_section/lower_organs"
   },
   "menu_properties": {
-    "player_x": 0,
+    "player_x": 130,
     "player_y": -70,
     "texture": "cybernetics:textures/gui/cyberware/section/lower_organs.png",
     "x": 37,

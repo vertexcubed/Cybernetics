@@ -4,7 +4,7 @@
     "tag": "cybernetics:cyberware_section/head"
   },
   "menu_properties": {
-    "player_x": 0,
+    "player_x": 130,
     "player_y": 20,
     "texture": "cybernetics:textures/gui/cyberware/section/eyes.png",
     "x": 160,

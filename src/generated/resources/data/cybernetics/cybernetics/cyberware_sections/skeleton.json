@@ -4,7 +4,7 @@
     "tag": "cybernetics:cyberware_section/skeleton"
   },
   "menu_properties": {
-    "player_x": 0,
+    "player_x": 130,
     "player_y": -30,
     "texture": "cybernetics:textures/gui/cyberware/section/skeleton.png",
     "x": 59,

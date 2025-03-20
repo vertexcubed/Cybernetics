@@ -63,6 +63,10 @@ public class CyberwareInventory extends CombinedInvWrapperModifiable implements 
     }
 
 
+    public CyberwareSection getSectionFromSlot(int slot) {
+        int index = getIndexForSlot(slot);
+        return ((CyberwareSection) getHandlerFromIndex(index));
+    }
 
 
 

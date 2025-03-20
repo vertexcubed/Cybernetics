@@ -146,7 +146,7 @@ public class TaskManager {
      * @return whether a task was found to interrupt.
      */
     public boolean interruptFrameTask(String tag) {
-        return interruptTaskInternal(tag, nextFrameTasks);
+        return interruptTaskInternal(tag, currentFrameTasks);
     }
 
     /**
@@ -155,7 +155,7 @@ public class TaskManager {
      * @return whether a task was found to interrupt.
      */
     public boolean interruptTickTask(String tag) {
-        return interruptTaskInternal(tag, nextTickTasks);
+        return interruptTaskInternal(tag, currentTickTasks);
     }
 
     /**

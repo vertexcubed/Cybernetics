@@ -67,6 +67,17 @@ public class WrappedTask extends AbstractTask {
         child.interrupt();
     }
 
+    @Override
+    public boolean hasTag(String tag) {
+        boolean other = child == null ? parent.hasTag(tag) : child.hasTag(tag);
+        return other || super.hasTag(tag);
+    }
+
+    @Override
+    public UUID uuid() {
+        return child == null ? parent.uuid() : child.uuid();
+    }
+
     @FunctionalInterface
     public interface ChildFactory {
         AbstractTask create(TaskState parentResult);

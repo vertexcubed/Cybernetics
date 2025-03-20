@@ -32,11 +32,11 @@ public class  ScreenStateMachine {
     }
 
     public boolean changeState(ScreenState state) {
+        if(state == null || !states.contains(state)) {
+            return false;
+        }
         if(activeState == null) {
             return init(state);
-        }
-        if(!states.contains(state)) {
-            return false;
         }
         activeState.exit();
         activeState = state;

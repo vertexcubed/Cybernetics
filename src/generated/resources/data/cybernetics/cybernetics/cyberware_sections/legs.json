@@ -4,7 +4,7 @@
     "tag": "cybernetics:cyberware_section/legs"
   },
   "menu_properties": {
-    "player_x": 0,
+    "player_x": 130,
     "player_y": -130,
     "texture": "cybernetics:textures/gui/cyberware/section/legs.png",
     "x": 59,

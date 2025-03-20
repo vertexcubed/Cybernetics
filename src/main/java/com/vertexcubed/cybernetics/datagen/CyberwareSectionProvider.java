@@ -20,7 +20,7 @@ public class CyberwareSectionProvider {
                 modLoc("textures/gui/cyberware/section/head.png"),
                 59,
                 24,
-                0,
+                130,
                 20,
                 CybTags.HEAD_SECTION,
                 5
@@ -30,7 +30,7 @@ public class CyberwareSectionProvider {
                 modLoc("textures/gui/cyberware/section/upper_organs.png"),
                 37,
                 46,
-                0,
+                130,
                 -30,
                 CybTags.UPPER_ORGANS_SECTION,
                 7
@@ -40,7 +40,7 @@ public class CyberwareSectionProvider {
                 modLoc("textures/gui/cyberware/section/skeleton.png"),
                 59,
                 68,
-                0,
+                130,
                 -30,
                 CybTags.SKELETON_SECTION,
                 4
@@ -50,7 +50,7 @@ public class CyberwareSectionProvider {
                 modLoc("textures/gui/cyberware/section/lower_organs.png"),
                 37,
                 90,
-                0,
+                130,
                 -70,
                 CybTags.LOWER_ORGANS_SECTION,
                 6
@@ -60,7 +60,7 @@ public class CyberwareSectionProvider {
                 modLoc("textures/gui/cyberware/section/legs.png"),
                 59,
                 112,
-                0,
+                130,
                 -130,
                 CybTags.LEGS_SECTION,
                 3
@@ -72,7 +72,7 @@ public class CyberwareSectionProvider {
                 modLoc("textures/gui/cyberware/section/eyes.png"),
                 160,
                 24,
-                0,
+                130,
                 20,
                 CybTags.HEAD_SECTION,
                 4
@@ -82,7 +82,7 @@ public class CyberwareSectionProvider {
                 modLoc("textures/gui/cyberware/section/arms.png"),
                 182,
                 46,
-                0,
+                130,
                 -40,
                 CybTags.HEAD_SECTION,
                 4
@@ -92,7 +92,7 @@ public class CyberwareSectionProvider {
                 modLoc("textures/gui/cyberware/section/skin.png"),
                 160,
                 68,
-                0,
+                130,
                 -40,
                 CybTags.HEAD_SECTION,
                 3
@@ -102,7 +102,7 @@ public class CyberwareSectionProvider {
                 modLoc("textures/gui/cyberware/section/hands.png"),
                 182,
                 90,
-                0,
+                130,
                 -70,
                 CybTags.HEAD_SECTION,
                 3
@@ -112,7 +112,7 @@ public class CyberwareSectionProvider {
                 modLoc("textures/gui/cyberware/section/feet.png"),
                 160,
                 112,
-                0,
+                130,
                 -140,
                 CybTags.HEAD_SECTION,
                 4

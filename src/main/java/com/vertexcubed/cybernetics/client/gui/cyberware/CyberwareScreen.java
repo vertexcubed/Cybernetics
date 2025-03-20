@@ -21,7 +21,9 @@ import net.minecraft.world.entity.player.Inventory;
 import team.lodestar.lodestone.systems.easing.Easing;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.vertexcubed.cybernetics.Cybernetics.modLoc;
 
@@ -36,13 +38,12 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
     private BasicWidget entityWidget;
     private final List<BasicWidget> sectionButtons = new ArrayList<>();
     private float entityRotation;
+    private float entityScale;
     private boolean canClickSectionButtons = false;
     private boolean canClickBackButton = false;
 
-    private final ScreenState mainState;
-    private final ScreenState trueMainState;
-    private final ScreenState sectionState;
-    private final ScreenStateMachine stateMachine;
+    private ScreenState mainState;
+    private ScreenStateMachine stateMachine;
 
 
     private LocalPlayer fakePlayer;
@@ -50,11 +51,6 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         super(menu, playerInventory, title);
         this.imageWidth = 226;
         this.imageHeight = 154;
-        mainState = ScreenState.create(this, state -> {}, state -> {});
-        trueMainState = ScreenState.create(this, state -> {}, state -> {});
-        sectionState = ScreenState.create(this, state -> {}, state -> {});
-        stateMachine = new ScreenStateMachine(trueMainState, mainState, sectionState);
-        stateMachine.init(trueMainState);
     }
 
 
@@ -71,8 +67,12 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
                 .playSoundOnClick(true)
                 .lightOnHover(true)
                 .click((ctx, mouseX, mouseY, button) -> {
-
+                    if(canClickBackButton && ctx.getAlpha() > 0.0f &&
+                            (!mainState.isActive(stateMachine))) {
+                        this.stateMachine.changeState(mainState);
+                    }
                 })
+                .zOffset(300)
         );
 
         //==============
@@ -97,15 +97,52 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         );
         entityWidget.setScale(60);
 
-        ScreenHelper.getTaskManager(this).addFrameTask(moveWidget(entityWidget, leftPos + 91, topPos + 16, gameTime(), 20, Easing.QUARTIC_OUT));
+        ScreenHelper.getTaskManager(this).addFrameTask(moveWidget(entityWidget, leftPos + 91, topPos + 16, 20, Easing.QUARTIC_OUT));
 
         // ===============
         // Section Buttons
         // ===============
 
-        List<AbstractTask> moveSections = new ArrayList<>();
         List<CyberwareSection> sections = menu.getCyberware().getSections();
+        Map<CyberwareSection, ScreenState> sectionStates = new HashMap<>();
         sections.forEach(section -> {
+            sectionStates.put(section, ScreenState.create(this, state -> {
+                int duration = 15;
+                ScreenHelper.getTaskManager(this).addFrameTask(
+                        new TweenTask(() -> entityRotation, (f) -> entityRotation = f, -45, duration, Easing.CUBIC_IN_OUT)
+                                .withTag("section_enter")
+                );
+                ScreenHelper.getTaskManager(this).addFrameTask(
+                        new TweenTask(entityWidget::getScale, entityWidget::setScale, 120, duration, Easing.CUBIC_IN_OUT)
+                                .withTag("section_enter")
+                );
+                ScreenHelper.getTaskManager(this).addFrameTask(
+                        moveWidget(entityWidget, leftPos + section.getType().playerX(), topPos + section.getType().playerY(), duration, Easing.CUBIC_IN_OUT)
+                                .withTag("section_enter")
+                );
+
+                ScreenHelper.getTaskManager(this).addTickTask(
+                        new WaitTask(20).then(() -> new InstantRunTask(() -> canClickBackButton = true))
+                );
+
+
+
+            }, state -> {
+                int duration = 15;
+                ScreenHelper.getTaskManager(this).addFrameTask(
+                        new TweenTask(() -> entityRotation, (f) -> entityRotation = f, 0, duration, Easing.CUBIC_IN_OUT)
+                                .withTag("section_exit")
+                );
+                ScreenHelper.getTaskManager(this).addFrameTask(
+                        new TweenTask(entityWidget::getScale, entityWidget::setScale, 60, duration, Easing.CUBIC_IN_OUT)
+                                .withTag("section_exit")
+                );
+                ScreenHelper.getTaskManager(this).addFrameTask(
+                        moveWidget(entityWidget, leftPos + 91, topPos + 16, duration, Easing.CUBIC_IN_OUT)
+                                .withTag("section_exit")
+                );
+
+            }));
             int pos = topPos + section.getType().y();
             BasicWidget widget = addRenderableWidget(BasicWidget
                     .texture(this, leftPos + section.getType().x(), pos + 20, 24, 24, section.getType().texture()))
@@ -114,8 +151,8 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
                     .alpha(0.0f)
                     .click((ctx, mouseX, mouseY, partialTick) -> {
                         if(canClickSectionButtons && ctx.getAlpha() > 0.0f &&
-                                (mainState.isActive(stateMachine) || trueMainState.isActive(stateMachine))) {
-                            Cybernetics.LOGGER.debug("Haha!");
+                                (mainState.isActive(stateMachine))) {
+                            this.stateMachine.changeState(sectionStates.get(section));
                         }
                     });
             this.sectionButtons.add(widget);
@@ -129,33 +166,73 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
             return y;
         });
 
-        for (int i = 0; i < sectionButtons.size(); i++) {
-            BasicWidget widget = sectionButtons.get(i);
-            int pos = widget.getY() - 20;
-            moveSections.add(new WaitTask(i).then(r -> new TweenTask(
-                    () -> (float) widget.getY(),
-                    (f) -> widget.setY((int) (float) f),
-                    pos,
-                    10,
-                    Easing.CUBIC_OUT)
-            ));
 
-            moveSections.add(new WaitTask(i)
-                    .then(
-                            r -> new TweenTask(
-                                    widget::getAlpha,
-                                    widget::setAlpha,
-                                    1.0f,
-                                    10,
-                                    Easing.CUBIC_OUT)
-                    )
+        //===========
+        // Main State
+        //===========
+
+        mainState = ScreenState.create(this, state -> {
+            Cybernetics.LOGGER.debug("Entering main state");
+            List<AbstractTask> moveSections = new ArrayList<>();
+
+            for (int i = 0; i < sectionButtons.size(); i++) {
+                BasicWidget widget = sectionButtons.get(i);
+                widget.visible = true;
+                int pos = widget.getY() - 20;
+                moveSections.add(new WaitTask(i).then(r -> new TweenTask(
+                        () -> (float) widget.getY(),
+                        (f) -> widget.setY((int) (float) f),
+                        pos,
+                        10,
+                        Easing.CUBIC_OUT)
+                ));
+
+                moveSections.add(new WaitTask(i)
+                        .then(
+                                r -> new TweenTask(
+                                        widget::getAlpha,
+                                        widget::setAlpha,
+                                        1.0f,
+                                        10,
+                                        Easing.CUBIC_OUT)
+                        )
+                );
+            }
+
+            ScreenHelper.getTaskManager(this).addFrameTask(
+                    new WaitTask(10)
+                            .then(res -> new AfterAllTask(moveSections))
+                            .withTag("main_enter")
             );
-        }
+            ScreenHelper.getTaskManager(this).addFrameTask(
+                    new WaitTask(20)
+                            .then(res -> new InstantRunTask(() -> canClickSectionButtons = true))
+            );
+        }, state -> {
+            this.canClickSectionButtons = false;
+            ScreenHelper.getTaskManager(this).interruptFrameTask("main_enter");
 
-        ScreenHelper.getTaskManager(this).addFrameTask(
-                new WaitTask(10)
-                        .then(res -> new AfterAllTask(moveSections))
-        );
+            List<AbstractTask> alphaSections = new ArrayList<>();
+            for(BasicWidget widget : sectionButtons) {
+                alphaSections.add(new TweenTask(
+                        widget::getAlpha,
+                        widget::setAlpha,
+                        0.0f,
+                        10,
+                        Easing.CUBIC_OUT)
+                        .then(() -> new InstantRunTask(() -> {
+                            widget.setY(widget.getY() + 20);
+                            widget.visible = false;
+                        })));
+            }
+            ScreenHelper.getTaskManager(this).addFrameTask(new AfterAllTask(alphaSections));
+        });
+
+
+        List<ScreenState> allStates = new ArrayList<>(sectionStates.values());
+        allStates.add(mainState);
+        stateMachine = new ScreenStateMachine(allStates);
+        stateMachine.init(mainState);
     }
 
 
@@ -186,9 +263,22 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+
+    }
+
+    @Override
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         guiGraphics.blit(TEXTURE, leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
 
+        for (int i = 0; i < menu.slots.size(); i++) {
+            if(!menu.getSlot(i).isActive()) continue;
+            boolean isInvSlot = menu.getSlot(i) instanceof CyberwareMenu.InventorySlot;
+            boolean slotEmpty = !menu.getSlot(i).hasItem();
+            int u = slotEmpty && !isInvSlot ? 23 : 0;
+            int v = isInvSlot ? 19 : 0;
+            guiGraphics.blit(SLOT_TEXTURE, leftPos + menu.getSlot(i).x - 5, topPos + menu.getSlot(i).y - 1, u, v, 22, 18, 64, 64);
+        }
     }
 
     private void scissor(GuiGraphics guiGraphics) {
@@ -196,7 +286,7 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
     }
 
     //make sure to add the task thats returned by this function too!!!
-    private AbstractTask moveWidget(AbstractWidget widget, int newX, int newY, long startTime, int duration, Easing easing) {
+    private AbstractTask moveWidget(AbstractWidget widget, int newX, int newY, int duration, Easing easing) {
         AbstractTask moveX = new TweenTask(() -> (float) widget.getX(), (x) -> widget.setX((int) (float) x), newX, duration, easing);
         AbstractTask moveY = new TweenTask(() -> (float) widget.getY(), (y) -> widget.setY((int) (float) y), newY, duration, easing);
         return new AfterAllTask(List.of(moveX, moveY));

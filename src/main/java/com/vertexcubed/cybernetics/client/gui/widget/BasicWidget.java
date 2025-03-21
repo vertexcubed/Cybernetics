@@ -89,6 +89,11 @@ public class BasicWidget extends CybAbstractWidget {
         return this;
     }
 
+    public BasicWidget active(boolean a) {
+        this.active = a;
+        return this;
+    }
+
     public float getAlpha() {
         return alpha;
     }

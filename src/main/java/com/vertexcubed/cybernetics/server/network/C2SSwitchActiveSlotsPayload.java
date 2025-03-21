@@ -1,22 +1,14 @@
 package com.vertexcubed.cybernetics.server.network;
 
-import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.common.menu.CyberwareMenu;
-import com.vertexcubed.cybernetics.common.registry.CybAttachments;
 import com.vertexcubed.cybernetics.common.registry.CybDPRegistries;
-import com.vertexcubed.cybernetics.common.storage.CyberwareInventory;
 import com.vertexcubed.cybernetics.common.storage.CyberwareSectionType;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.core.Holder;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.SimpleMenuProvider;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
@@ -79,12 +71,10 @@ public class C2SSwitchActiveSlotsPayload implements CustomPacketPayload {
 
     public static void handle(final C2SSwitchActiveSlotsPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
-            Cybernetics.LOGGER.debug("Received switch slot paylod");
             ServerPlayer player = (ServerPlayer) context.player();
             CyberwareSectionType type = payload.getType();
             if(player.containerMenu instanceof CyberwareMenu menu) {
-                Cybernetics.LOGGER.debug("Switching slots...");
-                menu.switchActiveSlots(type);
+                menu.switchCyberwareSlots(type);
             }
         }).exceptionally(e -> {
             context.disconnect(Component.literal("Failed to handle payload " + TYPE.id() + ": " + e.getMessage()));

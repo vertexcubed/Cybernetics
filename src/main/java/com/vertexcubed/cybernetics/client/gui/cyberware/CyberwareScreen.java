@@ -13,15 +13,16 @@ import com.vertexcubed.cybernetics.common.menu.CyberwareMenu;
 import com.vertexcubed.cybernetics.common.storage.CyberwareSection;
 import com.vertexcubed.cybernetics.common.storage.CyberwareSectionType;
 import com.vertexcubed.cybernetics.server.network.C2SSwitchActiveSlotsPayload;
+import com.vertexcubed.cybernetics.server.network.C2SSwitchInventoryPagePayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import team.lodestar.lodestone.systems.easing.Easing;
 
@@ -113,11 +114,11 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         int slotX = 36, slotY = 20;
         int rows = 4;
         for(int i = 0; i < menu.getCyberware().getLongestSectionSize(); i++) {
-            slotMasks.add(addRenderableWidget(maskWidget(slotX, slotY, rows, i)));
+            slotMasks.add((maskWidget(slotX, slotY, rows, i)));
         }
         slotY = 84;
         for(int i = 0; i < 12; i++) {
-            slotMasks.add(addRenderableWidget(maskWidget(slotX, slotY, rows, i)));
+            slotMasks.add((maskWidget(slotX, slotY, rows, i)));
         }
 
 
@@ -153,6 +154,9 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
                     BasicWidget mask = slotMasks.get(i);
                     maskFadeOut.add(new WaitTask(i)
                             .then(() -> new TweenTask(false, mask::getAlpha, mask::setAlpha, 0.0f, 10, Easing.CUBIC_OUT))
+                            .then(() -> new InstantRunTask(() -> {
+                                mask.visible = false;
+                            }))
                     );
                 }
 
@@ -163,17 +167,20 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
                                 mask.visible = true;
                                 mask.setAlpha(1.0f);
                             });
-                            Cybernetics.LOGGER.debug("Switching slots on client...");
-                            menu.switchActiveSlots(section.getType());
+                            menu.switchCyberwareSlots(section.getType());
                             PacketDistributor.sendToServer(new C2SSwitchActiveSlotsPayload(section.getType()));
+                            menu.switchInventoryPage(0);
+                            PacketDistributor.sendToServer(new C2SSwitchInventoryPagePayload(0));
                         }))
                         .then(() -> new AfterAllTask(maskFadeOut))
+                        .withTag("section_enter")
                 );
 
 
 
 
             }, state -> {
+                ScreenHelper.getTaskManager(this).interruptFrameTask("section_enter");
                 int duration = 15;
                 ScreenHelper.getTaskManager(this).addFrameTask(
                         new TweenTask(() -> entityRotation, (f) -> entityRotation = f, 0, duration, Easing.CUBIC_IN_OUT)
@@ -189,15 +196,18 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
                 );
                 List<AbstractTask> maskFadeIn = new ArrayList<>();
                 slotMasks.forEach(mask -> {
-                    maskFadeIn.add(new TweenTask(mask::getAlpha, mask::setAlpha, 1.0f, 5));
+                    maskFadeIn.add(new InstantRunTask(() -> mask.visible = true)
+                            .then(() -> new TweenTask(mask::getAlpha, mask::setAlpha, 1.0f, 5))
+                            .then(() -> new InstantRunTask(() -> mask.visible = false))
+                    );
                 });
+
                 ScreenHelper.getTaskManager(this).addFrameTask(new AfterAllTask(maskFadeIn)
                         .then(() -> new InstantRunTask(() -> {
-                            slotMasks.forEach(mask -> {
-                                mask.visible = false;
-                            });
-                            menu.switchActiveSlots(null);
+                            menu.switchCyberwareSlots(null);
                             PacketDistributor.sendToServer(new C2SSwitchActiveSlotsPayload((CyberwareSectionType) null));
+                            menu.switchInventoryPage(-1);
+                            PacketDistributor.sendToServer(new C2SSwitchInventoryPagePayload(-1));
                         }))
 
                 );
@@ -298,14 +308,13 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
     private BasicWidget maskWidget(int slotX, int slotY, int rows, int i) {
         return BasicWidget.create(this, leftPos + slotX + ((i % rows) * 25) - 4, topPos + slotY + ((i / rows) * 21), 22, 18,
                 (context, guiGraphics, mouseX, mouseY, partialTick) -> {
-                    RenderSystem.enableBlend();
                     guiGraphics.blit(CyberwareScreen.TEXTURE, context.getX(), context.getY(), context.getZOffset(), 27, 9, context.getWidth(), context.getHeight(), 226, 154);
-                    RenderSystem.disableBlend();
                 })
                 .alpha(0.0f)
                 .playSoundOnClick(false)
                 .visible(false)
-                .zOffset(300);
+                .zOffset(350)
+                .active(false);
     }
 
 
@@ -319,7 +328,16 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
+        //Need to render separately, because for some reason I can't make them render over items otherwise.
+        slotMasks.forEach(mask -> {
+            mask.render(guiGraphics, mouseX, mouseY, partialTick);
+        });
+
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
+
     }
+
+
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {

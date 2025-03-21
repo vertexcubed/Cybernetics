@@ -1,24 +1,19 @@
 package com.vertexcubed.cybernetics.common.menu;
 
 import com.vertexcubed.cybernetics.Cybernetics;
-import com.vertexcubed.cybernetics.common.registry.CybAttachments;
 import com.vertexcubed.cybernetics.common.registry.CybMenus;
 import com.vertexcubed.cybernetics.common.storage.CyberwareInventory;
 import com.vertexcubed.cybernetics.common.storage.CyberwareSectionType;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +28,8 @@ public class CyberwareMenu extends AbstractContainerMenu {
     protected final List<ItemStack> itemsToAdd = new ArrayList<>();
     protected final List<ItemStack> itemsToRemove = new ArrayList<>();
 
+    private int currentInventoryPage;
+
 
     private final int inventorySlotId;
     public CyberwareMenu(int containerId, Inventory inventory, CyberwareInventory cyberwareInventory) {
@@ -43,6 +40,8 @@ public class CyberwareMenu extends AbstractContainerMenu {
             //TODO: only cyberware can be inserted.
             this.inventoryClone.insertItem(counter++, inventory.getItem(i).copy(), false);
         }
+
+        currentInventoryPage = -1;
 
         // ===================
         // Cyberware Inventory
@@ -73,8 +72,12 @@ public class CyberwareMenu extends AbstractContainerMenu {
         //=======================
         inventorySlotId = slots.size();
         int invX = 36, invY = 84;
+
+        // # of pages total
         for(int j = 0; j < 3; j++) {
+            // each slot
             for(int i = 0; i < 12; i++) {
+//                addSlot(new InventorySlot(this.inventoryClone, i, invX + ((i % rows) * 25) + 1, invY + ((i / rows) * 21) + 1, 0));
                 addSlot(new InventorySlot(this.inventoryClone, i + (j*12), invX + ((i % rows) * 25) + 1, invY + ((i / rows) * 21) + 1, j));
             }
         }
@@ -84,8 +87,24 @@ public class CyberwareMenu extends AbstractContainerMenu {
         //===========
     }
 
+    public void switchInventoryPage(int page) {
+//        if(!canEdit) return;
+        this.currentInventoryPage = page;
+        int j = 0;
+        for(int i = inventorySlotId; i < slots.size(); i++) {
+            InventorySlot slot = (InventorySlot) getSlot(i);
+            if(slot.getPage() == page) {
+                j++;
+                slot.turnOn();
+            }
+            else {
+                slot.turnOff();
+            }
+        }
+        Cybernetics.LOGGER.debug("# of slots turned on: " + j);
+    }
 
-    public void switchActiveSlots(CyberwareSectionType type) {
+    public void switchCyberwareSlots(CyberwareSectionType type) {
         for(int i = 0; i < cyberwareInventoryClone.getSlots(); i++) {
             if (type != null && cyberwareInventoryClone.getSectionFromSlot(i).getType().equals(type)) {
                 ((CyberwareSlot) getSlot(i)).turnOn();
@@ -94,6 +113,11 @@ public class CyberwareMenu extends AbstractContainerMenu {
             }
 
         }
+    }
+
+    @Override
+    public void clicked(int slotId, int button, ClickType clickType, Player player) {
+        super.clicked(slotId, button, clickType, player);
     }
 
     public CyberwareInventory getCyberware() {
@@ -109,6 +133,9 @@ public class CyberwareMenu extends AbstractContainerMenu {
     public boolean stillValid(Player player) {
         return true;
     }
+
+
+
 
     public static class InventorySlot extends ToggleableSlot {
 

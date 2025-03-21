@@ -68,6 +68,16 @@ public class CyberwareInventory extends CombinedInvWrapperModifiable implements 
         return ((CyberwareSection) getHandlerFromIndex(index));
     }
 
+    public int getLongestSectionSize() {
+        int output = 0;
+        for (IItemHandlerModifiable itemHandler : itemHandlers) {
+            if (output < itemHandler.getSlots()) {
+                output = itemHandler.getSlots();
+            }
+        }
+        return output;
+    }
+
 
 
 //  Bless Neoforge handling syncing for me.

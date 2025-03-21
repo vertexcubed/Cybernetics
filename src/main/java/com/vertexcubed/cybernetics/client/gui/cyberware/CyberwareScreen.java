@@ -1,5 +1,6 @@
 package com.vertexcubed.cybernetics.client.gui.cyberware;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenState;
@@ -10,14 +11,18 @@ import com.vertexcubed.cybernetics.client.util.FakeLocalPlayer;
 import com.vertexcubed.cybernetics.client.util.RenderHelper;
 import com.vertexcubed.cybernetics.common.menu.CyberwareMenu;
 import com.vertexcubed.cybernetics.common.storage.CyberwareSection;
+import com.vertexcubed.cybernetics.common.storage.CyberwareSectionType;
+import com.vertexcubed.cybernetics.server.network.C2SSwitchActiveSlotsPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.neoforged.neoforge.network.PacketDistributor;
 import team.lodestar.lodestone.systems.easing.Easing;
 
 import java.util.ArrayList;
@@ -37,6 +42,7 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
     private BasicWidget backButton;
     private BasicWidget entityWidget;
     private final List<BasicWidget> sectionButtons = new ArrayList<>();
+    private final List<BasicWidget> slotMasks = new ArrayList<>();
     private float entityRotation;
     private float entityScale;
     private boolean canClickSectionButtons = false;
@@ -99,6 +105,24 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
 
         ScreenHelper.getTaskManager(this).addFrameTask(moveWidget(entityWidget, leftPos + 91, topPos + 16, 20, Easing.QUARTIC_OUT));
 
+        //===========
+        // Slot Masks
+        //===========
+
+        slotMasks.clear();
+        int slotX = 36, slotY = 20;
+        int rows = 4;
+        for(int i = 0; i < menu.getCyberware().getLongestSectionSize(); i++) {
+            slotMasks.add(addRenderableWidget(maskWidget(slotX, slotY, rows, i)));
+        }
+        slotY = 84;
+        for(int i = 0; i < 12; i++) {
+            slotMasks.add(addRenderableWidget(maskWidget(slotX, slotY, rows, i)));
+        }
+
+
+
+
         // ===============
         // Section Buttons
         // ===============
@@ -124,6 +148,28 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
                 ScreenHelper.getTaskManager(this).addTickTask(
                         new WaitTask(20).then(() -> new InstantRunTask(() -> canClickBackButton = true))
                 );
+                List<AbstractTask> maskFadeOut = new ArrayList<>();
+                for(int i = 0; i < slotMasks.size(); i++) {
+                    BasicWidget mask = slotMasks.get(i);
+                    maskFadeOut.add(new WaitTask(i)
+                            .then(() -> new TweenTask(false, mask::getAlpha, mask::setAlpha, 0.0f, 10, Easing.CUBIC_OUT))
+                    );
+                }
+
+
+                ScreenHelper.getTaskManager(this).addFrameTask(new WaitTask(15)
+                        .then(() -> new InstantRunTask(() -> {
+                            slotMasks.forEach(mask -> {
+                                mask.visible = true;
+                                mask.setAlpha(1.0f);
+                            });
+                            Cybernetics.LOGGER.debug("Switching slots on client...");
+                            menu.switchActiveSlots(section.getType());
+                            PacketDistributor.sendToServer(new C2SSwitchActiveSlotsPayload(section.getType()));
+                        }))
+                        .then(() -> new AfterAllTask(maskFadeOut))
+                );
+
 
 
 
@@ -140,6 +186,20 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
                 ScreenHelper.getTaskManager(this).addFrameTask(
                         moveWidget(entityWidget, leftPos + 91, topPos + 16, duration, Easing.CUBIC_IN_OUT)
                                 .withTag("section_exit")
+                );
+                List<AbstractTask> maskFadeIn = new ArrayList<>();
+                slotMasks.forEach(mask -> {
+                    maskFadeIn.add(new TweenTask(mask::getAlpha, mask::setAlpha, 1.0f, 5));
+                });
+                ScreenHelper.getTaskManager(this).addFrameTask(new AfterAllTask(maskFadeIn)
+                        .then(() -> new InstantRunTask(() -> {
+                            slotMasks.forEach(mask -> {
+                                mask.visible = false;
+                            });
+                            menu.switchActiveSlots(null);
+                            PacketDistributor.sendToServer(new C2SSwitchActiveSlotsPayload((CyberwareSectionType) null));
+                        }))
+
                 );
 
             }));
@@ -235,19 +295,18 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         stateMachine.init(mainState);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    private BasicWidget maskWidget(int slotX, int slotY, int rows, int i) {
+        return BasicWidget.create(this, leftPos + slotX + ((i % rows) * 25) - 4, topPos + slotY + ((i / rows) * 21), 22, 18,
+                (context, guiGraphics, mouseX, mouseY, partialTick) -> {
+                    RenderSystem.enableBlend();
+                    guiGraphics.blit(CyberwareScreen.TEXTURE, context.getX(), context.getY(), context.getZOffset(), 27, 9, context.getWidth(), context.getHeight(), 226, 154);
+                    RenderSystem.disableBlend();
+                })
+                .alpha(0.0f)
+                .playSoundOnClick(false)
+                .visible(false)
+                .zOffset(300);
+    }
 
 
     @Override

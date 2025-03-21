@@ -10,5 +10,6 @@ public class CybPayloads {
         final PayloadRegistrar main = event.registrar("1");
         C2SOpenCyberwarePayload.register(main);
         S2CSyncCyberwarePayload.register(main);
+        C2SSwitchActiveSlotsPayload.register(main);
     }
 }

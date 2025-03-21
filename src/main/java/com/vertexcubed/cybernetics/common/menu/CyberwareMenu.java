@@ -84,6 +84,18 @@ public class CyberwareMenu extends AbstractContainerMenu {
         //===========
     }
 
+
+    public void switchActiveSlots(CyberwareSectionType type) {
+        for(int i = 0; i < cyberwareInventoryClone.getSlots(); i++) {
+            if (type != null && cyberwareInventoryClone.getSectionFromSlot(i).getType().equals(type)) {
+                ((CyberwareSlot) getSlot(i)).turnOn();
+            } else {
+                ((CyberwareSlot) getSlot(i)).turnOff();
+            }
+
+        }
+    }
+
     public CyberwareInventory getCyberware() {
         return cyberwareInventoryClone;
     }

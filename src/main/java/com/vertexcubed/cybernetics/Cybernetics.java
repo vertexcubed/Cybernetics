@@ -63,6 +63,8 @@ public class Cybernetics
 
         CybAttachments.register(modEventBus);
         CybMenus.register(modEventBus);
+        CybDataComponents.register(modEventBus);
+        CybItems.register(modEventBus);
     }
 
     @SubscribeEvent

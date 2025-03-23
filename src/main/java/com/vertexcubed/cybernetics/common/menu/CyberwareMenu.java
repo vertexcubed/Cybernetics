@@ -2,8 +2,10 @@ package com.vertexcubed.cybernetics.common.menu;
 
 import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.common.registry.CybMenus;
+import com.vertexcubed.cybernetics.common.registry.CybTags;
 import com.vertexcubed.cybernetics.common.storage.CyberwareInventory;
 import com.vertexcubed.cybernetics.common.storage.CyberwareSectionType;
+import com.vertexcubed.cybernetics.common.util.CyberwareHelper;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -37,8 +39,11 @@ public class CyberwareMenu extends AbstractContainerMenu {
         this.inventoryClone = new ItemStackHandler(Inventory.INVENTORY_SIZE);
         int counter = 0;
         for(int i = 0 ; i < Inventory.INVENTORY_SIZE ; i++) {
-            //TODO: only cyberware can be inserted.
-            this.inventoryClone.insertItem(counter++, inventory.getItem(i).copy(), false);
+            ItemStack stack = inventory.getItem(i).copy();
+            if(!CyberwareHelper.getValidSections(stack, inventory.player.registryAccess()).isEmpty() || stack.is(CybTags.ANY_SECTION)) {
+                this.inventoryClone.insertItem(counter++, inventory.getItem(i).copy(), false);
+            }
+
         }
 
         currentInventoryPage = -1;

@@ -1,5 +1,147 @@
 {
-  "itemGroup.cybernetics": "Example Mod Tab",
-  "block.cybernetics.example_block": "Example Block",
-  "item.cybernetics.example_item": "Example Item"
+  "itemGroup.cybernetics": "Cybernetics",
+  "container.cybernetics.freezer": "Freezer",
+  "container.cybernetics.cyberware_station": "Cyberware Station",
+
+  "block.cybernetics.freezer": "Freezer",
+  "block.cybernetics.cyberware_station": "Cyberware Station",
+  "block.cybernetics.surgical_chamber": "Surgical Chamber",
+
+  "item.cybernetics.motor": "Motor",
+  "item.cybernetics.neural_interface": "Neural Interface",
+  "item.cybernetics.printed_circuit_board": "Printed Circuit Board",
+  "item.cybernetics.lens": "Glass Lens",
+  "item.cybernetics.flux_core": "Flux Core",
+  "item.cybernetics.stimulant_injector": "Stimulant Injector",
+  "item.cybernetics.surgical_steel_ingot": "Surgical Steel Ingot",
+  "item.cybernetics.surgical_steel_nugget": "Surgical Steel Nugget",
+  "item.cybernetics.surgical_steel_plate": "Surgical Steel Plate",
+
+  "item.cybernetics.mk1_berserk": "Mk1 Berserk",
+  "item.cybernetics.mk2_berserk": "Mk2 Berserk",
+  "item.cybernetics.mk3_berserk": "Mk3 Berserk",
+  "item.cybernetics.carbon_fiber_skull": "Carbon Fiber Skull Reinforcement",
+  "item.cybernetics.mk1_dash": "Mk1 Adrenaline Injector",
+  "item.cybernetics.mk2_dash": "Mk2 Adrenaline Injector",
+
+  "item.cybernetics.mk1_optics": "Mk1 Optics",
+  "item.cybernetics.mk2_optics": "Mk2 Optics",
+  "item.cybernetics.mk3_optics": "Mk3 Optics",
+  "item.cybernetics.night_vision_eyes": "Enhanced Light Receptors",
+
+  "item.cybernetics.emergency_defibrillator": "Emergency Defibrillator",
+  "item.cybernetics.oxygen_recycler": "Oxygen Recycler",
+  "item.cybernetics.health_boost_organs": "Artificial Blood Supply",
+
+  "item.cybernetics.stomach_filter": "Nutrient Filtration System",
+  "item.cybernetics.synaptic_disabler": "Ranged Synapse Scrambler",
+  "item.cybernetics.mk1_double_jump_adder": "Mk1 Tendon Boost",
+  "item.cybernetics.mk2_double_jump_adder": "Mk2 Tendon Boost",
+
+  "item.cybernetics.reinforced_skeleton": "Reinforced Carbon Fiber Skeleton",
+  "item.cybernetics.titanium_skeleton": "Titanium Skeleton",
+  "item.cybernetics.health_boost_skeleton": "Stem Cell Booster Frame",
+  "item.cybernetics.kinetic_discharger": "Kinetic Discharger",
+
+  "item.cybernetics.fire_resistance_skin": "Thermal-Proof Plating",
+  "item.cybernetics.projectile_deflector": "Projectile Deflection System",
+
+  "item.cybernetics.range_extender": "Range Extender",
+
+  "item.cybernetics.strength_hands": "Fortified Knuckles",
+  "item.cybernetics.stone_mining_fists": "Iron Fists",
+
+  "item.cybernetics.speed_legs": "Ligament Support System",
+  "item.cybernetics.reinforced_tendons": "Reinforced Tendons",
+
+  "item.cybernetics.bionic_feet": "Bionic Feet Replacement",
+  "item.cybernetics.sound_absorbent_feet": "S.N.E.A.K.ers",
+  "item.cybernetics.jump_boost_feet": "Spring-Laced Soles",
+  "item.cybernetics.full_speed_feet": "Lynx Paws",
+
+
+
+
+
+  "jei.cybernetics.cyberware_crafting": "Cyberware Crafting",
+
+
+  "tooltip.cybernetics.confirm": "Apply Changes?",
+  "tooltip.cybernetics.section": "Cyberware",
+  "tooltip.cybernetics.capacity": "Capacity",
+  "tooltip.cybernetics.requirements": "Requires",
+  "tooltip.cybernetics.incompatibilities": "Incompatible with",
+  "tooltip.cybernetics.section.any": "Any Section",
+  "tooltip.cybernetics.section.head": "Head",
+  "tooltip.cybernetics.section.eyes": "Eyes",
+  "tooltip.cybernetics.section.upper_organs": "Upper Organs",
+  "tooltip.cybernetics.section.lower_organs": "Lower Organs",
+  "tooltip.cybernetics.section.skeleton": "Skeleton",
+  "tooltip.cybernetics.section.skin": "Skin",
+  "tooltip.cybernetics.section.hands": "Hands",
+  "tooltip.cybernetics.section.arms": "Arms",
+  "tooltip.cybernetics.section.legs": "Legs",
+  "tooltip.cybernetics.section.feet": "Feet",
+
+  "tooltip.cybernetics.ability.night_vision": "Toggle Night Vision",
+  "tooltip.cybernetics.ability.synaptic_disabler": "Synaptic Disabler",
+  "tooltip.cybernetics.ability.scan": "Scan Nearby Mobs",
+  "tooltip.cybernetics.ability.mk1_berserk": "Activate Berserk",
+  "tooltip.cybernetics.ability.mk2_berserk": "Activate Berserk",
+  "tooltip.cybernetics.ability.mk3_berserk": "Activate Berserk",
+
+  "tooltip.cybernetics.description.shift": "Hold _[Shift]_ for description",
+  "tooltip.cybernetics.description.alt": "Hold _[Alt]_ for requirements",
+
+
+  "tooltip.cybernetics.mk1_berserk.description": "A chip implanted into the user's brain, heightening their senses temporarily. When activated, the user enters a state of _rage_, giving the following effects: \n- _Resistance 4_\n- _Regeneration_\n- _+30% speed_\n- _+70% attack speed_\nDuration: _10 seconds_.\nCooldown: _1 minute._",
+  "tooltip.cybernetics.mk2_berserk.description": "A chip implanted into the user's brain, moderately heightening their senses temporarily. When activated, the user enters a state of _rage_, giving the following effects: \n- _Resistance 4_\n- _Regeneration_\n- _+30% speed_\n- _+70% attack speed_\n- _+3 damage_ with fists.\nDuration: _12 seconds_.\nCooldown: _50 seconds._",
+  "tooltip.cybernetics.mk3_berserk.description": "A chip implanted into the user's brain, significantly heightening their senses temporarily. When activated, the user enters a state of _rage_, giving the following effects: \n- _Resistance 4_\n- _Regeneration 2_\n- _+50% speed_\n- _+70% attack speed_\n- _+5.5 damage_ with fists.\nDuration: _15 seconds_.\nCooldown: _45 seconds._",
+  "tooltip.cybernetics.carbon_fiber_skull.description": "Woven plating made with high strength carbon fiber, giving the user permanent _+3 armor_.",
+  "tooltip.cybernetics.mk1_dash.description": "A basic automatic injection system giving the user a boost in adrenaline, allowing them to _dash forward_ when pressing the _dash key_.\nCooldown: _5 seconds_.",
+  "tooltip.cybernetics.mk2_dash.description": "An upgraded injection system over the Mk 1, allowing the user to additionally _dash in midair_.\nCooldown: _5 seconds_.",
+
+  "tooltip.cybernetics.mk1_optics.description": "A basic cybernetic eye system. Displays information about the user's _stored energy_ and _rejection_, as well as _nearby mob health_.",
+  "tooltip.cybernetics.mk2_optics.description": "An upgraded cybernetic eye system. Along with the effects of the Mk1, it allows the user to _scan nearby mobs_, highlighting them.",
+  "tooltip.cybernetics.mk3_optics.description": "A advanced cybernetic eye system.  Along with the effects of the Mk2, it allows the user to ",
+  "tooltip.cybernetics.night_vision_eyes.description": "An augment to any optics, allowing for _perfect vision_ even in _total darkness_.",
+
+  "tooltip.cybernetics.emergency_defibrillator.description": "An emergency AED unit that will restart the heart in cases of sudden trauma. _Revives_ the user _once_ when they die, giving them temporary _regeneration_ and some health back.\nCooldown: _2 minutes_",
+  "tooltip.cybernetics.oxygen_recycler.description": "A mechanical pump connected directly to the lungs, allowing the body to save oxygen produced elsewhere to maintain the user's breath. Gives a _75%_ chance to _not consume air bubbles_. Stacks with Respiration.",
+  "tooltip.cybernetics.health_boost_organs.description": "An aritifical sac that improves blood flow through the body, giving the user permanent _+5 maximum health_.",
+
+  "tooltip.cybernetics.stomach_filter.description": "This item is yet to be implemented, and currently unobtainable. Sorry!",
+  "tooltip.cybernetics.synaptic_disabler.description": "This item is yet to be implemented, and currently unobtainable. Sorry!",
+  "tooltip.cybernetics.mk1_double_jump_adder.description": "An internal booster that sits next to the stomach, providing more energy to the user's _Reinforced Tendons_. Gives _+1 extra midair jump_.",
+  "tooltip.cybernetics.mk2_double_jump_adder.description": "An advanced booster that spreads across the user's pelvis, providing even more of a boost to the user's _Reinforced Tendons_. Gives _+2 extra midair jumps_.",
+
+  "tooltip.cybernetics.reinforced_skeleton.description": "A replacement for much of the user's skeleton, significantly increasing its _durability_ and _sturdiness_. Gives the user permanent _+2 armor_.",
+  "tooltip.cybernetics.titanium_skeleton.description": "A significantly stronger replacement for the user's skeleton, made of pure _titanium_. Gives the user permanent _+5 armor_ and _+2 armor toughness_.",
+  "tooltip.cybernetics.health_boost_skeleton.description": "A specialized skeleton replacement that allows the body to produce stem cells more rapidly, giving the user permanent _+5 max health_.",
+  "tooltip.cybernetics.kinetic_discharger.description": "A web of thin titanium sheets that absorb kinetic energy and allow the user to release it at once. When falling, the user can _sneak_ to release it, _spiking down_ towards the ground. The produced shockwave _damages nearby enemies._\nCooldown: _5 seconds_.",
+
+  "tooltip.cybernetics.fire_resistance_skin.description": "A thin layer of heat-proof plating embedded into the skin. Renders the user _immune to fire_ and other _extreme heat_.",
+  "tooltip.cybernetics.projectile_deflector.description": "Projectile Deflection System",
+
+  "tooltip.cybernetics.range_extender.description": "A set of specialized pistons allowing the user to extend their arms further than before, providing them permanent _+1 block reach_.",
+
+  "tooltip.cybernetics.strength_hands.description": "Steel knuckles embedded within the user's hands that enhance their attacks. Gives permanent _+5 damage_ when _unarmed_ or using _fist type weapons_, and _+3 damage_ othewise.",
+  "tooltip.cybernetics.stone_mining_fists.description": "A total hand replacement, fortifying every part of the user's fists. Allows the user to _mine stone_ and other blocks with their _bare hands_ incredibly quickly.",
+
+  "tooltip.cybernetics.speed_legs.description": "A set of artificial muscle fibers that wrap around the user's ligaments, giving a permanent _swiftness_ effect.",
+  "tooltip.cybernetics.reinforced_tendons.description": "A metal support structure that fortifies and greatly enhances the user's tendons. Allows the user to _double jump_.",
+
+  "tooltip.cybernetics.bionic_feet.description": "A simple foot replacement that doesn't do much on its own, but is required for many other augments. In addition, it gives permanent _+2 armor_.",
+  "tooltip.cybernetics.sound_absorbent_feet.description": "A set of rubber-padded soles that are embedded under the user's skin, making the user's _footsteps silent_. The acronym doesn't stand for anything.",
+  "tooltip.cybernetics.jump_boost_feet.description": "A full sole replacement, with specialized springs allowing for higher jumps. Gives the user permanent _Jump Boost._",
+  "tooltip.cybernetics.full_speed_feet.description": "A specialized embedded system modeled after the paws of felines, enhancing the user's ability to traverse difficult terrain. Prevents _slowdown_ from _blocks_ the user is walking on, such as Soul Sand or Honey.",
+
+
+
+
+  "key.cybernetics.category": "Cybernetics",
+  "key.cybernetics.player_cyberware_menu": "View Cyberware",
+  "key.cybernetics.player_abilities_menu": "Abilities",
+  "key.cybernetics.key.cybernetics.dash": "Dash",
+  "effect.cybernetics.paralyzed": "Paralyzed"
 }

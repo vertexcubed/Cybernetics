@@ -39,7 +39,8 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
     public static final ResourceLocation SLOT_TEXTURE = modLoc("textures/gui/cyberware/slots.png");
 
 
-
+    private BasicWidget pageLeft;
+    private BasicWidget pageRight;
     private BasicWidget backButton;
     private BasicWidget entityWidget;
     private final List<BasicWidget> sectionButtons = new ArrayList<>();
@@ -64,6 +65,9 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
     @Override
     protected void init() {
         super.init();
+
+        //When screens are resized, init() is called again but not the constructor. Well I think at least
+        ScreenHelper.getTaskManager(this).clear();
 
         //============
         // Back Button
@@ -121,12 +125,18 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
             slotMasks.add((maskWidget(slotX, slotY, rows, i)));
         }
 
+        //=============
+        // Page Buttons
+        //=============
+
+        this.pageLeft = addRenderableWidget(pageButton(leftPos + 37, topPos + 67, true));
+        this.pageRight = addRenderableWidget(pageButton(leftPos + 112, topPos + 67, false));
 
 
 
-        // ===============
+        //================
         // Section Buttons
-        // ===============
+        //================
 
         List<CyberwareSection> sections = menu.getCyberware().getSections();
         Map<CyberwareSection, ScreenState> sectionStates = new HashMap<>();
@@ -159,6 +169,20 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
                             }))
                     );
                 }
+                maskFadeOut.add(new WaitTask(menu.getCyberware().getLongestSectionSize())
+                        .then(() -> new InstantRunTask(() -> {
+                            pageLeft.visible = true;
+                            pageLeft.active = true;
+                        }))
+                        .then(() -> new TweenTask(pageLeft::getAlpha, pageLeft::setAlpha, 1.0f, 15))
+                );
+                maskFadeOut.add(new WaitTask(menu.getCyberware().getLongestSectionSize() + 2)
+                        .then(() -> new InstantRunTask(() -> {
+                            pageRight.visible = true;
+                            pageRight.active = true;
+                        }))
+                        .then(() -> new TweenTask(pageRight::getAlpha, pageRight::setAlpha, 1.0f, 15))
+                );
 
 
                 ScreenHelper.getTaskManager(this).addFrameTask(new WaitTask(15)
@@ -202,6 +226,21 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
                     );
                 });
 
+                maskFadeIn.add(new TweenTask(pageLeft::getAlpha, pageLeft::setAlpha, 0.0f, 5)
+                        .then(() -> new InstantRunTask(() -> {
+                            pageLeft.visible = false;
+                            pageLeft.active = false;
+                        }))
+                );
+
+                maskFadeIn.add(new TweenTask(pageRight::getAlpha, pageRight::setAlpha, 0.0f, 5)
+                        .then(() -> new InstantRunTask(() -> {
+                            pageRight.visible = false;
+                            pageRight.active = false;
+                        }))
+                );
+
+
                 ScreenHelper.getTaskManager(this).addFrameTask(new AfterAllTask(maskFadeIn)
                         .then(() -> new InstantRunTask(() -> {
                             menu.switchCyberwareSlots(null);
@@ -211,6 +250,8 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
                         }))
 
                 );
+
+                canClickBackButton = false;
 
             }));
             int pos = topPos + section.getType().y();
@@ -242,7 +283,6 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         //===========
 
         mainState = ScreenState.create(this, state -> {
-            Cybernetics.LOGGER.debug("Entering main state");
             List<AbstractTask> moveSections = new ArrayList<>();
 
             for (int i = 0; i < sectionButtons.size(); i++) {
@@ -368,6 +408,33 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         AbstractTask moveY = new TweenTask(() -> (float) widget.getY(), (y) -> widget.setY((int) (float) y), newY, duration, easing);
         return new AfterAllTask(List.of(moveX, moveY));
     }
+
+    private BasicWidget pageButton(int x, int y, boolean left) {
+        return BasicWidget.create(this, x, y, 12, 9, ((context, guiGraphics, mouseX, mouseY, partialTick) -> {
+            int page = menu.getInventoryPage();
+            boolean canPress = left ? page > 0 : page < 2;
+
+            int v = left ? 0 : 10;
+            int u = canPress ? 0 : 13;
+            guiGraphics.blit(modLoc("textures/gui/cyberware/buttons.png"), context.getX(), context.getY(), context.getWidth(), context.getHeight(), u, v, context.getWidth(), context.getHeight(), 32, 32);
+        }))
+                .alpha(0.0f)
+                .visible(false)
+                .active(false)
+                .lightOnHover(true)
+                .click((context, mouseX, mouseY, button) -> {
+                    int page = menu.getInventoryPage();
+                    boolean canPress = left ? page > 0 : page < 2;
+                    if(canPress) {
+                        int newPage = left ? page - 1 : page + 1;
+                        menu.switchInventoryPage(newPage);
+                        PacketDistributor.sendToServer(new C2SSwitchInventoryPagePayload(newPage));
+                    }
+                })
+        ;
+    }
+
+
     private long gameTime() {
         return Minecraft.getInstance().level.getGameTime();
     }

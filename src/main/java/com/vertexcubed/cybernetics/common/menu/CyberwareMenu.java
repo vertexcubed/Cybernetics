@@ -90,18 +90,15 @@ public class CyberwareMenu extends AbstractContainerMenu {
     public void switchInventoryPage(int page) {
 //        if(!canEdit) return;
         this.currentInventoryPage = page;
-        int j = 0;
         for(int i = inventorySlotId; i < slots.size(); i++) {
             InventorySlot slot = (InventorySlot) getSlot(i);
             if(slot.getPage() == page) {
-                j++;
                 slot.turnOn();
             }
             else {
                 slot.turnOff();
             }
         }
-        Cybernetics.LOGGER.debug("# of slots turned on: " + j);
     }
 
     public void switchCyberwareSlots(CyberwareSectionType type) {
@@ -117,6 +114,7 @@ public class CyberwareMenu extends AbstractContainerMenu {
 
     @Override
     public void clicked(int slotId, int button, ClickType clickType, Player player) {
+        if(clickType == ClickType.THROW) return;
         super.clicked(slotId, button, clickType, player);
     }
 
@@ -134,7 +132,9 @@ public class CyberwareMenu extends AbstractContainerMenu {
         return true;
     }
 
-
+    public int getInventoryPage() {
+        return currentInventoryPage;
+    }
 
 
     public static class InventorySlot extends ToggleableSlot {

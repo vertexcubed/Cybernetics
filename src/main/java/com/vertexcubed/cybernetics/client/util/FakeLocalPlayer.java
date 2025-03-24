@@ -6,6 +6,11 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
 
+/**
+ * Simple Fake local player, for use in rendering.
+ * Don't actually tick this or do anything, it'll probably crash the game.
+ * If you want to animate the arms, increment {@link LocalPlayer#tickCount}
+ */
 public class FakeLocalPlayer extends LocalPlayer {
     private final Player parent;
     public FakeLocalPlayer(Minecraft pMinecraft, ClientLevel pClientLevel, LocalPlayer parent) {

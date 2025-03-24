@@ -3,7 +3,6 @@ package com.vertexcubed.cybernetics.common.registry;
 import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.common.menu.CyberwareMenu;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.bus.api.IEventBus;

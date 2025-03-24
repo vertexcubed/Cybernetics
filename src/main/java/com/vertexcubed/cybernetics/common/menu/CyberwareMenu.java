@@ -11,7 +11,6 @@ import com.vertexcubed.cybernetics.common.registry.CybTags;
 import com.vertexcubed.cybernetics.common.storage.CyberwareInventory;
 import com.vertexcubed.cybernetics.common.storage.CyberwareSectionType;
 import com.vertexcubed.cybernetics.common.util.CyberwareHelper;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -24,7 +23,8 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CyberwareMenu extends AbstractContainerMenu {
 

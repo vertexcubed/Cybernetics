@@ -1,10 +1,12 @@
 package com.vertexcubed.cybernetics.client.task;
 
-import com.vertexcubed.cybernetics.Cybernetics;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.UUID;
 
+/**
+ * Wraps a task into a parent and (lazily instantiated) child task. Once the parent task is
+ * finished, the child task is created and begins executing. Generally don't creating this yourself
+ * and use {@link AbstractTask#then} instead.
+ */
 public class WrappedTask extends AbstractTask {
 
     private AbstractTask child;

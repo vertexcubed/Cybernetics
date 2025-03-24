@@ -1,10 +1,8 @@
 package com.vertexcubed.cybernetics.mixin.client;
 
-import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.client.gui.util.ICybScreen;
 import com.vertexcubed.cybernetics.client.task.TaskManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;

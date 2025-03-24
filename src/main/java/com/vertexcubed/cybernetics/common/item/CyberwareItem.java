@@ -1,7 +1,6 @@
 package com.vertexcubed.cybernetics.common.item;
 
 import com.vertexcubed.cybernetics.client.util.TooltipHelper;
-import com.vertexcubed.cybernetics.common.registry.CybDPRegistries;
 import com.vertexcubed.cybernetics.common.registry.CybDataComponents;
 import com.vertexcubed.cybernetics.common.registry.CybTags;
 import com.vertexcubed.cybernetics.common.storage.CyberwareSectionType;
@@ -15,7 +14,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;

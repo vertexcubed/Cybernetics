@@ -5,6 +5,9 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
+/**
+ * Extension of AbstractWidget that lets you not play a sound when this widget is clicked.
+ */
 public abstract class CybAbstractWidget extends AbstractWidget {
 
     protected boolean playSound = false;

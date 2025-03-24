@@ -5,7 +5,6 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.wrapper.EmptyItemHandler;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class CombinedInvWrapperModifiable implements IItemHandlerModifiable {

@@ -1,12 +1,14 @@
 package com.vertexcubed.cybernetics.client.task;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 
 /**
- * Task that is instantly completed after any of its previous tasks are completed. Uncompleted tasks will not continue to process.
+ * Task that is instantly completed after any of its previous tasks are "finished".
+ * It will <b>not</b> continue executing unfinished tasks!
+ * Includes options for allowing failed/interrupted tasks to be considered finished.
+ * Fails if all tasks end without being counted as "finished".
  */
 public class AfterAnyTask extends AbstractTask {
     private final boolean allowInterrupted;

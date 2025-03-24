@@ -11,8 +11,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.Iterator;
-
 import static com.vertexcubed.cybernetics.Cybernetics.modLoc;
 
 public class CyberwareConfirmScreen extends Screen {

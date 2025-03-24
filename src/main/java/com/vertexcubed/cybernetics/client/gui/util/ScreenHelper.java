@@ -6,7 +6,9 @@ import net.minecraft.client.gui.screens.Screen;
 public class ScreenHelper {
 
     /**
-     * Returns the associated task manager for this screen. ALL screens have a task manager, so this should never be null unless I royally fucked something up.
+     * Returns the associated TaskManager for this screen.
+     * By default, all screens have a task manager associated with them.
+     * Will only return null if this is called within the screen constructor (do not do!).
      */
     public static TaskManager getTaskManager(Screen screen) {
         return ((ICybScreen) screen).cybernetics$getTaskManager();

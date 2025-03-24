@@ -5,7 +5,6 @@ import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.common.registry.CybDPRegistries;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;

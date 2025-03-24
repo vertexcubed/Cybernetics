@@ -5,7 +5,9 @@ import java.util.UUID;
 
 
 /**
- * Task that is instantly completed after all of its previous tasks are completed.
+ * Task that is instantly completed after all of its previous tasks are "finished".
+ * Includes options for allowing failed/interrupted tasks to be considered finished.
+ * Fails if all tasks end without being counted as "finished",
  */
 public class AfterAllTask extends AbstractTask {
     private final boolean allowInterrupted;

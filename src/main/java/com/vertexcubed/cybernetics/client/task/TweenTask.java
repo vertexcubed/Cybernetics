@@ -1,6 +1,5 @@
 package com.vertexcubed.cybernetics.client.task;
 
-import com.vertexcubed.cybernetics.Cybernetics;
 import net.minecraft.util.Mth;
 import team.lodestar.lodestone.systems.easing.Easing;
 
@@ -8,6 +7,10 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * A task that tweens (or lerps) an arbitrary float value by calling {@link Mth#lerp}.
+ * This is the most basic task for animation, and is very versatile.
+ */
 public class TweenTask extends AbstractTask{
 
 

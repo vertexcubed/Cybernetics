@@ -4,7 +4,6 @@ import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
 import net.minecraft.client.gui.screens.Screen;
 
 import java.util.LinkedList;
-import java.util.Optional;
 import java.util.Queue;
 import java.util.UUID;
 
@@ -51,7 +50,7 @@ public class TaskManager {
                 task.update(this, gameTime, 0);
             }
 
-            processTaskResult(gameTime, task, currentTickTasks, nextTickTasks);
+            processTaskResult(task, nextTickTasks);
         }
 
         //Swap
@@ -73,27 +72,12 @@ public class TaskManager {
                 task.update(this, gameTime, partialTick);
             }
 
-            processTaskResult(gameTime, task, currentFrameTasks, nextFrameTasks);
+            processTaskResult(task, nextFrameTasks);
         }
 
         //Swap
         currentFrameTasks = nextFrameTasks;
         nextFrameTasks = new LinkedList<>();
-    }
-
-    public Optional<Queue<AbstractTask>> findQueueWith(AbstractTask task) {
-        if(queueHas(currentFrameTasks, task)) return Optional.of(currentFrameTasks);
-        if(queueHas(nextFrameTasks, task)) return Optional.of(nextFrameTasks);
-        return Optional.empty();
-    }
-
-    private boolean queueHas(Queue<AbstractTask> queue, AbstractTask task) {
-        for(AbstractTask t : queue) {
-            if(t == task) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -205,17 +189,14 @@ public class TaskManager {
 
 
     // Processes the result of calling a task. Do stuff on complete, on fail, etc.
-    private void processTaskResult(long gameTime, AbstractTask task, Queue<AbstractTask> currentQueue, Queue<AbstractTask> nextQueue) {
+    private void processTaskResult(AbstractTask task, Queue<AbstractTask> nextQueue) {
         AbstractTask.TaskState state = task.getState();
         switch(state) {
             case PENDING -> {
                 nextQueue.add(task);
             }
-            case INTERRUPTED -> {
-            }
-            case COMPLETED -> {
-            }
-            case FAILURE -> {
+            case INTERRUPTED, COMPLETED, FAILURE -> {
+                //Just discards the task for now. May add something here.
             }
         }
     }

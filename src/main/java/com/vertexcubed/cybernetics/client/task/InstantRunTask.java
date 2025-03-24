@@ -2,6 +2,9 @@ package com.vertexcubed.cybernetics.client.task;
 
 import java.util.UUID;
 
+/**
+ * Simple task that runs a runnable upon execution, then completes itself.
+ */
 public class InstantRunTask extends AbstractTask {
 
     private final Runnable run;

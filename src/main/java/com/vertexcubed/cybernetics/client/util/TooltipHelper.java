@@ -12,11 +12,14 @@ import java.util.List;
 
 public class TooltipHelper {
 
+    /**
+     * Formats tooltips that use "_" as means of highlighting text. Also wraps it with a certain length given.
+     */
     public static List<Component> processTooltip(MutableComponent in, ChatFormatting primaryColor, ChatFormatting secondaryColor, int length) {
         String[] splits = in.getString().split("\n");
         List<String> text = new ArrayList<>();
         for (String split : splits) {
-            text.addAll(List.of(WordUtils.wrap(split, length).split("\n"))); //need to write custom wrapper probably to prevent _Highlighted text_ being broken up
+            text.addAll(List.of(WordUtils.wrap(split, length).split("\n"))); //TODO: write custom wrapper to prevent _Highlighted text_ being broken up
         }
 
 

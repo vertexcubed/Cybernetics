@@ -3,7 +3,6 @@ package com.vertexcubed.cybernetics.common.registry;
 import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.common.item.CyberwareProperties;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;

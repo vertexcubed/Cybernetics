@@ -1,14 +1,11 @@
 package com.vertexcubed.cybernetics.server.network;
 
 import com.vertexcubed.cybernetics.common.menu.CyberwareMenu;
-import com.vertexcubed.cybernetics.common.registry.CybAttachments;
-import com.vertexcubed.cybernetics.common.storage.CyberwareInventory;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.SimpleMenuProvider;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 

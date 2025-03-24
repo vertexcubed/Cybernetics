@@ -2,7 +2,6 @@ package com.vertexcubed.cybernetics.datagen;
 
 import com.vertexcubed.cybernetics.common.registry.CybDPRegistries;
 import com.vertexcubed.cybernetics.common.registry.CybTags;
-import com.vertexcubed.cybernetics.common.storage.CyberwareSection;
 import com.vertexcubed.cybernetics.common.storage.CyberwareSectionType;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;

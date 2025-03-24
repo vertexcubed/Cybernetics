@@ -1,9 +1,10 @@
 package com.vertexcubed.cybernetics.client.task;
 
-import com.vertexcubed.cybernetics.Cybernetics;
-
 import java.util.UUID;
 
+/**
+ * Simple task that waits a given amount of time in ticks, then is completed.
+ */
 public class WaitTask extends AbstractTask {
 
     private final long duration;

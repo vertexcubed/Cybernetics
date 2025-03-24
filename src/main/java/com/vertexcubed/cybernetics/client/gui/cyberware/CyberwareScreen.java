@@ -1,6 +1,5 @@
 package com.vertexcubed.cybernetics.client.gui.cyberware;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenState;
@@ -22,7 +21,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import team.lodestar.lodestone.systems.easing.Easing;
 
@@ -345,22 +343,18 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         stateMachine.init(mainState);
     }
 
-    private BasicWidget maskWidget(int slotX, int slotY, int rows, int i) {
-        return BasicWidget.create(this, leftPos + slotX + ((i % rows) * 25) - 4, topPos + slotY + ((i / rows) * 21), 22, 18,
-                (context, guiGraphics, mouseX, mouseY, partialTick) -> {
-                    guiGraphics.blit(CyberwareScreen.TEXTURE, context.getX(), context.getY(), context.getZOffset(), 27, 9, context.getWidth(), context.getHeight(), 226, 154);
-                })
-                .alpha(0.0f)
-                .playSoundOnClick(false)
-                .visible(false)
-                .zOffset(350)
-                .active(false);
+    private long gameTime() {
+        return Minecraft.getInstance().level.getGameTime();
     }
 
+    public ScreenStateMachine stateMachine() {
+        return stateMachine;
+    }
 
     @Override
     protected void containerTick() {
         super.containerTick();
+        stateMachine.tick(gameTime());
         fakePlayer.tickCount++;
     }
 
@@ -381,6 +375,8 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
+
+        stateMachine.render(guiGraphics, partialTick);
 
         //Need to render separately, because for some reason I can't make them render over items otherwise.
         slotMasks.forEach(mask -> {
@@ -416,7 +412,18 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         guiGraphics.enableScissor(leftPos + 5, topPos + 5, leftPos + 221, topPos + 149);
     }
 
-    //make sure to add the task thats returned by this function too!!!
+    private BasicWidget maskWidget(int slotX, int slotY, int rows, int i) {
+        return BasicWidget.create(this, leftPos + slotX + ((i % rows) * 25) - 4, topPos + slotY + ((i / rows) * 21), 22, 18,
+                        (context, guiGraphics, mouseX, mouseY, partialTick) -> {
+                            guiGraphics.blit(CyberwareScreen.TEXTURE, context.getX(), context.getY(), context.getZOffset(), 27, 9, context.getWidth(), context.getHeight(), 226, 154);
+                        })
+                .alpha(0.0f)
+                .playSoundOnClick(false)
+                .visible(false)
+                .zOffset(350)
+                .active(false);
+    }
+
     private AbstractTask moveWidget(AbstractWidget widget, int newX, int newY, int duration, Easing easing) {
         AbstractTask moveX = new TweenTask(() -> (float) widget.getX(), (x) -> widget.setX((int) (float) x), newX, duration, easing);
         AbstractTask moveY = new TweenTask(() -> (float) widget.getY(), (y) -> widget.setY((int) (float) y), newY, duration, easing);
@@ -446,14 +453,5 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
                     }
                 })
         ;
-    }
-
-
-    private long gameTime() {
-        return Minecraft.getInstance().level.getGameTime();
-    }
-
-    public ScreenStateMachine stateMachine() {
-        return stateMachine;
     }
 }

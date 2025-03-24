@@ -12,5 +12,6 @@ public class CybPayloads {
         S2CSyncCyberwarePayload.register(main);
         C2SSwitchActiveSlotsPayload.register(main);
         C2SSwitchInventoryPagePayload.register(main);
+        C2SApplyCyberwarePayload.register(main);
     }
 }

@@ -69,6 +69,7 @@
   "tooltip.cybernetics.confirm": "Apply Changes?",
   "tooltip.cybernetics.section": "Cyberware",
   "tooltip.cybernetics.capacity": "Capacity",
+  "tooltip.cybernetics.allows_duplicates": "Allows Duplicates",
   "tooltip.cybernetics.requirements": "Requires",
   "tooltip.cybernetics.incompatibilities": "Incompatible with",
   "tooltip.cybernetics.section.any": "Any Section",

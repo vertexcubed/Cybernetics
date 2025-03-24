@@ -364,6 +364,20 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         fakePlayer.tickCount++;
     }
 
+
+    @Override
+    public void onClose() {
+        Cybernetics.LOGGER.debug("on close");
+        if(menu.hasModified()) {
+            Cybernetics.LOGGER.debug("Has modified");
+            this.minecraft.pushGuiLayer(new CyberwareConfirmScreen());
+        }
+        else {
+            super.onClose();
+        }
+
+    }
+
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);

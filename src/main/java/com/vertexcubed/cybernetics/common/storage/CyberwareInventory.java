@@ -1,9 +1,14 @@
 package com.vertexcubed.cybernetics.common.storage;
 
+import com.vertexcubed.cybernetics.common.item.CyberwareProperties;
 import com.vertexcubed.cybernetics.common.registry.CybDPRegistries;
+import com.vertexcubed.cybernetics.common.registry.CybDataComponents;
+import com.vertexcubed.cybernetics.common.registry.CybTags;
 import com.vertexcubed.cybernetics.common.util.CombinedInvWrapperModifiable;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.NotNull;
@@ -78,9 +83,45 @@ public class CyberwareInventory extends CombinedInvWrapperModifiable implements 
         return output;
     }
 
+    @Override
+    public boolean isItemValid(int slot, ItemStack stack) {
+        CyberwareProperties properties = stack.get(CybDataComponents.CYBERWARE_PROPERTIES);
+        if(properties != null) {
+            //Does inv contain any incompatibilities?
+            List<Ingredient> incompatibilities = properties.incompatibilities();
+            for(int i = 0; i < getSlots(); i++) {
+                if(!properties.allowDuplicates() && ItemStack.matches(stack, getStackInSlot(i))) return false;
+                for(Ingredient ingredient : incompatibilities) {
+                    if(ingredient.test(getStackInSlot(i))) return false;
+                }
+            }
 
 
-//  Bless Neoforge handling syncing for me.
+
+            //Does inv contain ALL requirements?
+            List<Ingredient> requirements = properties.requirements();
+            int reqCount = 0;
+            for(Ingredient requirement : requirements) {
+                for(int i = 0; i < getSlots(); i++) {
+                    if(requirement.test(getStackInSlot(i))) {
+                        reqCount++;
+                        break;
+                    }
+                }
+            }
+            if(reqCount != requirements.size()) return false;
+
+
+        }
+        //Is stack any section? If so, we're done.
+        if (stack.is(CybTags.ANY_SECTION)) return super.isItemValid(slot, stack);
+
+        //If not, does stack tag match section?
+        CyberwareSection section = getSectionFromSlot(slot);
+        return stack.is(section.getType().tag()) && super.isItemValid(slot, stack);
+    }
+
+    //  Bless Neoforge handling syncing for me.
 
     @Override
     public CompoundTag serializeNBT(@NotNull HolderLookup.Provider provider) {

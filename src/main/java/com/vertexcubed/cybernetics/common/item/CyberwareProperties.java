@@ -1,7 +1,6 @@
 package com.vertexcubed.cybernetics.common.item;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.ListCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -15,18 +14,20 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.ArrayList;
 import java.util.List;
 
-public record CyberwareProperties(int capacity, List<Ingredient> requirements, List<Ingredient> incompatibilities, Description description) {
+public record CyberwareProperties(int capacity, boolean allowDuplicates, List<Ingredient> requirements, List<Ingredient> incompatibilities, Description description) {
 
     public static final Codec<CyberwareProperties> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     Codec.INT.fieldOf("capacity").forGetter(CyberwareProperties::capacity),
-                    Ingredient.LIST_CODEC.fieldOf("requirements").forGetter(CyberwareProperties::requirements),
-                    Ingredient.LIST_CODEC.fieldOf("incompatibilities").forGetter(CyberwareProperties::incompatibilities),
-                    Description.CODEC.fieldOf("description").forGetter(CyberwareProperties::description)
+                    Codec.BOOL.optionalFieldOf("allow_duplicates", false).forGetter(CyberwareProperties::allowDuplicates),
+                    Ingredient.LIST_CODEC.optionalFieldOf("requirements", List.of()).forGetter(CyberwareProperties::requirements),
+                    Ingredient.LIST_CODEC.optionalFieldOf("incompatibilities", List.of()).forGetter(CyberwareProperties::incompatibilities),
+                    Description.CODEC.optionalFieldOf("description", Description.DEFAULT).forGetter(CyberwareProperties::description)
                     ).apply(instance, CyberwareProperties::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, CyberwareProperties> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, CyberwareProperties::capacity,
+            ByteBufCodecs.BOOL, CyberwareProperties::allowDuplicates,
             Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), CyberwareProperties::requirements,
             Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), CyberwareProperties::incompatibilities,
             Description.STREAM_CODEC, CyberwareProperties::description,
@@ -37,11 +38,14 @@ public record CyberwareProperties(int capacity, List<Ingredient> requirements, L
 
 
     public record Description(boolean showDescription, boolean showRequirements, boolean showIncompatibilities) {
+
+        public static final Description DEFAULT = new Description(true, true, true);
+
         public static final Codec<Description> CODEC = RecordCodecBuilder.create(instance ->
                 instance.group(
-                        Codec.BOOL.fieldOf("show_description").forGetter(Description::showDescription),
-                        Codec.BOOL.fieldOf("show_requirements").forGetter(Description::showRequirements),
-                        Codec.BOOL.fieldOf("show_incompatibilities").forGetter(Description::showIncompatibilities)
+                        Codec.BOOL.optionalFieldOf("show_description", true).forGetter(Description::showDescription),
+                        Codec.BOOL.optionalFieldOf("show_requirements", true).forGetter(Description::showRequirements),
+                        Codec.BOOL.optionalFieldOf("show_incompatibilities", true).forGetter(Description::showIncompatibilities)
                 ).apply(instance, Description::new));
 
         public static final StreamCodec<ByteBuf, Description> STREAM_CODEC = StreamCodec.composite(
@@ -62,6 +66,8 @@ public record CyberwareProperties(int capacity, List<Ingredient> requirements, L
         private boolean showIncompatibilities = true;
         private boolean showDescription = true;
         private int capacity = 2;
+        private boolean allowDuplicates = false;
+
         public Builder() {
 
         }
@@ -116,17 +122,22 @@ public record CyberwareProperties(int capacity, List<Ingredient> requirements, L
             return this;
         }
 
-        public Builder setShowRequirements(boolean showRequirements) {
+        public Builder allowDuplicates(boolean allowDuplicates) {
+            this.allowDuplicates = allowDuplicates;
+            return this;
+        }
+
+        public Builder showRequirements(boolean showRequirements) {
             this.showRequirements = showRequirements;
             return this;
         }
 
-        public Builder setShowIncompatibilities(boolean showIncompatibilities) {
+        public Builder showIncompatibilities(boolean showIncompatibilities) {
             this.showIncompatibilities = showIncompatibilities;
             return this;
         }
 
-        public Builder setShowDescription(boolean showDescription) {
+        public Builder showDescription(boolean showDescription) {
             this.showDescription = showDescription;
             return this;
         }
@@ -137,7 +148,7 @@ public record CyberwareProperties(int capacity, List<Ingredient> requirements, L
         }
 
         public CyberwareProperties build() {
-            return new CyberwareProperties(capacity, requirements, incompatibilities, new Description(showDescription, showRequirements, showIncompatibilities));
+            return new CyberwareProperties(capacity, allowDuplicates, requirements, incompatibilities, new Description(showDescription, showRequirements, showIncompatibilities));
         }
     }
 }

@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -30,15 +31,24 @@ public class CyberwareItem extends Item {
     }
 
 
-    public void cyberwareTick(ItemStack stack, Level level, Player player) {
+    /**
+     * Called every tick when a cyberware item is in an active cyberware inventory.
+     */
+    public void cyberwareTick(ItemStack stack, int slot, Level level, Entity player) {
 
     }
 
-    public void onEquip(ItemStack stack, Level level, Player player) {
+    /**
+     * Called When a cyberware item is equipped.
+     */
+    public void onEquip(ItemStack stack, int slot, Level level, Entity player) {
 
     }
 
-    public void onUnequip(ItemStack stack, Level level, Player player) {
+    /**
+     * Called When a cyberware item is unequipped.
+     */
+    public void onUnequip(ItemStack stack, int slot, Level level, Entity player) {
 
     }
 
@@ -54,6 +64,9 @@ public class CyberwareItem extends Item {
 
         tooltip.add(Component.translatable("tooltip.cybernetics.capacity").append(": ").append(Component.literal(String.valueOf(properties.capacity()))).withStyle(ChatFormatting.GOLD));
 
+        if(properties.allowDuplicates()) {
+            tooltip.add(Component.translatable("tooltip.cybernetics.allows_duplicates").withStyle(ChatFormatting.RED));
+        }
         if(properties.description().showDescription()) {
             if(Screen.hasShiftDown()) {
                 tooltip.addAll(TooltipHelper.processTooltip(Component.translatable("tooltip." + id.getNamespace() + "." + id.getPath() + ".description"), ChatFormatting.GRAY, ChatFormatting.RED, 40));

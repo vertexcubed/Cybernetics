@@ -46,7 +46,6 @@ public class CyberwareInventory extends CombinedInvWrapperModifiable implements 
 
     public CyberwareInventory copy() {
         CyberwareInventory copy = new CyberwareInventory(new IItemHandlerModifiable[0]);
-        //TODO: implement copy
         copy.capacity = capacity;
         copy.maxCapacity = maxCapacity;
         copy.clearHandlers();

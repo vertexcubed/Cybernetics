@@ -1,15 +1,20 @@
 package com.vertexcubed.cybernetics.client.gui.cyberware;
 
 import com.vertexcubed.cybernetics.Cybernetics;
+import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
 import com.vertexcubed.cybernetics.client.gui.widget.BasicWidget;
+import com.vertexcubed.cybernetics.client.gui.widget.TextWidget;
+import com.vertexcubed.cybernetics.client.task.TweenTask;
 import com.vertexcubed.cybernetics.common.menu.CyberwareMenu;
 import com.vertexcubed.cybernetics.server.network.C2SApplyCyberwarePayload;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.PacketDistributor;
+import team.lodestar.lodestone.systems.easing.Easing;
 
 import static com.vertexcubed.cybernetics.Cybernetics.modLoc;
 
@@ -22,8 +27,9 @@ public class CyberwareConfirmScreen extends Screen {
     private int imageWidth;
     private int imageHeight;
     private long time;
+    private TextWidget textWidget;
 
-
+    private int scissorX;
     public CyberwareConfirmScreen() {
         super(Component.literal("Confirmation"));
         imageWidth = 91;
@@ -37,14 +43,29 @@ public class CyberwareConfirmScreen extends Screen {
 
         this.leftPos = (this.width - this.imageWidth) / 2;
         this.topPos = (this.height - this.imageHeight) / 2;
-
+        textWidget = new TextWidget(leftPos + 8, topPos + 12, 85);
+        textWidget.setText(Component.translatable("tooltip.cybernetics.confirm"));
+        textWidget.setColor(0xff00fff7);
 
         addRenderableWidget(button(leftPos + 9, topPos + 39, true));
         addRenderableWidget(button(leftPos + 65, topPos + 39, false));
 
-
+        scissorX = 0;
+        ScreenHelper.getTaskManager(this).addFrameTask(
+                new TweenTask(() -> (float) scissorX, (f) -> scissorX = (int) (float) f, 45, 20, Easing.CUBIC_IN_OUT)
+        );
     }
 
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
+
+    @Override
+    public void tick() {
+        textWidget.tick(time);
+        time++;
+    }
 
     private BasicWidget button(int x, int y, boolean isConfirm) {
         return BasicWidget.create(this, x, y, 17, 17, ((context, guiGraphics, mouseX, mouseY, partialTick) -> {
@@ -78,12 +99,24 @@ public class CyberwareConfirmScreen extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+
+        guiGraphics.enableScissor(leftPos + 45 - scissorX, topPos, leftPos + 46 + scissorX, topPos + imageHeight);
+
         renderBg(guiGraphics, partialTick, mouseX, mouseY);
 
         for (Renderable renderable : this.renderables) {
             renderable.render(guiGraphics, mouseX, mouseY, partialTick);
         }
+
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().scale(0.8888f, 0.8888f, 0);
+        guiGraphics.pose().translate(0.125 * textWidget.getX(), 0.125 * textWidget.getY(), 0);
+        textWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+        guiGraphics.pose().popPose();
+
+        guiGraphics.disableScissor();
     }
 
     public void renderBg(GuiGraphics guiGraphics, float frameTimeDelta, int mouseX, int mouseY) {

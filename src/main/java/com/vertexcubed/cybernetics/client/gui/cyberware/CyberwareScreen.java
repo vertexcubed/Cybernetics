@@ -5,6 +5,7 @@ import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenState;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenStateMachine;
 import com.vertexcubed.cybernetics.client.gui.widget.BasicWidget;
+import com.vertexcubed.cybernetics.client.gui.widget.TextWidget;
 import com.vertexcubed.cybernetics.client.task.*;
 import com.vertexcubed.cybernetics.client.util.FakeLocalPlayer;
 import com.vertexcubed.cybernetics.client.util.RenderHelper;
@@ -41,6 +42,7 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
     private BasicWidget pageRight;
     private BasicWidget backButton;
     private BasicWidget entityWidget;
+    private TextWidget textWidget;
     private final List<BasicWidget> sectionButtons = new ArrayList<>();
     private final List<BasicWidget> slotMasks = new ArrayList<>();
     private float entityRotation;
@@ -68,8 +70,17 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         ScreenHelper.getTaskManager(this).clear();
 
         //============
+        // Text Widget
+        //============
+
+        this.textWidget = addRenderableWidget(new TextWidget(this.leftPos + 32, this.topPos + 9));
+        this.textWidget.setColor(0xff00fff7);
+
+
+
+        //============
         // Back Button
-        // ===========
+        //============
 
         this.backButton = addRenderableWidget(BasicWidget
                 .texture(this, leftPos + 208, topPos + 9, 9, 9, 0, 23, 32, 32, modLoc("textures/gui/cyberware/buttons.png"))
@@ -141,6 +152,9 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         sections.forEach(section -> {
             sectionStates.put(section, ScreenState.create(this, state -> {
                 int duration = 15;
+
+                textWidget.setText(Component.translatable("tooltip." + section.getId().getNamespace() + ".section." + section.getId().getPath()));
+
                 ScreenHelper.getTaskManager(this).addFrameTask(
                         new TweenTask(() -> entityRotation, (f) -> entityRotation = f, -45, duration, Easing.CUBIC_IN_OUT)
                                 .withTag("section_enter")
@@ -283,6 +297,9 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         mainState = ScreenState.create(this, state -> {
             List<AbstractTask> moveSections = new ArrayList<>();
 
+
+            textWidget.setText(Component.translatable("tooltip.cybernetics.section"));
+
             for (int i = 0; i < sectionButtons.size(); i++) {
                 BasicWidget widget = sectionButtons.get(i);
                 widget.visible = true;
@@ -355,6 +372,7 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
     protected void containerTick() {
         super.containerTick();
         stateMachine.tick(gameTime());
+        textWidget.tick(gameTime());
         fakePlayer.tickCount++;
     }
 

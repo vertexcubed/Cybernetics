@@ -27,6 +27,9 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mod(Cybernetics.MOD_ID)
 public class Cybernetics
 {
@@ -56,6 +59,8 @@ public class Cybernetics
         modEventBus.register(this);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+
+
 
         CybAttachments.register(modEventBus);
         CybMenus.register(modEventBus);

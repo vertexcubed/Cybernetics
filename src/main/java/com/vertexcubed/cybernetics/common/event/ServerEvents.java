@@ -2,6 +2,7 @@ package com.vertexcubed.cybernetics.common.event;
 
 import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.common.registry.CybAttachments;
+import com.vertexcubed.cybernetics.common.storage.CyberwareInventory;
 import com.vertexcubed.cybernetics.server.network.S2CSyncCyberwarePayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -18,6 +19,18 @@ public class ServerEvents {
         if(!player.hasData(CybAttachments.CYBERWARE_INVENTORY)) {
             player.getData(CybAttachments.CYBERWARE_INVENTORY).init(player.level().registryAccess());
         }
+        PacketDistributor.sendToPlayer(player, new S2CSyncCyberwarePayload(player.getData(CybAttachments.CYBERWARE_INVENTORY)));
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        PacketDistributor.sendToPlayer(player, new S2CSyncCyberwarePayload(player.getData(CybAttachments.CYBERWARE_INVENTORY)));
+    }
+
+    @SubscribeEvent
+    public static void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
         PacketDistributor.sendToPlayer(player, new S2CSyncCyberwarePayload(player.getData(CybAttachments.CYBERWARE_INVENTORY)));
     }
 }

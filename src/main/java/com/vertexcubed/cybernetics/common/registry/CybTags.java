@@ -17,7 +17,7 @@ public class CybTags {
             DASH_ITEMS = itemTag("dash_items"),
 
 
-    ANY_SECTION = itemTag("cyberware_section/any"),
+            ANY_SECTION = itemTag("cyberware_section/any"),
             HEAD_SECTION = itemTag("cyberware_section/head"),
             EYES_SECTION = itemTag("cyberware_section/eyes"),
             UPPER_ORGANS_SECTION = itemTag("cyberware_section/upper_organs"),

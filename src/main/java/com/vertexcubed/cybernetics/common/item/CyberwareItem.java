@@ -14,6 +14,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -32,21 +33,21 @@ public class CyberwareItem extends Item {
     /**
      * Called every tick when a cyberware item is in an active cyberware inventory.
      */
-    public void cyberwareTick(ItemStack stack, int slot, Level level, Entity player) {
+    public void cyberwareTick(ItemStack stack, int slot, Level level, LivingEntity entity) {
 
     }
 
     /**
      * Called When a cyberware item is equipped.
      */
-    public void onEquip(ItemStack stack, int slot, Level level, Entity player) {
+    public void onEquip(ItemStack stack, int slot, Level level, LivingEntity entity) {
 
     }
 
     /**
      * Called When a cyberware item is unequipped.
      */
-    public void onUnequip(ItemStack stack, int slot, Level level, Entity player) {
+    public void onUnequip(ItemStack stack, int slot, Level level, LivingEntity entity) {
 
     }
 

@@ -82,11 +82,11 @@ public record CyberwareProperties(int capacity, boolean allowDuplicates, List<In
                 if(o instanceof Item) {
                     ingredient = Ingredient.of((Item) o);
                 }
-                else if(o instanceof TagKey<?>) {
-                    TagKey<?> tag = (TagKey<?>) o;
+                else if(o instanceof TagKey<?> tag) {
                     if(!tag.isFor(BuiltInRegistries.ITEM.key())) {
                         throw new IllegalArgumentException("Tag " + tag + " is not item tag!");
                     }
+                    //Seemingly unsafe cast, but we know this is an Item tag, so it's safe...?
                     ingredient = Ingredient.of((TagKey<Item>) tag);
                 }
                 else {
@@ -107,11 +107,11 @@ public record CyberwareProperties(int capacity, boolean allowDuplicates, List<In
                 if(o instanceof Item) {
                     ingredient = Ingredient.of((Item) o);
                 }
-                else if(o instanceof TagKey<?>) {
-                    TagKey<?> tag = (TagKey<?>) o;
+                else if(o instanceof TagKey<?> tag) {
                     if(!tag.isFor(BuiltInRegistries.ITEM.key())) {
                         throw new IllegalArgumentException("Tag " + tag + " is not item tag!");
                     }
+                    //Seemingly unsafe cast, but we know this is an Item tag, so it's safe...?
                     ingredient = Ingredient.of((TagKey<Item>) tag);
                 }
                 else {

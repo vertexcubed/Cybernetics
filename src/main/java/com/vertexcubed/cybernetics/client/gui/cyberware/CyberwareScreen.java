@@ -59,6 +59,9 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         super(menu, playerInventory, title);
         this.imageWidth = 226;
         this.imageHeight = 154;
+
+        //TODO: add capacity widget
+        //TODO: add little popups when you're missing requirements/have incompatibilities.
     }
 
 

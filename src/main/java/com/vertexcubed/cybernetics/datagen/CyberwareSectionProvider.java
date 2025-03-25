@@ -73,7 +73,7 @@ public class CyberwareSectionProvider {
                 24,
                 130,
                 20,
-                CybTags.HEAD_SECTION,
+                CybTags.EYES_SECTION,
                 4
         ));
 
@@ -83,7 +83,7 @@ public class CyberwareSectionProvider {
                 46,
                 130,
                 -40,
-                CybTags.HEAD_SECTION,
+                CybTags.ARMS_SECTION,
                 4
         ));
 
@@ -93,7 +93,7 @@ public class CyberwareSectionProvider {
                 68,
                 130,
                 -40,
-                CybTags.HEAD_SECTION,
+                CybTags.SKIN_SECTION,
                 3
         ));
 
@@ -103,7 +103,7 @@ public class CyberwareSectionProvider {
                 90,
                 130,
                 -70,
-                CybTags.HEAD_SECTION,
+                CybTags.HANDS_SECTION,
                 3
         ));
 
@@ -113,7 +113,7 @@ public class CyberwareSectionProvider {
                 112,
                 130,
                 -140,
-                CybTags.HEAD_SECTION,
+                CybTags.FEET_SECTION,
                 4
         ));
 

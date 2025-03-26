@@ -3,6 +3,8 @@
     "package": "com.vertexcubed.cybernetics.mixin",
     "compatibilityLevel": "JAVA_17",
     "mixins": [
+        "EntityMixin",
+        "LivingEntityMixin"
     ],
     "client": [
         "client.GameRendererMixin",

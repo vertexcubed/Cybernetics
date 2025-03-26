@@ -6,6 +6,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -20,18 +21,21 @@ public class S2CSyncCyberwarePayload implements CustomPacketPayload {
     public static final StreamCodec<RegistryFriendlyByteBuf, S2CSyncCyberwarePayload> CODEC =
             StreamCodec.ofMember(S2CSyncCyberwarePayload::encode, S2CSyncCyberwarePayload::new);
 
-
+    private final int entity;
     private final CyberwareInventory inventory;
-    public S2CSyncCyberwarePayload(CyberwareInventory inventory) {
+    public S2CSyncCyberwarePayload(CyberwareInventory inventory, LivingEntity entity) {
         this.inventory = inventory;
+        this.entity = entity.getId();
     }
 
     public S2CSyncCyberwarePayload(RegistryFriendlyByteBuf byteBuf) {
+        entity = byteBuf.readVarInt();
         inventory = new CyberwareInventory();
         inventory.deserializeNBT(byteBuf.registryAccess(), byteBuf.readNbt());
     }
 
     public void encode(RegistryFriendlyByteBuf byteBuf) {
+        byteBuf.writeVarInt(entity);
         byteBuf.writeNbt(inventory.serializeNBT(byteBuf.registryAccess()));
     }
 
@@ -53,7 +57,8 @@ public class S2CSyncCyberwarePayload implements CustomPacketPayload {
     public static void handle(final S2CSyncCyberwarePayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             Player player = context.player();
-            player.getData(CybAttachments.CYBERWARE_INVENTORY).copyFrom(payload.inventory);
+            LivingEntity entity = (LivingEntity) player.level().getEntity(payload.entity);
+            entity.getData(CybAttachments.CYBERWARE_INVENTORY).copyFrom(payload.inventory);
         }).exceptionally(e -> {
             context.disconnect(Component.literal("Failed to handle payload " + TYPE.id() + ": " + e.getMessage()));
             return null;

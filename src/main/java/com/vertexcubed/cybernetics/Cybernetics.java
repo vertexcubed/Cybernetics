@@ -25,10 +25,8 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.slf4j.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Mod(Cybernetics.MOD_ID)
 public class Cybernetics
@@ -67,7 +65,13 @@ public class Cybernetics
         CybDataComponents.register(modEventBus);
         CybItems.register(modEventBus);
         CybCreativeTabs.register(modEventBus);
+        CybAbilities.register(modEventBus);
 
+    }
+
+    @SubscribeEvent
+    public void registerRegistries(NewRegistryEvent event) {
+        event.register(CybAbilities.ABILITY_TYPE_REGISTRY);
     }
 
     @SubscribeEvent

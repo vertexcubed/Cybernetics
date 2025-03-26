@@ -1,6 +1,7 @@
 package com.vertexcubed.cybernetics.common.registry;
 
 import com.vertexcubed.cybernetics.Cybernetics;
+import com.vertexcubed.cybernetics.common.storage.AbilityStorage;
 import com.vertexcubed.cybernetics.common.storage.CyberwareInventory;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -15,6 +16,10 @@ public class CybAttachments {
 
     public static final Supplier<AttachmentType<CyberwareInventory>> CYBERWARE_INVENTORY = ATTACHMENT_TYPES.register(
             "cyberware_inventory", () -> AttachmentType.serializable(CyberwareInventory::create).copyOnDeath().build()
+    );
+
+    public static final Supplier<AttachmentType<AbilityStorage>> ABILITY_STORAGE = ATTACHMENT_TYPES.register(
+            "ability_storage", () -> AttachmentType.serializable(AbilityStorage::new).copyOnDeath().build()
     );
 
 

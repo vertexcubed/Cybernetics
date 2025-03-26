@@ -4,7 +4,6 @@ import com.mojang.datafixers.util.Pair;
 import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.common.item.AttributeCyberwareItem;
 import com.vertexcubed.cybernetics.common.item.CyberwareItem;
-import com.vertexcubed.cybernetics.common.item.CyberwareProperties;
 import com.vertexcubed.cybernetics.common.item.CyberwareProperties.Builder;
 import com.vertexcubed.cybernetics.common.item.MobEffectCyberwareItem;
 import com.vertexcubed.cybernetics.common.util.Triple;
@@ -13,7 +12,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 

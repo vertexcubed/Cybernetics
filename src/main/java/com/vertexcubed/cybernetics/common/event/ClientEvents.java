@@ -1,7 +1,6 @@
 package com.vertexcubed.cybernetics.common.event;
 
 import com.vertexcubed.cybernetics.Cybernetics;
-import com.vertexcubed.cybernetics.client.gui.cyberware.CyberwareConfirmScreen;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
 import com.vertexcubed.cybernetics.common.item.CyberwareItem;
 import com.vertexcubed.cybernetics.common.registry.CybDataComponents;

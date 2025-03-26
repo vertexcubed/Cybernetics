@@ -96,6 +96,7 @@ public class CombinedInvWrapperModifiable implements IItemHandlerModifiable {
     public void clearHandlers() {
         itemHandlers.clear();
         handlerBaseIndices.clear();
+        this.slotCount = 0;
     }
 
     public void addItemHandler(IItemHandlerModifiable newHandler) {

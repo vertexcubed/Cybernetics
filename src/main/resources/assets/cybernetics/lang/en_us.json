@@ -31,10 +31,10 @@
 
   "item.cybernetics.emergency_defibrillator": "Emergency Defibrillator",
   "item.cybernetics.oxygen_recycler": "Oxygen Recycler",
-  "item.cybernetics.health_boost_organs": "Artificial Blood Supply",
+  "item.cybernetics.health_boost_organs": "Artificial Blood Pump",
 
-  "item.cybernetics.stomach_filter": "Nutrient Filtration System",
-  "item.cybernetics.synaptic_disabler": "Ranged Synapse Scrambler",
+  "item.cybernetics.stomach_filter": "Stomach Filter",
+  "item.cybernetics.synaptic_disabler": "Synaptic Disabler",
   "item.cybernetics.mk1_double_jump_adder": "Mk1 Tendon Boost",
   "item.cybernetics.mk2_double_jump_adder": "Mk2 Tendon Boost",
 
@@ -109,14 +109,14 @@
 
   "tooltip.cybernetics.emergency_defibrillator.description": "An emergency AED unit that will restart the heart in cases of sudden trauma. _Revives_ the user _once_ when they die, giving them temporary _regeneration_ and some health back.\nCooldown: _2 minutes_",
   "tooltip.cybernetics.oxygen_recycler.description": "A mechanical pump connected directly to the lungs, allowing the body to save oxygen produced elsewhere to maintain the user's breath. Gives a _75%_ chance to _not consume air bubbles_. Stacks with Respiration.",
-  "tooltip.cybernetics.health_boost_organs.description": "An aritifical sac that improves blood flow through the body, giving the user permanent _+5 maximum health_.",
+  "tooltip.cybernetics.health_boost_organs.description": "An aritifical pump that improves blood flow through the body, giving the user permanent _+5 maximum health_.",
 
   "tooltip.cybernetics.stomach_filter.description": "This item is yet to be implemented, and currently unobtainable. Sorry!",
   "tooltip.cybernetics.synaptic_disabler.description": "This item is yet to be implemented, and currently unobtainable. Sorry!",
   "tooltip.cybernetics.mk1_double_jump_adder.description": "An internal booster that sits next to the stomach, providing more energy to the user's _Reinforced Tendons_. Gives _+1 extra midair jump_.",
   "tooltip.cybernetics.mk2_double_jump_adder.description": "An advanced booster that spreads across the user's pelvis, providing even more of a boost to the user's _Reinforced Tendons_. Gives _+2 extra midair jumps_.",
 
-  "tooltip.cybernetics.reinforced_skeleton.description": "A replacement for much of the user's skeleton, significantly increasing its _durability_ and _sturdiness_. Gives the user permanent _+2 armor_.",
+  "tooltip.cybernetics.reinforced_skeleton.description": "A replacement for the user's skeleton, significantly increasing its _durability_ and _sturdiness_. Gives the user permanent _+2 armor_.",
   "tooltip.cybernetics.titanium_skeleton.description": "A significantly stronger replacement for the user's skeleton, made of pure _titanium_. Gives the user permanent _+5 armor_ and _+2 armor toughness_.",
   "tooltip.cybernetics.health_boost_skeleton.description": "A specialized skeleton replacement that allows the body to produce stem cells more rapidly, giving the user permanent _+5 max health_.",
   "tooltip.cybernetics.kinetic_discharger.description": "A web of thin titanium sheets that absorb kinetic energy and allow the user to release it at once. When falling, the user can _sneak_ to release it, _spiking down_ towards the ground. The produced shockwave _damages nearby enemies._\nCooldown: _5 seconds_.",

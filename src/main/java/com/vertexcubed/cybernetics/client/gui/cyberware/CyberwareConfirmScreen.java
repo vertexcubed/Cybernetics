@@ -7,7 +7,6 @@ import com.vertexcubed.cybernetics.client.gui.widget.TextWidget;
 import com.vertexcubed.cybernetics.client.task.TweenTask;
 import com.vertexcubed.cybernetics.common.menu.CyberwareMenu;
 import com.vertexcubed.cybernetics.server.network.C2SApplyCyberwarePayload;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;

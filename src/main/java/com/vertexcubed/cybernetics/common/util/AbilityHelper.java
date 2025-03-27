@@ -19,7 +19,7 @@ public class AbilityHelper {
     public static void addAbility(LivingEntity entity, AbilityType<?> type, boolean syncToClient) {
         if(!entity.hasData(CybAttachments.ABILITY_STORAGE)) return;
         AbilityStorage storage = entity.getData(CybAttachments.ABILITY_STORAGE);
-        storage.add(type.createAbility(entity));
+        storage.add(type.createAbility().setParent(entity));
         if(syncToClient && !entity.level().isClientSide()) {
             PacketDistributor.sendToAllPlayers(new S2CSyncAbilityStoragePayload(storage, entity));
         }

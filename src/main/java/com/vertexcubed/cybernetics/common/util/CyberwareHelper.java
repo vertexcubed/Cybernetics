@@ -122,9 +122,6 @@ public class CyberwareHelper {
 
     public static boolean hasCyberware(Item item, LivingEntity entity) {
         if(!entity.hasData(CybAttachments.CYBERWARE_INVENTORY)) return false;
-        if(entity.level().isClientSide) {
-            Cybernetics.LOGGER.debug("meow");
-        }
         CyberwareInventory inv = entity.getData(CybAttachments.CYBERWARE_INVENTORY);
         for(int i = 0; i < inv.getSlots(); i++) {
             if(inv.getStackInSlot(i).getItem() == item) {

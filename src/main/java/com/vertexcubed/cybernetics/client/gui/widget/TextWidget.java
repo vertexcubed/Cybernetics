@@ -78,7 +78,14 @@ public class TextWidget extends CybAbstractWidget {
     }
 
     public void setMaxWidth(int width) {
+        this.maxWidth = width;
+    }
 
+    public int getTextWidth() {
+        return font.width(displayText);
+    }
+    public int getTextHeight() {
+        return font.lineHeight;
     }
 
     /**

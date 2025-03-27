@@ -2,10 +2,8 @@ package com.vertexcubed.cybernetics.common.registry;
 
 import com.mojang.datafixers.util.Pair;
 import com.vertexcubed.cybernetics.Cybernetics;
-import com.vertexcubed.cybernetics.common.item.AttributeCyberwareItem;
-import com.vertexcubed.cybernetics.common.item.CyberwareItem;
+import com.vertexcubed.cybernetics.common.item.*;
 import com.vertexcubed.cybernetics.common.item.CyberwareProperties.Builder;
-import com.vertexcubed.cybernetics.common.item.MobEffectCyberwareItem;
 import com.vertexcubed.cybernetics.common.util.Triple;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -40,10 +38,10 @@ public class CybItems {
 
 
         //EYES
-//        MK1_OPTICS = ITEMS.register("mk1_optics", () -> new OpticsItem(cyberwareProps("mk1_optics"), false)),
+        MK1_OPTICS = ITEMS.register("mk1_optics", () -> new OpticsItem(cyberwareProps("mk1_optics"))),
 //        MK2_OPTICS = ITEMS.register("mk2_optics", () -> new OpticsItem(cyberwareProps("mk2_optics"), true)),
 //        MK3_OPTICS = ITEMS.register("mk3_optics", () -> new OpticsItem(cyberwareProps("mk3_optics"), true)),
-//        NIGHT_VISION_EYES = ITEMS.register("night_vision_eyes", () -> new NightVisionEyesItem(cyberwareProps("night_vision_eyes"))),
+        NIGHT_VISION_EYES = ITEMS.register("night_vision_eyes", () -> new SimpleAbilityCyberwareItem<>(cyberwareProps("night_vision_eyes"), CybAbilities.NIGHT_VISION)),
 
         //UPPER ORGANS
 //        EMERGENCY_DEFIBRILLATOR = ITEMS.register("emergency_defibrillator", () -> new SimpleAbilityCyberwareItem(cyberwareProps("emergency_defibrillator"), CybAbilities.EMERGENCY_DEFIBRILLATOR)),

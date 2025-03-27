@@ -22,6 +22,14 @@ public class CybKeyMappings {
             GLFW.GLFW_KEY_G,
             "key.categories.cybernetics"));
 
+    public static final Lazy<KeyMapping> PLAYER_ABILITIES_MENU = register(() -> new KeyMapping(
+            "key.cybernetics.open_abilities",
+            KeyConflictContext.UNIVERSAL,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_R,
+            "key.categories.cybernetics"
+    ));
+
 
     private static Lazy<KeyMapping> register(Supplier<KeyMapping> sup) {
         return Lazy.of(sup);

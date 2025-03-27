@@ -382,9 +382,7 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
 
     @Override
     public void onClose() {
-        Cybernetics.LOGGER.debug("on close");
         if(menu.hasModified()) {
-            Cybernetics.LOGGER.debug("Has modified");
             this.minecraft.pushGuiLayer(new CyberwareConfirmScreen());
         }
         else {

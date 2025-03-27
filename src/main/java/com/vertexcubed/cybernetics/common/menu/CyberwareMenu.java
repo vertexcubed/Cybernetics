@@ -136,12 +136,12 @@ public class CyberwareMenu extends AbstractContainerMenu {
         super.clicked(slotId, button, clickType, player);
 
 
-        Cybernetics.LOGGER.debug("====================");
-        Cybernetics.LOGGER.debug("cybAddItems: {}", cybAddItems);
-        Cybernetics.LOGGER.debug("cybRemoveItems: {}", cybRemoveItems);
-        Cybernetics.LOGGER.debug("invAddItems: {}", invAddItems);
-        Cybernetics.LOGGER.debug("invRemoveItems: {}", invRemoveItems);
-        Cybernetics.LOGGER.debug("====================");
+//        Cybernetics.LOGGER.debug("====================");
+//        Cybernetics.LOGGER.debug("cybAddItems: {}", cybAddItems);
+//        Cybernetics.LOGGER.debug("cybRemoveItems: {}", cybRemoveItems);
+//        Cybernetics.LOGGER.debug("invAddItems: {}", invAddItems);
+//        Cybernetics.LOGGER.debug("invRemoveItems: {}", invRemoveItems);
+//        Cybernetics.LOGGER.debug("====================");
 
     }
 
@@ -222,7 +222,6 @@ public class CyberwareMenu extends AbstractContainerMenu {
 
 
         Inventory inventory = player.getInventory();
-        Cybernetics.LOGGER.debug("Applying changes!");
         invAddItems.forEach(item -> {
             if(!inventory.add(item)) {
                 player.drop(item, true);

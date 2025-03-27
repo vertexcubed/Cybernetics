@@ -33,7 +33,6 @@ public class CyberwareConfirmScreen extends Screen {
         super(Component.literal("Confirmation"));
         imageWidth = 91;
         imageHeight = 65;
-        Cybernetics.LOGGER.info("teehee");
     }
 
     @Override

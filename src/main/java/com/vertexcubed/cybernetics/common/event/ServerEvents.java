@@ -21,9 +21,7 @@ public class ServerEvents {
         if(!player.hasData(CybAttachments.CYBERWARE_INVENTORY)) {
             player.getData(CybAttachments.CYBERWARE_INVENTORY).init(player.level().registryAccess());
         }
-        if(!player.hasData(CybAttachments.ABILITY_STORAGE)) {
-            player.getData(CybAttachments.ABILITY_STORAGE).init(player);
-        }
+        player.getData(CybAttachments.ABILITY_STORAGE).init(player);
         PacketDistributor.sendToPlayer(player, new S2CSyncAbilityStoragePayload(player.getData(CybAttachments.ABILITY_STORAGE), player));
         PacketDistributor.sendToPlayer(player, new S2CSyncCyberwarePayload(player.getData(CybAttachments.CYBERWARE_INVENTORY), player));
     }

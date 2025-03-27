@@ -1,5 +1,6 @@
 package com.vertexcubed.cybernetics.common.registry;
 
+import com.vertexcubed.cybernetics.common.ability.AbilityType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -29,6 +30,8 @@ public class CybTags {
             LEGS_SECTION = itemTag("cyberware_section/legs"),
             FEET_SECTION = itemTag("cyberware_section/feet")
                     ;
+
+    public static final TagKey<AbilityType<?>> HIDDEN_ABILITIES = TagKey.create(CybAbilities.ABILITY_TYPE_KEY, modLoc("hidden_abilities"));
 
 
     private static TagKey<Item> itemTag(String name) {

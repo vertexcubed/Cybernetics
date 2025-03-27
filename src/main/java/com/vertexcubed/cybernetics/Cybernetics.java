@@ -60,12 +60,12 @@ public class Cybernetics
 
 
 
+        CybAbilities.register(modEventBus);
         CybAttachments.register(modEventBus);
         CybMenus.register(modEventBus);
         CybDataComponents.register(modEventBus);
         CybItems.register(modEventBus);
         CybCreativeTabs.register(modEventBus);
-        CybAbilities.register(modEventBus);
 
     }
 

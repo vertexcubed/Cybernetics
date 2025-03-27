@@ -8,14 +8,13 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 public abstract class Ability implements INBTSerializable<CompoundTag> {
 
     private final AbilityType<?> type;
-    private final LivingEntity parent;
+    private LivingEntity parent;
     private boolean enabled;
     private int runningTime;
-    private int cooldown;
-    public Ability(AbilityType<?> type, LivingEntity parent) {
+    private int cooldown = -1;
+    public Ability(AbilityType<?> type) {
         this.runningTime = 0;
         this.type = type;
-        this.parent = parent;
     }
 
     public void tick() {
@@ -39,6 +38,14 @@ public abstract class Ability implements INBTSerializable<CompoundTag> {
 
     public abstract void onDisable(LivingEntity parent);
 
+    public abstract void saveAdditional(CompoundTag tag, HolderLookup.Provider provider);
+    public abstract void loadAdditional(CompoundTag tag, HolderLookup.Provider provider);
+
+    //TODO: this is extremely hacky. Figure something out!!!
+    public Ability setParent(LivingEntity parent) {
+        this.parent = parent;
+        return this;
+    }
 
 
     public AbilityType<?> getType() {
@@ -66,6 +73,14 @@ public abstract class Ability implements INBTSerializable<CompoundTag> {
         return true;
     }
 
+    public int getCooldown() {
+        return cooldown;
+    }
+
+    public int getRunningTime() {
+        return runningTime;
+    }
+
     @Override
     public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag tag = new CompoundTag();
@@ -73,7 +88,7 @@ public abstract class Ability implements INBTSerializable<CompoundTag> {
         tag.putBoolean("enabled", enabled);
         tag.putInt("runningTime", runningTime);
         tag.putInt("cooldown", cooldown);
-
+        saveAdditional(tag, provider);
         return tag;
     }
 
@@ -82,5 +97,6 @@ public abstract class Ability implements INBTSerializable<CompoundTag> {
         this.enabled = tag.getBoolean("enabled");
         this.runningTime = tag.getInt("runningTime");
         this.cooldown = tag.getInt("cooldown");
+        loadAdditional(tag, provider);
     }
 }

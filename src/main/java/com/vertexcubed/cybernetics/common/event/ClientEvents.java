@@ -1,8 +1,11 @@
 package com.vertexcubed.cybernetics.common.event;
 
 import com.vertexcubed.cybernetics.Cybernetics;
+import com.vertexcubed.cybernetics.client.gui.AbilityScreen;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
+import com.vertexcubed.cybernetics.client.util.InputHelper;
 import com.vertexcubed.cybernetics.common.item.CyberwareItem;
+import com.vertexcubed.cybernetics.common.registry.CybAttachments;
 import com.vertexcubed.cybernetics.common.registry.CybDataComponents;
 import com.vertexcubed.cybernetics.common.registry.CybKeyMappings;
 import com.vertexcubed.cybernetics.server.network.C2SOpenCyberwarePayload;
@@ -22,6 +25,10 @@ public class ClientEvents {
     public static void clientTickPre(ClientTickEvent.Pre event) {
         if(CybKeyMappings.OPEN_CYB_MENU.get().isDown()) {
             PacketDistributor.sendToServer(new C2SOpenCyberwarePayload());
+        }
+
+        if (InputHelper.isAbilityKeyHeld() && Minecraft.getInstance().screen == null && Minecraft.getInstance().player.hasData(CybAttachments.ABILITY_STORAGE)) {
+            Minecraft.getInstance().setScreen(new AbilityScreen());
         }
     }
 

@@ -1,5 +1,9 @@
 package com.vertexcubed.cybernetics.common.ability;
 
+import com.vertexcubed.cybernetics.common.registry.CybAbilities;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
 
 public class AbilityType<T extends Ability> {
@@ -9,11 +13,20 @@ public class AbilityType<T extends Ability> {
     private final boolean multiEnable;
     private final int maxCooldown;
     private final int maxRuntime;
-    public AbilityType(AbilityFactory<T> factory, boolean multiEnable, int maxCooldown, int maxRuntime) {
+    private final ResourceLocation texture;
+    private final Holder<AbilityType<?>> registryHolder;
+
+    public AbilityType(AbilityFactory<T> factory, boolean multiEnable, int maxCooldown, int maxRuntime, ResourceLocation texture) {
         this.factory = factory;
         this.multiEnable = multiEnable;
         this.maxCooldown = maxCooldown;
         this.maxRuntime = maxRuntime;
+        this.texture = texture;
+        this.registryHolder = CybAbilities.ABILITY_TYPE_REGISTRY.wrapAsHolder(this);
+    }
+
+    public boolean is(TagKey<AbilityType<?>> tag) {
+        return registryHolder.is(tag);
     }
 
     public int getMaxCooldown() {
@@ -28,16 +41,21 @@ public class AbilityType<T extends Ability> {
         return maxRuntime;
     }
 
-    public T createAbility(LivingEntity parent) {
-        return factory.create(this, parent);
+    public T createAbility() {
+        return factory.create(this);
+    }
+
+    public ResourceLocation getTexture() {
+        return texture;
     }
 
 
     public static class Builder<T extends Ability> {
         private final AbilityFactory<T> factory;
         private boolean multiEnable = false;
-        private int maxCooldown = 0;
-        private int maxRuntime = 0;
+        private int maxCooldown = -1;
+        private int maxRuntime = -1;
+        private ResourceLocation resourceLocation = null;
         public Builder(AbilityFactory<T> factory) {
             this.factory = factory;
         }
@@ -57,12 +75,17 @@ public class AbilityType<T extends Ability> {
             return this;
         }
 
+        public Builder<T> texture(ResourceLocation rl) {
+            resourceLocation = rl;
+            return this;
+        }
+
         public AbilityType<T> build() {
-            return new AbilityType<T>(factory, multiEnable, maxCooldown, maxRuntime);
+            return new AbilityType<T>(factory, multiEnable, maxCooldown, maxRuntime, resourceLocation);
         }
     }
 
     public interface AbilityFactory<T extends Ability> {
-        T create(AbilityType<T> type, LivingEntity parent);
+        T create(AbilityType<T> type);
     }
 }

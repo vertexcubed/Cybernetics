@@ -17,19 +17,28 @@ public class AbilityStorage implements INBTSerializable<CompoundTag> {
 
     private LivingEntity parent;
     private final List<Ability> abilities = new ArrayList<>();
+
+    private CompoundTag tag;
     public AbilityStorage() {
 
     }
 
     public void init(LivingEntity parent) {
         this.parent = parent;
+        abilities.forEach(ability -> ability.setParent(parent));
     }
 
     public void copyFrom(AbilityStorage other, LivingEntity parent) {
         this.abilities.clear();
         this.abilities.addAll(other.abilities);
         this.parent = parent;
+        this.abilities.forEach(ability -> ability.setParent(parent));
     }
+
+    public void tick() {
+        abilities.forEach(Ability::tick);
+    }
+
 
     public LivingEntity getParent() {
         return parent;
@@ -66,7 +75,10 @@ public class AbilityStorage implements INBTSerializable<CompoundTag> {
         for (int i = 0; i < list.size(); ++i) {
             CompoundTag sub = list.getCompound(i);
             AbilityType<?> type = CybAbilities.ABILITY_TYPE_REGISTRY.getOptional(ResourceLocation.parse(sub.getString("type"))).orElseThrow();
-            abilities.add(type.createAbility(parent));
+
+            Ability ability = type.createAbility();
+            ability.deserializeNBT(provider, sub);
+            abilities.add(ability);
         }
     }
 }

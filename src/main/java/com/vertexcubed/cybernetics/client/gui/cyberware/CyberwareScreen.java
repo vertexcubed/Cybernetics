@@ -1,6 +1,5 @@
 package com.vertexcubed.cybernetics.client.gui.cyberware;
 
-import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenState;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenStateMachine;
@@ -10,6 +9,7 @@ import com.vertexcubed.cybernetics.client.task.*;
 import com.vertexcubed.cybernetics.client.util.FakeLocalPlayer;
 import com.vertexcubed.cybernetics.client.util.RenderHelper;
 import com.vertexcubed.cybernetics.common.menu.CyberwareMenu;
+import com.vertexcubed.cybernetics.common.registry.CybSoundEvents;
 import com.vertexcubed.cybernetics.common.storage.CyberwareSection;
 import com.vertexcubed.cybernetics.common.storage.CyberwareSectionType;
 import com.vertexcubed.cybernetics.server.network.C2SSwitchActiveSlotsPayload;
@@ -89,6 +89,7 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
                 .texture(this, leftPos + 208, topPos + 9, 9, 9, 0, 23, 32, 32, modLoc("textures/gui/cyberware/buttons.png"))
                 .playSoundOnClick(true)
                 .lightOnHover(true)
+                .customClickSound(CybSoundEvents.CYBERWARE_BACK.get(), 0.75f)
                 .click((ctx, mouseX, mouseY, button) -> {
                     if(canClickBackButton && ctx.getAlpha() > 0.0f &&
                             (!mainState.isActive(stateMachine))) {
@@ -275,6 +276,7 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
                     .lightOnHover(true)
                     .playSoundOnClick(true)
                     .alpha(0.0f)
+                    .customClickSound(CybSoundEvents.CYBERWARE_BUTTON.get(), 0.75f)
                     .click((ctx, mouseX, mouseY, partialTick) -> {
                         if(canClickSectionButtons && ctx.getAlpha() > 0.0f &&
                                 (mainState.isActive(stateMachine))) {
@@ -392,6 +394,12 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
     }
 
     @Override
+    public void removed() {
+        Minecraft.getInstance().player.playSound(CybSoundEvents.CYBERWARE_CLOSE.get());
+        super.removed();
+    }
+
+    @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -462,6 +470,8 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
                 .visible(false)
                 .active(false)
                 .lightOnHover(true)
+                .playSoundOnClick(true)
+                .customClickSound(CybSoundEvents.CYBERWARE_PAGE.get(), 0.75f)
                 .click((context, mouseX, mouseY, button) -> {
                     int page = menu.getInventoryPage();
                     boolean canPress = left ? page > 0 : page < 2;

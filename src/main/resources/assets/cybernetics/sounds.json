@@ -1,0 +1,38 @@
+{
+    "cyberware_open": {
+        "sounds": [
+            "cybernetics:cyberware_open"
+        ]
+    },
+    "cyberware_close": {
+        "sounds": [
+            "cybernetics:cyberware_close"
+        ]
+    },
+    "cyberware_back": {
+        "sounds": [
+            "cybernetics:cyberware_back"
+        ]
+    },
+    "cyberware_confirm": {
+        "sounds": [
+            "cybernetics:cyberware_confirm"
+        ]
+    },
+    "cyberware_button": {
+        "sounds": [
+            "cybernetics:cyberware_button"
+        ]
+    },
+    "cyberware_page": {
+        "sounds": [
+            "cybernetics:cyberware_page"
+        ]
+    },
+
+    "double_jump": {
+        "sounds": [
+            "cybernetics:double_jump"
+        ]
+    }
+}

@@ -1,5 +1,7 @@
 package com.vertexcubed.cybernetics.server.network;
 
+import com.vertexcubed.cybernetics.client.hud.AbilityHUD;
+import com.vertexcubed.cybernetics.client.hud.CyberneticsHUD;
 import com.vertexcubed.cybernetics.common.registry.CybAttachments;
 import com.vertexcubed.cybernetics.common.storage.AbilityStorage;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -57,6 +59,12 @@ public class S2CSyncAbilityStoragePayload implements CustomPacketPayload {
             Player player = context.player();
             LivingEntity entity = (LivingEntity) player.level().getEntity(payload.entity);
             entity.getData(CybAttachments.ABILITY_STORAGE).copyFrom(payload.abilities, entity);
+
+            CyberneticsHUD.getInstance().getElements().forEach(element -> {
+                if(element instanceof AbilityHUD abilityHUD) {
+                    abilityHUD.updateElementList();
+                }
+            });
         }).exceptionally(e -> {
             context.disconnect(Component.literal("Failed to handle payload " + TYPE.id() + ": " + e.getMessage()));
             return null;

@@ -1,12 +1,15 @@
 package com.vertexcubed.cybernetics.client.gui.cyberware;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
 import com.vertexcubed.cybernetics.client.gui.widget.BasicWidget;
 import com.vertexcubed.cybernetics.client.gui.widget.TextWidget;
 import com.vertexcubed.cybernetics.client.task.TweenTask;
 import com.vertexcubed.cybernetics.common.menu.CyberwareMenu;
+import com.vertexcubed.cybernetics.common.registry.CybSoundEvents;
 import com.vertexcubed.cybernetics.server.network.C2SApplyCyberwarePayload;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
@@ -28,6 +31,8 @@ public class CyberwareConfirmScreen extends Screen {
     private long time;
     private TextWidget textWidget;
 
+    private BasicWidget barLeft;
+    private BasicWidget barRight;
     private int scissorX;
     public CyberwareConfirmScreen() {
         super(Component.literal("Confirmation"));
@@ -48,9 +53,29 @@ public class CyberwareConfirmScreen extends Screen {
         addRenderableWidget(button(leftPos + 9, topPos + 39, true));
         addRenderableWidget(button(leftPos + 65, topPos + 39, false));
 
+        barLeft = BasicWidget
+                .texture(this, leftPos + 45 - 5, topPos, 5, 65,0 ,0, 128, 128, TEXTURE)
+                .zOffset(300)
+        ;
+
+        barRight = BasicWidget
+                .texture(this, leftPos + 46, topPos, 5, 65,86,0, 128, 128, TEXTURE)
+                .zOffset(300)
+        ;
+
+
+
+        Minecraft.getInstance().player.playSound(CybSoundEvents.CYBERWARE_CONFIRM.get(), 1.0f, 1.0f);
+
         scissorX = 0;
         ScreenHelper.getTaskManager(this).addFrameTask(
-                new TweenTask(() -> (float) scissorX, (f) -> scissorX = (int) (float) f, 45, 20, Easing.CUBIC_IN_OUT)
+                new TweenTask(() -> (float) scissorX, (f) -> scissorX = (int) (float) f, 40, 10, Easing.CUBIC_IN_OUT)
+        );
+        ScreenHelper.getTaskManager(this).addFrameTask(
+                new TweenTask(() -> (float) barLeft.getX(), (f) -> barLeft.setX((int) (float) f), leftPos, 10, Easing.CUBIC_IN_OUT)
+        );
+        ScreenHelper.getTaskManager(this).addFrameTask(
+                new TweenTask(() -> (float) barRight.getX(), (f) -> barRight.setX((int) (float) f), leftPos + imageWidth - 5, 10, Easing.CUBIC_IN_OUT)
         );
     }
 
@@ -71,6 +96,8 @@ public class CyberwareConfirmScreen extends Screen {
                     guiGraphics.blit(TEXTURE, context.getX(), context.getY(), context.getWidth(), context.getHeight(), 93, v, context.getWidth(), context.getHeight(), 128, 128);
         }))
                 .lightOnHover(true)
+                .playSoundOnClick(true)
+                .customClickSound(CybSoundEvents.CYBERWARE_BUTTON.get(), 0.75f)
                 .click((context, guiGraphics, mouseX, mouseY) -> {
                     if(isConfirm) {
                         if(this.minecraft.player.containerMenu instanceof CyberwareMenu menu) {
@@ -81,26 +108,26 @@ public class CyberwareConfirmScreen extends Screen {
                             Cybernetics.LOGGER.error("Couldn't apply changes: menu is not CyberwareMenu!");
                         }
                     }
-                    this.onClose();
+                    this.minecraft.popGuiLayer();
+                    this.minecraft.player.closeContainer();
+                    this.minecraft.popGuiLayer();
                 })
         ;
     }
 
-
     @Override
     public void onClose() {
-        this.minecraft.popGuiLayer();
-        this.minecraft.player.closeContainer();
-        this.minecraft.popGuiLayer();
+        Minecraft.getInstance().player.playSound(CybSoundEvents.CYBERWARE_CLOSE.get());
+        super.onClose();
     }
-
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
 
+        RenderSystem.enableDepthTest();
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
-        guiGraphics.enableScissor(leftPos + 45 - scissorX, topPos, leftPos + 46 + scissorX, topPos + imageHeight);
+        guiGraphics.enableScissor(leftPos + 45 - scissorX - 5, topPos, leftPos + 46 + scissorX + 5, topPos + imageHeight);
 
         renderBg(guiGraphics, partialTick, mouseX, mouseY);
 
@@ -114,6 +141,10 @@ public class CyberwareConfirmScreen extends Screen {
         textWidget.render(guiGraphics, mouseX, mouseY, partialTick);
         guiGraphics.pose().popPose();
 
+        barLeft.render(guiGraphics, mouseX, mouseY, partialTick);
+        barRight.render(guiGraphics, mouseX, mouseY, partialTick);
+
+
         guiGraphics.disableScissor();
     }
 
@@ -122,6 +153,10 @@ public class CyberwareConfirmScreen extends Screen {
 //        RenderSystem.setShaderTexture(0, TEXTURE);
 //        RenderHelper.resetShaderColor();
         guiGraphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 128, 128);
+
+
+
+
     }
 
 }

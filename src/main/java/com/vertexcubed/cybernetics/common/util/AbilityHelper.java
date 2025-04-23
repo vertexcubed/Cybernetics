@@ -1,5 +1,7 @@
 package com.vertexcubed.cybernetics.common.util;
 
+import com.vertexcubed.cybernetics.client.hud.AbilityHUD;
+import com.vertexcubed.cybernetics.client.hud.CyberneticsHUD;
 import com.vertexcubed.cybernetics.common.ability.Ability;
 import com.vertexcubed.cybernetics.common.ability.AbilityType;
 import com.vertexcubed.cybernetics.common.registry.CybAttachments;
@@ -20,6 +22,15 @@ public class AbilityHelper {
         if(!entity.hasData(CybAttachments.ABILITY_STORAGE)) return;
         AbilityStorage storage = entity.getData(CybAttachments.ABILITY_STORAGE);
         storage.add(type.createAbility().setParent(entity));
+
+        if(entity.level().isClientSide) {
+            CyberneticsHUD.getInstance().getElements().forEach(element -> {
+                if(element instanceof AbilityHUD abilityHUD) {
+                    abilityHUD.updateElementList();
+                }
+            });
+        }
+
         if(syncToClient && !entity.level().isClientSide()) {
             PacketDistributor.sendToAllPlayers(new S2CSyncAbilityStoragePayload(storage, entity));
         }
@@ -39,6 +50,14 @@ public class AbilityHelper {
                 storage.remove(a);
                 removedAnything = true;
             }
+        }
+
+        if(entity.level().isClientSide) {
+            CyberneticsHUD.getInstance().getElements().forEach(element -> {
+                if(element instanceof AbilityHUD abilityHUD) {
+                    abilityHUD.updateElementList();
+                }
+            });
         }
 
         if(syncToClient && !entity.level().isClientSide() && removedAnything) {
@@ -96,5 +115,16 @@ public class AbilityHelper {
             PacketDistributor.sendToAllPlayers(new BidirectionalAbilityEventPayload(BidirectionalAbilityEventPayload.Mode.DISABLE, type, entity.getId()));
         }
         return disabledAnything;
+    }
+
+    public static boolean isEnabled(LivingEntity entity, AbilityType<?> type) {
+        if(!entity.hasData(CybAttachments.ABILITY_STORAGE)) return false;
+        AbilityStorage storage = entity.getData(CybAttachments.ABILITY_STORAGE);
+        for(Ability a : storage.getAbilities()) {
+            if(a.getType() == type && a.isEnabled()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

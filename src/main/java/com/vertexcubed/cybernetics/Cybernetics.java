@@ -1,6 +1,11 @@
 package com.vertexcubed.cybernetics;
 
 import com.mojang.logging.LogUtils;
+import com.vertexcubed.cybernetics.client.hud.AbilityHUD;
+import com.vertexcubed.cybernetics.client.hud.CyberneticsHUD;
+import com.vertexcubed.cybernetics.client.hud.MobEffectHUDElement;
+import com.vertexcubed.cybernetics.client.shader.CybCoreShaders;
+import com.vertexcubed.cybernetics.client.util.HUDAnchor;
 import com.vertexcubed.cybernetics.common.registry.*;
 import com.vertexcubed.cybernetics.datagen.DataGenerators;
 import com.vertexcubed.cybernetics.server.network.CybPayloads;
@@ -18,8 +23,10 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.event.RegisterShadersEvent;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
@@ -66,6 +73,7 @@ public class Cybernetics
         CybDataComponents.register(modEventBus);
         CybItems.register(modEventBus);
         CybCreativeTabs.register(modEventBus);
+        CybSoundEvents.register(modEventBus);
 
     }
 
@@ -77,11 +85,6 @@ public class Cybernetics
     @SubscribeEvent
     public void registerPayloadHandlers(final RegisterPayloadHandlersEvent event) {
         CybPayloads.regsiter(event);
-    }
-
-    @SubscribeEvent
-    public void registerScreens(RegisterMenuScreensEvent event) {
-        CybScreens.register(event);
     }
 
     @SubscribeEvent
@@ -101,12 +104,28 @@ public class Cybernetics
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
+            CyberneticsHUD.addElements(new MobEffectHUDElement(HUDAnchor.MIDDLE_LEFT, 4, -79));
+            CyberneticsHUD.addElements(new AbilityHUD(HUDAnchor.TOP_RIGHT, -162, 4));
+        }
 
+        @SubscribeEvent
+        public static void registerScreens(RegisterMenuScreensEvent event) {
+            CybScreens.register(event);
+        }
+
+        @SubscribeEvent
+        public static void registerGUI(RegisterGuiLayersEvent event) {
+            event.registerAboveAll(modLoc("hud"), CyberneticsHUD.getInstance());
         }
 
         @SubscribeEvent
         public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
             CybKeyMappings.register(event);
+        }
+
+        @SubscribeEvent
+        public static void registerShaders(RegisterShadersEvent event) {
+            CybCoreShaders.registerShaders(event);
         }
     }
 }

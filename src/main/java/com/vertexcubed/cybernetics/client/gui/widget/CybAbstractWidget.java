@@ -30,12 +30,16 @@ public abstract class CybAbstractWidget extends AbstractWidget {
         if (this.isValidClickButton(pButton)) {
             boolean flag = this.clicked(pMouseX, pMouseY);
             if (flag) {
-                if(playSound) this.playDownSound(Minecraft.getInstance().getSoundManager());
+                if(playSound) playClickSound();
                 this.onClick(pMouseX, pMouseY, pButton);
                 return true;
             }
         }
 
         return false;
+    }
+
+    public void playClickSound() {
+        this.playDownSound(Minecraft.getInstance().getSoundManager());
     }
 }

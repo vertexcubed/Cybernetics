@@ -183,40 +183,30 @@ public class CyberwareMenu extends AbstractContainerMenu {
         List<Pair<Integer, ItemStack>> toAddReal = new ArrayList<>();
         List<Pair<Integer, ItemStack>> toRemoveReal = new ArrayList<>();
         for(int i = 0; i < cyberware.getSlots(); i++) {
-            if(cyberware.getStackInSlot(i).isEmpty() && !cyberwareInventoryClone.getStackInSlot(i).isEmpty()) {
-                ItemStack stack = cyberwareInventoryClone.getStackInSlot(i);
-                if(in(stack, cybAddItems)) {
-                    toAddReal.add(new Pair<>(i, stack));
-                }
-                else {
-                    Cybernetics.LOGGER.error("Cannot apply changes: Fatal mismatch between cybAddItems list and actual inventory.");
-                    return;
-                }
+            ItemStack addStack = cyberwareInventoryClone.getStackInSlot(i);
+            if(!addStack.isEmpty() && in(addStack, cybAddItems)) {
+                toAddReal.add(new Pair<>(i, addStack));
+                cybAddItems.remove(addStack);
             }
-            else if(!cyberware.getStackInSlot(i).isEmpty() && cyberwareInventoryClone.getStackInSlot(i).isEmpty()) {
-                ItemStack stack = cyberware.getStackInSlot(i);
-                if(in(stack, cybRemoveItems)) {
-                    toRemoveReal.add(new Pair<>(i, stack));
-                }
-                else {
-                    Cybernetics.LOGGER.error("Cannot apply changes: Fatal mismatch between cybRemoveItems list and actual inventory.");
-                    return;
-                }
+            ItemStack removeStack = cyberware.getStackInSlot(i);
+            if(!removeStack.isEmpty() && in(removeStack, cybRemoveItems)) {
+                toRemoveReal.add(new Pair<>(i, removeStack));
+                cybRemoveItems.remove(removeStack);
             }
         }
+        toRemoveReal.forEach(pair -> {
+            ItemStack extracted = cyberware.extractItem(pair.getFirst(), pair.getSecond().getCount(), false);
+            NeoForge.EVENT_BUS.post(new CyberwareEvent.Unequip(extracted, pair.getFirst(), player.level(), player));
+            if(extracted.getItem() instanceof CyberwareItem cybItem) {
+                cybItem.onUnequip(extracted, pair.getFirst(), player.level(), player);
+            }
+        });
         toAddReal.forEach(pair -> {
             cyberware.insertItem(pair.getFirst(), pair.getSecond(), false);
             ItemStack inserted = pair.getSecond();
             NeoForge.EVENT_BUS.post(new CyberwareEvent.Equip(inserted, pair.getFirst(), player.level(), player));
             if(inserted.getItem() instanceof CyberwareItem cybItem) {
                 cybItem.onEquip(inserted, pair.getFirst(), player.level(), player);
-            }
-        });
-        toRemoveReal.forEach(pair -> {
-            ItemStack extracted = cyberware.extractItem(pair.getFirst(), pair.getSecond().getCount(), false);
-            NeoForge.EVENT_BUS.post(new CyberwareEvent.Unequip(extracted, pair.getFirst(), player.level(), player));
-            if(extracted.getItem() instanceof CyberwareItem cybItem) {
-                cybItem.onUnequip(extracted, pair.getFirst(), player.level(), player);
             }
         });
 

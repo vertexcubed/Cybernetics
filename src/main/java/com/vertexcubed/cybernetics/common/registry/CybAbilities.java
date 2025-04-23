@@ -3,6 +3,7 @@ package com.vertexcubed.cybernetics.common.registry;
 import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.common.ability.AbilityType;
 import com.vertexcubed.cybernetics.common.ability.NightVisionAbility;
+import com.vertexcubed.cybernetics.common.ability.OpticsAbility;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.bus.api.IEventBus;
@@ -24,8 +25,9 @@ public class CybAbilities {
 
 
     public static final Supplier<AbilityType<NightVisionAbility>> NIGHT_VISION
-            = ABILITY_TYPES.register("night_vision", () -> new AbilityType.Builder<>(NightVisionAbility::new).build());
-
+            = ABILITY_TYPES.register("night_vision", () -> new AbilityType.Builder<>(NightVisionAbility::new).texture(modLoc("textures/gui/ability/night_vision.png")).build());
+    public static final Supplier<AbilityType<OpticsAbility>> OPTICS
+            = ABILITY_TYPES.register("optics", () -> new AbilityType.Builder<>(OpticsAbility::new).build());
 
 
 

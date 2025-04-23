@@ -38,9 +38,9 @@ public class CybItems {
 
 
         //EYES
-        MK1_OPTICS = ITEMS.register("mk1_optics", () -> new OpticsItem(cyberwareProps("mk1_optics"))),
-//        MK2_OPTICS = ITEMS.register("mk2_optics", () -> new OpticsItem(cyberwareProps("mk2_optics"), true)),
-//        MK3_OPTICS = ITEMS.register("mk3_optics", () -> new OpticsItem(cyberwareProps("mk3_optics"), true)),
+        MK1_OPTICS = ITEMS.register("mk1_optics", () -> new OpticsItem(cyberwareProps("mk1_optics"), false)),
+        MK2_OPTICS = ITEMS.register("mk2_optics", () -> new OpticsItem(cyberwareProps("mk2_optics"), true)),
+        MK3_OPTICS = ITEMS.register("mk3_optics", () -> new OpticsItem(cyberwareProps("mk3_optics"), true)),
         NIGHT_VISION_EYES = ITEMS.register("night_vision_eyes", () -> new SimpleAbilityCyberwareItem<>(cyberwareProps("night_vision_eyes"), CybAbilities.NIGHT_VISION)),
 
         //UPPER ORGANS
@@ -77,7 +77,7 @@ public class CybItems {
 
 
         //LEGS
-//        REINFORCED_TENDONS = ITEMS.register("reinforced_tendons", () -> new ReinforcedTendonsItem(cyberwareProps("reinforced_tendons"))),
+        REINFORCED_TENDONS = ITEMS.register("reinforced_tendons", () -> new DoubleJumpItem(cyberwareProps("reinforced_tendons"))),
         SPEED_LEGS = ITEMS.register("speed_legs", () -> new MobEffectCyberwareItem(cyberwareProps("speed_legs"), Triple.of(MobEffects.MOVEMENT_SPEED, -1, 1))),
 
         //FEET

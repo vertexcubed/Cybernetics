@@ -1,9 +1,12 @@
 package com.vertexcubed.cybernetics.client.gui.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -18,6 +21,8 @@ public class BasicWidget extends CybAbstractWidget {
     private boolean lightOnHover;
     private float scale;
     private int zOffset;
+    private SoundEvent clickSound;
+    private float soundVolume;
 
     private BasicWidget(Screen parent, int x, int y, int width, int height, WidgetRenderer renderer) {
         super(x, y, width, height);
@@ -132,6 +137,16 @@ public class BasicWidget extends CybAbstractWidget {
         return this;
     }
 
+    public BasicWidget customClickSound(SoundEvent event) {
+        return customClickSound(event, 1.0f);
+    }
+
+    public BasicWidget customClickSound(SoundEvent event, float volume) {
+        clickSound = event;
+        this.soundVolume = volume;
+        return this;
+    }
+
     /**
      * Gets the parent screen of this widget.
      */
@@ -165,6 +180,15 @@ public class BasicWidget extends CybAbstractWidget {
         if(this.clickHandler != null) {
             clickHandler.onClick(this, mouseX, mouseY, button);
         }
+    }
+
+    @Override
+    public void playClickSound() {
+        if(this.clickSound == null) {
+            super.playClickSound();
+            return;
+        }
+        Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(clickSound, 1,soundVolume));
     }
 
     @FunctionalInterface

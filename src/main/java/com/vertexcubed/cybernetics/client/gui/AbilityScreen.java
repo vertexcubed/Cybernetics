@@ -43,6 +43,7 @@ public class AbilityScreen extends Screen {
 
     private Player player;
     private TextWidget textWidget;
+    private int ids;
     public AbilityScreen() {
         super(Component.literal("Abilities"));
     }
@@ -115,9 +116,7 @@ public class AbilityScreen extends Screen {
     }
 
     @Override
-    protected void renderBlurredBackground(float partialTick) {
-
-    }
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {}
 
     public void updateText(Component text) {
         textWidget.setText(text, true);
@@ -206,6 +205,7 @@ public class AbilityScreen extends Screen {
         private float startAngle;
         private float totalAngle;
         private final Ability ability;
+        private final int id;
         public AbilitySlice(Ability ability, float inner, float outer, float startAngle, float totalAngle) {
             super((int) centerX, (int) centerY, 1, 1);
             this.playSound = false;
@@ -215,6 +215,7 @@ public class AbilityScreen extends Screen {
             this.totalAngle = totalAngle;
             this.alpha = 0.75f;
             this.ability = ability;
+            this.id = AbilityScreen.this.ids++;
         }
 
         @Override
@@ -273,18 +274,18 @@ public class AbilityScreen extends Screen {
         public void setSelected(boolean selected) {
             if(this.selected != selected) {
                 if(selected) {
-                    ScreenHelper.getTaskManager(AbilityScreen.this).interruptFrameTask("deselected");
-                    ScreenHelper.getTaskManager(AbilityScreen.this).addFrameTask(new TweenTask(this::getInner, this::setInner, 70, 7, Easing.CIRC_OUT).withTag("selected"));
-                    ScreenHelper.getTaskManager(AbilityScreen.this).addFrameTask(new TweenTask(this::getOuter, this::setOuter, 110, 7, Easing.CIRC_OUT).withTag("selected"));
-                    ScreenHelper.getTaskManager(AbilityScreen.this).addFrameTask(new TweenTask(this::getAlpha, this::setAlpha, 0.9f, 7, Easing.CIRC_OUT).withTag("selected"));
+                    ScreenHelper.getTaskManager(AbilityScreen.this).interruptFrameTask("deselected_" + id);
+                    ScreenHelper.getTaskManager(AbilityScreen.this).addFrameTask(new TweenTask(this::getInner, this::setInner, 70, 7, Easing.CIRC_OUT).withTag("selected_" + id));
+                    ScreenHelper.getTaskManager(AbilityScreen.this).addFrameTask(new TweenTask(this::getOuter, this::setOuter, 110, 7, Easing.CIRC_OUT).withTag("selected_" + id));
+                    ScreenHelper.getTaskManager(AbilityScreen.this).addFrameTask(new TweenTask(this::getAlpha, this::setAlpha, 0.9f, 7, Easing.CIRC_OUT).withTag("selected_" + id));
                     ResourceLocation abilityRLoc = CybAbilities.ABILITY_TYPE_REGISTRY.getKey(ability.getType());
                     AbilityScreen.this.updateText(Component.translatable("tooltip." + abilityRLoc.getNamespace() + ".ability." + abilityRLoc.getPath()));
                 }
                 else {
-                    ScreenHelper.getTaskManager(AbilityScreen.this).interruptFrameTask("selected");
-                    ScreenHelper.getTaskManager(AbilityScreen.this).addFrameTask(new TweenTask(this::getInner, this::setInner, 60, 10, Easing.QUAD_OUT).withTag("deselected"));
-                    ScreenHelper.getTaskManager(AbilityScreen.this).addFrameTask(new TweenTask(this::getOuter, this::setOuter, 100, 10, Easing.QUAD_OUT).withTag("deselected"));
-                    ScreenHelper.getTaskManager(AbilityScreen.this).addFrameTask(new TweenTask(this::getAlpha, this::setAlpha, 0.75f, 7, Easing.CIRC_OUT).withTag("deselected"));
+                    ScreenHelper.getTaskManager(AbilityScreen.this).interruptFrameTask("selected_" + id);
+                    ScreenHelper.getTaskManager(AbilityScreen.this).addFrameTask(new TweenTask(this::getInner, this::setInner, 60, 10, Easing.QUAD_OUT).withTag("deselected_" + id));
+                    ScreenHelper.getTaskManager(AbilityScreen.this).addFrameTask(new TweenTask(this::getOuter, this::setOuter, 100, 10, Easing.QUAD_OUT).withTag("deselected_" + id));
+                    ScreenHelper.getTaskManager(AbilityScreen.this).addFrameTask(new TweenTask(this::getAlpha, this::setAlpha, 0.75f, 7, Easing.CIRC_OUT).withTag("deselected_" + id));
                 }
             }
             this.selected = selected;

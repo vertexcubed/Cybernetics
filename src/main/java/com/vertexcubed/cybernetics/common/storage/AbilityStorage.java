@@ -49,6 +49,7 @@ public class AbilityStorage implements INBTSerializable<CompoundTag> {
     }
 
     public boolean remove(Ability ability) {
+        ability.disable();
         return this.abilities.remove(ability);
     }
 

@@ -22,6 +22,20 @@ public class EntityMixin {
         return original.call();
     }
 
+    @WrapMethod(method = "isSteppingCarefully")
+    public boolean cybernetics$isSteppingCarefully(Operation<Boolean> original) {
+        Entity entity = (Entity) (Object) this;
+        if(entity instanceof LivingEntity livingEntity) {
+            if(CyberwareHelper.hasCyberware(CybItems.SOUND_ABSORBENT_FEET.get(), livingEntity)) {
+                return true;
+            }
+        }
+
+
+        return original.call();
+    }
+
+
     @WrapMethod(method = "getBlockJumpFactor")
     public float cybernetics$getBlockJumpFactor(Operation<Float> original) {
         Entity e = (Entity) (Object) this;

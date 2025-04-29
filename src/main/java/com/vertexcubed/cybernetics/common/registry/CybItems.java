@@ -49,7 +49,7 @@ public class CybItems {
         HEALTH_BOOST_ORGANS = ITEMS.register("health_boost_organs", () -> new AttributeCyberwareItem(cyberwareProps("health_boost_organs"), Pair.of(Attributes.MAX_HEALTH, new AttributeModifier(modLoc("health_boost_organs"), 5, AttributeModifier.Operation.ADD_VALUE)))),
 
         //LOWER ORGANS
-        STOMACH_FILTER = ITEMS.register("stomach_filter", () -> new CyberwareItem(cyberwareProps("stomach_filter"))),
+        STOMACH_FILTER = ITEMS.register("stomach_filter", () -> new StomachFilterItem(cyberwareProps("stomach_filter"))),
 //        SYNAPTIC_DISABLER = ITEMS.register("synaptic_disabler", () -> new SimpleAbilityCyberwareItem(cyberwareProps("synaptic_disabler"), CybAbilities.SYNAPTIC_DISABLER)),
 //        MK1_DOUBLE_JUMP_ADDER = ITEMS.register("mk1_double_jump_adder", () -> new AttributeCyberwareItem(cyberwareProps("mk1_double_jump_adder"), Pair.of(CybAttributes.DOUBLE_JUMPS.get(), new AttributeModifier(UUID.fromString("053bf72d-a9e1-4e3f-8373-e2491155f9f5"), "Lower Organs Double Jump Boost", 1.0, AttributeModifier.Operation.ADD_VALUE)))),
 //        MK2_DOUBLE_JUMP_ADDER = ITEMS.register("mk2_double_jump_adder", () -> new AttributeCyberwareItem(cyberwareProps("mk2_double_jump_adder"), Pair.of(CybAttributes.DOUBLE_JUMPS.get(), new AttributeModifier(UUID.fromString("a819279b-894b-4c33-bb05-74d5751859f6"), "Lower Organs Double Jump Boost", 2.0, AttributeModifier.Operation.ADD_VALUE)))),
@@ -73,7 +73,6 @@ public class CybItems {
 
         //HANDS
         STRENGTH_HANDS = ITEMS.register("strength_hands", () -> new AttributeCyberwareItem(cyberwareProps("strength_hands"), Pair.of(Attributes.ATTACK_DAMAGE, new AttributeModifier(modLoc("strength_hands"), 3.0, AttributeModifier.Operation.ADD_VALUE)))),
-        STONE_MINING_FISTS = ITEMS.register("stone_mining_fists", () -> new CyberwareItem(cyberwareProps("stone_mining_fists"))),
 
 
         //LEGS
@@ -142,7 +141,6 @@ public class CybItems {
 
 
         addToMap("strength_hands", () -> new Builder().setCapacity(4));
-        addToMap("stone_mining_fists", () -> new Builder().setCapacity(3));
 
 
         addToMap("reinforced_tendons", () -> new Builder().setCapacity(7));

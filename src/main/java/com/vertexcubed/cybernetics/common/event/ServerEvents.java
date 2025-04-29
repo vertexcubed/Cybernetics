@@ -2,13 +2,21 @@ package com.vertexcubed.cybernetics.common.event;
 
 import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.common.registry.CybAttachments;
+import com.vertexcubed.cybernetics.common.registry.CybItems;
+import com.vertexcubed.cybernetics.common.registry.CybTags;
+import com.vertexcubed.cybernetics.common.util.CyberwareHelper;
 import com.vertexcubed.cybernetics.server.network.S2CSyncAbilityStoragePayload;
 import com.vertexcubed.cybernetics.server.network.S2CSyncCyberwarePayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tiers;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -56,6 +64,20 @@ public class ServerEvents {
         if(entity.hasData(CybAttachments.ABILITY_STORAGE)) {
             entity.getData(CybAttachments.ABILITY_STORAGE).init(entity);
             PacketDistributor.sendToAllPlayers(new S2CSyncAbilityStoragePayload(entity.getData(CybAttachments.ABILITY_STORAGE), entity));
+        }
+    }
+
+
+
+    @SubscribeEvent
+    public static void onLivingAttackEvent(LivingIncomingDamageEvent event) {
+        if(event.getEntity().level().isClientSide) return;
+
+        if(CyberwareHelper.hasCyberware(CybItems.PROJECTILE_DEFLECTOR.get(), event.getEntity()) && !event.getSource().isDirect()) {
+            EntityType<?> entityType = event.getSource().getDirectEntity().getType();
+            if(!entityType.is(CybTags.PROJECTILES_ALWAYS_HIT) && event.getEntity().getRandom().nextInt(10) < 4) {
+                event.setCanceled(true);
+            }
         }
     }
 }

@@ -59,8 +59,7 @@ public class CybItemTagsProvider extends ItemTagsProvider {
                 CybItems.RANGE_EXTENDER.get()
         );
         this.tag(CybTags.HANDS_SECTION).add(
-                CybItems.STRENGTH_HANDS.get(),
-                CybItems.STONE_MINING_FISTS.get()
+                CybItems.STRENGTH_HANDS.get()
         );
         this.tag(CybTags.LEGS_SECTION).add(
                 CybItems.REINFORCED_TENDONS.get(),

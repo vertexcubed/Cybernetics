@@ -10,6 +10,8 @@
     "client": [
         "client.GameRendererMixin",
         "client.GuiMixin",
+        "client.LevelRendererMixin",
+        "client.MinecraftMixin",
         "client.ScreenMixin"
     ],
     "injectors": {

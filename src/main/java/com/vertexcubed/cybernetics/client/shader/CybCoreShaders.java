@@ -19,7 +19,8 @@ public class CybCoreShaders {
     private static final List<ShaderHolder> shaders = new ArrayList<>();
 
     public static ShaderHolder
-            CIRCLE_PROGRESS = register(modLoc("circle_progress"), DefaultVertexFormat.POSITION_TEX, "Progress")
+            CIRCLE_PROGRESS = register(modLoc("circle_progress"), DefaultVertexFormat.POSITION_TEX, "Progress"),
+            SCAN = register(modLoc("scan"), DefaultVertexFormat.POSITION_TEX, "CameraPos", "Center", "Radius")
     ;
 
 

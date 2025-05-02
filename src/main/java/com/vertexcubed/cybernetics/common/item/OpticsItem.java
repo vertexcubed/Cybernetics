@@ -19,11 +19,19 @@ public class OpticsItem extends SimpleAbilityCyberwareItem<OpticsAbility> {
     public void onEquip(ItemStack stack, int slot, Level level, LivingEntity entity) {
         super.onEquip(stack, slot, level, entity);
         AbilityHelper.enableAbility(entity, CybAbilities.OPTICS.get()); //this should be enabled by default!
+        if(canScan) {
+            if(!AbilityHelper.hasAbility(entity, CybAbilities.SCAN.get())) {
+                AbilityHelper.addAbility(entity, CybAbilities.SCAN.get());
+            }
+        }
     }
 
     @Override
     public void onUnequip(ItemStack stack, int slot, Level level, LivingEntity entity) {
         super.onUnequip(stack, slot, level, entity);
+        if(canScan) {
+            AbilityHelper.removeAbility(entity, CybAbilities.SCAN.get());
+        }
     }
 
 

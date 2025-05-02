@@ -4,6 +4,7 @@ import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.common.ability.AbilityType;
 import com.vertexcubed.cybernetics.common.ability.NightVisionAbility;
 import com.vertexcubed.cybernetics.common.ability.OpticsAbility;
+import com.vertexcubed.cybernetics.common.ability.ScanAbility;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.bus.api.IEventBus;
@@ -28,7 +29,8 @@ public class CybAbilities {
             = ABILITY_TYPES.register("night_vision", () -> new AbilityType.Builder<>(NightVisionAbility::new).texture(modLoc("textures/gui/ability/night_vision.png")).build());
     public static final Supplier<AbilityType<OpticsAbility>> OPTICS
             = ABILITY_TYPES.register("optics", () -> new AbilityType.Builder<>(OpticsAbility::new).build());
-
+    public static final Supplier<AbilityType<ScanAbility>> SCAN
+            = ABILITY_TYPES.register("scan", () -> new AbilityType.Builder<>(ScanAbility::new).maxRuntime(0).maxCooldown(100).build());
 
 
     public static void register(IEventBus eventBus) {

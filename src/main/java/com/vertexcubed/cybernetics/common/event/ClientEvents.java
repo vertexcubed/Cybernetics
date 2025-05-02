@@ -3,6 +3,7 @@ package com.vertexcubed.cybernetics.common.event;
 import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.client.gui.AbilityScreen;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
+import com.vertexcubed.cybernetics.client.render.ScannerRenderer;
 import com.vertexcubed.cybernetics.client.util.InputHelper;
 import com.vertexcubed.cybernetics.common.item.CyberwareItem;
 import com.vertexcubed.cybernetics.common.item.DoubleJumpItem;
@@ -16,9 +17,12 @@ import net.minecraft.client.player.LocalPlayer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, modid = Cybernetics.MOD_ID, value = Dist.CLIENT)
@@ -71,7 +75,21 @@ public class ClientEvents {
     }
 
 
+    @SubscribeEvent
+    public static void renderLevel(RenderLevelStageEvent event) {
+        if(event.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES) return;
+//        ScannerRenderer.getInstance().renderScan(event.getPoseStack(), event.getPartialTick().getGameTimeDeltaPartialTick(true), event.getCamera(), Minecraft.getInstance().getMainRenderTarget());
+    }
 
+
+    @SubscribeEvent
+    public static void onClientLogout(ClientPlayerNetworkEvent.LoggingOut event) {
+        ScannerRenderer.getInstance().stop();
+    }
+
+
+
+    // Double jump, dash, spike, etc.
 
     private static void handleDoubleJump() {
         LocalPlayer player = Minecraft.getInstance().player;

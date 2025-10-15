@@ -93,6 +93,8 @@ public class AbilityScreen extends Screen {
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTick);
 
+        Cybernetics.LOGGER.debug("{}", RenderSystem.getModelViewMatrix());
+
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 //        RenderSystem.disableTexture();

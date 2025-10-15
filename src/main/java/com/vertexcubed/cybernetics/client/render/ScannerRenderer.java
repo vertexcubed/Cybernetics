@@ -1,17 +1,20 @@
 package com.vertexcubed.cybernetics.client.render;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.client.shader.CybCoreShaders;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.joml.Matrix4fStack;
 import org.joml.Vector3f;
 import team.lodestar.lodestone.systems.rendering.shader.ExtendedShaderInstance;
 
@@ -68,7 +71,6 @@ public class ScannerRenderer {
         // width and height
         int width = renderTarget.width;
         int height = renderTarget.height;
-//        Cybernetics.LOGGER.debug("Width: {}, height: {}", width, height);
 
         // setup render state
 
@@ -76,22 +78,35 @@ public class ScannerRenderer {
         RenderSystem.depthMask(false);
         RenderSystem.disableDepthTest();
         RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 
         ShaderInstance oldShader = RenderSystem.getShader();
         RenderSystem.setShader(() -> shader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
+
+
+        // Copy proj mat before setting the ortho matrix
+        Matrix4f invProjMat = new Matrix4f(RenderSystem.getProjectionMatrix()).invert();
+
         // we're replacing the projection matrix with an orthographic matrix w/ screensize as the size.
         RenderSystem.backupProjectionMatrix();
         RenderSystem.setProjectionMatrix(new Matrix4f().setOrtho(0, width, 0, height, 0.1f, 1000.0f), VertexSorting.ORTHOGRAPHIC_Z);
+
+
+        // Copy View mat before setting it to identity
+        Matrix4f invViewMat = new Matrix4f(RenderSystem.getModelViewMatrix()).invert();
+
+        // This is a BAD BAD BAD HORRENDOUS IDEA but im sick and tired
+        Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
+        modelViewStack.pushMatrix();
+        modelViewStack.mul(invViewMat);
         RenderSystem.applyModelViewMatrix();
 
 
-        // setup uniforms
 
-        Matrix4f invViewMat = new Matrix4f(poseStack.last().pose()).invert();
-        Matrix4f invProjMat = new Matrix4f(RenderSystem.getProjectionMatrix()).invert();
+
+        // setup other uniforms
         Vector3f cameraPos = camera.getPosition().toVector3f();
 
         // non-cached uniforms
@@ -100,32 +115,32 @@ public class ScannerRenderer {
         shader.safeGetUniform("InvViewMat").set(invViewMat);
 
         // cached uniforms
-
         shader.safeGetUniform("CameraPos").set(cameraPos);
         shader.safeGetUniform("Center").set(center);
         shader.safeGetUniform("Radius").set((elapsed + partialTick) * 1.5f);
 
 
-        // render
 
+        // render
         BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.addVertex(0, 0, 0.0f).setUv(0, 0);
-        buffer.addVertex(width, 0, 0.0f).setUv(1, 0);
-        buffer.addVertex(width, height, 0.0f).setUv(1, 1);
-        buffer.addVertex(0, height, 0.0f).setUv(0, 1);
+        buffer.addVertex(0, 0, -50).setUv(0, 0);
+        buffer.addVertex(width, 0, -50).setUv(1, 0);
+        buffer.addVertex(width, height, -50).setUv(1, 1);
+        buffer.addVertex(0, height, -50).setUv(0, 1);
 
         BufferUploader.drawWithShader(buffer.buildOrThrow());
 
+        // clean up view matrix
+        modelViewStack.popMatrix();
+        RenderSystem.applyModelViewMatrix();
 
         // end
-
         shader.setUniformDefaults();
         RenderSystem.restoreProjectionMatrix();
         RenderSystem.setShader(() -> oldShader);
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
         RenderSystem.disableBlend();
-        RenderSystem.applyModelViewMatrix();
 
     }
 

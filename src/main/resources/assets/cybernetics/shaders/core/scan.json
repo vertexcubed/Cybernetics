@@ -2,7 +2,7 @@
     "blend": {
         "func": "add",
         "srcrgb": "one",
-        "dstrgb": "one"
+        "dstrgb": "zero"
     },
     "vertex": "position_tex",
     "fragment": "cybernetics:scan",
@@ -16,8 +16,10 @@
     "uniforms": [
         { "name": "ModelViewMat", "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
         { "name": "ProjMat",      "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+
         { "name": "InvViewMat",   "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
         { "name": "InvProjMat",   "type": "matrix4x4", "count": 16, "values": [ 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0 ] },
+
         { "name": "CameraPos",    "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] },
         { "name": "Center",       "type": "float",     "count": 3,  "values": [ 0.0, 0.0, 0.0 ] },
         { "name": "Radius",       "type": "float",     "count": 1,  "values": [ 1.0 ] }

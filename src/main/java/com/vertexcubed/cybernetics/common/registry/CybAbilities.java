@@ -1,10 +1,7 @@
 package com.vertexcubed.cybernetics.common.registry;
 
 import com.vertexcubed.cybernetics.Cybernetics;
-import com.vertexcubed.cybernetics.common.ability.AbilityType;
-import com.vertexcubed.cybernetics.common.ability.NightVisionAbility;
-import com.vertexcubed.cybernetics.common.ability.OpticsAbility;
-import com.vertexcubed.cybernetics.common.ability.ScanAbility;
+import com.vertexcubed.cybernetics.common.ability.*;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.bus.api.IEventBus;
@@ -31,6 +28,9 @@ public class CybAbilities {
             = ABILITY_TYPES.register("optics", () -> new AbilityType.Builder<>(OpticsAbility::new).build());
     public static final Supplier<AbilityType<ScanAbility>> SCAN
             = ABILITY_TYPES.register("scan", () -> new AbilityType.Builder<>(ScanAbility::new).maxRuntime(0).maxCooldown(100).build());
+    public static final Supplier<AbilityType<EmergencyDefibrillatorAbility>> EMERGENCY_DEFIBRILLATOR
+            = ABILITY_TYPES.register("emergency_defibrillator", () -> new AbilityType.Builder<>(EmergencyDefibrillatorAbility::new).maxRuntime(0).maxCooldown(120).build());
+
 
 
     public static void register(IEventBus eventBus) {

@@ -111,7 +111,7 @@
   "tooltip.cybernetics.oxygen_recycler.description": "A mechanical pump connected directly to the lungs, allowing the body to save oxygen produced elsewhere to maintain the user's breath. Gives a _75%_ chance to _not consume air bubbles_. Stacks with Respiration.",
   "tooltip.cybernetics.health_boost_organs.description": "An aritifical pump that improves blood flow through the body, giving the user permanent _+5 maximum health_.",
 
-  "tooltip.cybernetics.stomach_filter.description": "This item is yet to be implemented, and currently unobtainable. Sorry!",
+  "tooltip.cybernetics.stomach_filter.description": "A protective lining for the user's stomach, preventing _poison_, _nausea_, and _hunger_. Extracts more nutrients from consumed food, giving a _25%_ chance to _double hunger points_.",
   "tooltip.cybernetics.synaptic_disabler.description": "This item is yet to be implemented, and currently unobtainable. Sorry!",
   "tooltip.cybernetics.mk1_double_jump_adder.description": "An internal booster that sits next to the stomach, providing more energy to the user's _Reinforced Tendons_. Gives _+1 extra midair jump_.",
   "tooltip.cybernetics.mk2_double_jump_adder.description": "An advanced booster that spreads across the user's pelvis, providing even more of a boost to the user's _Reinforced Tendons_. Gives _+2 extra midair jumps_.",

@@ -44,7 +44,7 @@ public class CybItems {
         NIGHT_VISION_EYES = ITEMS.register("night_vision_eyes", () -> new SimpleAbilityCyberwareItem<>(cyberwareProps("night_vision_eyes"), CybAbilities.NIGHT_VISION)),
 
         //UPPER ORGANS
-//        EMERGENCY_DEFIBRILLATOR = ITEMS.register("emergency_defibrillator", () -> new SimpleAbilityCyberwareItem(cyberwareProps("emergency_defibrillator"), CybAbilities.EMERGENCY_DEFIBRILLATOR)),
+        EMERGENCY_DEFIBRILLATOR = ITEMS.register("emergency_defibrillator", () -> new SimpleAbilityCyberwareItem<>(cyberwareProps("emergency_defibrillator"), CybAbilities.EMERGENCY_DEFIBRILLATOR)),
         OXYGEN_RECYCLER = ITEMS.register("oxygen_recycler", () -> new CyberwareItem(cyberwareProps("oxygen_recycler"))),
         HEALTH_BOOST_ORGANS = ITEMS.register("health_boost_organs", () -> new AttributeCyberwareItem(cyberwareProps("health_boost_organs"), Pair.of(Attributes.MAX_HEALTH, new AttributeModifier(modLoc("health_boost_organs"), 5, AttributeModifier.Operation.ADD_VALUE)))),
 

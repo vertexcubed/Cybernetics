@@ -1,21 +1,27 @@
 package com.vertexcubed.cybernetics.common.event;
 
 import com.vertexcubed.cybernetics.Cybernetics;
+import com.vertexcubed.cybernetics.common.ability.Ability;
+import com.vertexcubed.cybernetics.common.registry.CybAbilities;
 import com.vertexcubed.cybernetics.common.registry.CybAttachments;
 import com.vertexcubed.cybernetics.common.registry.CybItems;
 import com.vertexcubed.cybernetics.common.registry.CybTags;
+import com.vertexcubed.cybernetics.common.storage.AbilityStorage;
+import com.vertexcubed.cybernetics.common.util.AbilityHelper;
 import com.vertexcubed.cybernetics.common.util.CyberwareHelper;
 import com.vertexcubed.cybernetics.server.network.S2CSyncAbilityStoragePayload;
 import com.vertexcubed.cybernetics.server.network.S2CSyncCyberwarePayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -79,5 +85,20 @@ public class ServerEvents {
                 event.setCanceled(true);
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void onLivingDeathEvent(LivingDeathEvent event) {
+        if(event.getEntity().level().isClientSide) return;
+
+        LivingEntity entity = event.getEntity();
+
+        if(!((entity instanceof Player player && player.isCreative()) || entity.isSpectator())) {
+            if(AbilityHelper.enableAbility(entity, CybAbilities.EMERGENCY_DEFIBRILLATOR.get(), true)) {
+                event.setCanceled(true);
+                return;
+            }
+        }
+
     }
 }

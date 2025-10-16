@@ -2,6 +2,7 @@ package com.vertexcubed.cybernetics.common.ability;
 
 import com.vertexcubed.cybernetics.common.registry.CybAbilities;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,7 +15,6 @@ public class AbilityType<T extends Ability> {
     private final int maxCooldown;
     private final int maxRuntime;
     private final ResourceLocation texture;
-    private final Holder<AbilityType<?>> registryHolder;
 
     public AbilityType(AbilityFactory<T> factory, boolean multiEnable, int maxCooldown, int maxRuntime, ResourceLocation texture) {
         this.factory = factory;
@@ -22,11 +22,14 @@ public class AbilityType<T extends Ability> {
         this.maxCooldown = maxCooldown;
         this.maxRuntime = maxRuntime;
         this.texture = texture;
-        this.registryHolder = CybAbilities.ABILITY_TYPE_REGISTRY.wrapAsHolder(this);
     }
 
     public boolean is(TagKey<AbilityType<?>> tag) {
-        return registryHolder.is(tag);
+        return holder().is(tag);
+    }
+
+    public Holder<AbilityType<?>> holder() {
+        return CybAbilities.ABILITY_TYPE_REGISTRY.getHolderOrThrow(CybAbilities.ABILITY_TYPE_REGISTRY.getResourceKey(this).orElseThrow());
     }
 
     public int getMaxCooldown() {

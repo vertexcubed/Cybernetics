@@ -35,7 +35,7 @@ public class CybItemTagsProvider extends ItemTagsProvider {
                 CybItems.NIGHT_VISION_EYES.get()
         );
         this.tag(CybTags.UPPER_ORGANS_SECTION).add(
-//                CybItems.EMERGENCY_DEFIBRILLATOR.get(),
+                CybItems.EMERGENCY_DEFIBRILLATOR.get(),
                 CybItems.OXYGEN_RECYCLER.get(),
                 CybItems.HEALTH_BOOST_ORGANS.get()
         );

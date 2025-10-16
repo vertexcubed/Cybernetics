@@ -21,6 +21,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -57,6 +58,18 @@ public class AbilityScreen extends Screen {
         centerY = minecraft.getWindow().getGuiScaledHeight() / 2.0f;
 
         AbilityStorage abilities = player.getData(CybAttachments.ABILITY_STORAGE);
+
+
+//        CybAbilities.ABILITY_TYPE_REGISTRY.getOrCreateTag(CybTags.HIDDEN_ABILITIES).forEach(holder -> {
+//            Cybernetics.LOGGER.debug("{}", holder.getRegisteredName());
+//        });
+
+//        Cybernetics.LOGGER.debug("{}", CybAbilities.ABILITY_TYPE_REGISTRY.getHolder(CybAbilities.ABILITY_TYPE_REGISTRY.getKey(CybAbilities.EMERGENCY_DEFIBRILLATOR.get())).get().is(CybTags.HIDDEN_ABILITIES));
+//
+//        Cybernetics.LOGGER.debug("{}", CybAbilities.ABILITY_TYPE_REGISTRY.getKey(CybAbilities.EMERGENCY_DEFIBRILLATOR.get()));
+//        Cybernetics.LOGGER.debug("{}", CybAbilities.ABILITY_TYPE_REGISTRY);
+
+        // TODO: This doesn't seem to work - tag borked?
         List<Ability> filtered = abilities.getAbilities().stream().filter(ability -> !ability.getType().is(CybTags.HIDDEN_ABILITIES)).toList();
         int sections = filtered.size();
         float length = 360.0f / sections;
@@ -92,9 +105,6 @@ public class AbilityScreen extends Screen {
     @Override
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTick);
-
-        Cybernetics.LOGGER.debug("{}", RenderSystem.getModelViewMatrix());
-
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 //        RenderSystem.disableTexture();

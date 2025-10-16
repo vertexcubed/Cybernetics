@@ -13,7 +13,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-
+// TODO: create AbilityTagsProvider and CybAbilityTagsProvider
 public class DataGenerators {
 
     public static void gatherData(GatherDataEvent event) {

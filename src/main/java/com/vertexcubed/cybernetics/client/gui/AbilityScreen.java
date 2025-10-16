@@ -59,17 +59,6 @@ public class AbilityScreen extends Screen {
 
         AbilityStorage abilities = player.getData(CybAttachments.ABILITY_STORAGE);
 
-
-//        CybAbilities.ABILITY_TYPE_REGISTRY.getOrCreateTag(CybTags.HIDDEN_ABILITIES).forEach(holder -> {
-//            Cybernetics.LOGGER.debug("{}", holder.getRegisteredName());
-//        });
-
-//        Cybernetics.LOGGER.debug("{}", CybAbilities.ABILITY_TYPE_REGISTRY.getHolder(CybAbilities.ABILITY_TYPE_REGISTRY.getKey(CybAbilities.EMERGENCY_DEFIBRILLATOR.get())).get().is(CybTags.HIDDEN_ABILITIES));
-//
-//        Cybernetics.LOGGER.debug("{}", CybAbilities.ABILITY_TYPE_REGISTRY.getKey(CybAbilities.EMERGENCY_DEFIBRILLATOR.get()));
-//        Cybernetics.LOGGER.debug("{}", CybAbilities.ABILITY_TYPE_REGISTRY);
-
-        // TODO: This doesn't seem to work - tag borked?
         List<Ability> filtered = abilities.getAbilities().stream().filter(ability -> !ability.getType().is(CybTags.HIDDEN_ABILITIES)).toList();
         int sections = filtered.size();
         float length = 360.0f / sections;

@@ -30,6 +30,14 @@ public class CybKeyMappings {
             "key.categories.cybernetics"
     ));
 
+    public static final Lazy<KeyMapping> DASH = register(() -> new KeyMapping(
+            "key.cybernetics.dash",
+            KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_LEFT_ALT,
+            "key.categories.cybernetics"
+    ));
+
 
     private static Lazy<KeyMapping> register(Supplier<KeyMapping> sup) {
         return Lazy.of(sup);

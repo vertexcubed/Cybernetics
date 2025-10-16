@@ -48,8 +48,8 @@ public class CybItemTagsProvider extends ItemTagsProvider {
         this.tag(CybTags.SKELETON_SECTION).add(
                 CybItems.REINFORCED_SKELETON.get(),
                 CybItems.TITANIUM_SKELETON.get(),
-                CybItems.HEALTH_BOOST_SKELETON.get()
-//                CybItems.KINETIC_DISCHARGER.get()
+                CybItems.HEALTH_BOOST_SKELETON.get(),
+                CybItems.KINETIC_DISCHARGER.get()
         );
         this.tag(CybTags.SKIN_SECTION).add(
                 CybItems.FIRE_RESISTANCE_SKIN.get(),

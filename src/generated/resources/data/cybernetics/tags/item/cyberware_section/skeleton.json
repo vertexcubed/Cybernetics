@@ -2,6 +2,7 @@
   "values": [
     "cybernetics:reinforced_skeleton",
     "cybernetics:titanium_skeleton",
-    "cybernetics:health_boost_skeleton"
+    "cybernetics:health_boost_skeleton",
+    "cybernetics:kinetic_discharger"
   ]
 }

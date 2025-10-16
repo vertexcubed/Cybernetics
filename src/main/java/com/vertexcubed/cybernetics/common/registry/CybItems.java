@@ -61,7 +61,7 @@ public class CybItems {
                 Pair.of(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(modLoc("titanium_skeleton"), 2.0, AttributeModifier.Operation.ADD_VALUE))
                 )),
         HEALTH_BOOST_SKELETON = ITEMS.register("health_boost_skeleton", () -> new AttributeCyberwareItem(cyberwareProps("health_boost_skeleton"), Pair.of(Attributes.MAX_HEALTH, new AttributeModifier(modLoc("health_boost_skeleton"), 5, AttributeModifier.Operation.ADD_VALUE)))),
-//        KINETIC_DISCHARGER = ITEMS.register("kinetic_discharger", () -> new KineticDischargerItem(cyberwareProps("kinetic_discharger"))),
+        KINETIC_DISCHARGER = ITEMS.register("kinetic_discharger", () -> new KineticDischargerItem(cyberwareProps("kinetic_discharger"))),
 
         //SKIN
         FIRE_RESISTANCE_SKIN = ITEMS.register("fire_resistance_skin", () -> new MobEffectCyberwareItem(cyberwareProps("fire_resistance_skin"), Triple.of(MobEffects.FIRE_RESISTANCE, -1, 0))),

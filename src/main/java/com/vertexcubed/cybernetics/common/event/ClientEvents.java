@@ -1,6 +1,7 @@
 package com.vertexcubed.cybernetics.common.event;
 
 import com.vertexcubed.cybernetics.Cybernetics;
+import com.vertexcubed.cybernetics.client.PlayerMovement;
 import com.vertexcubed.cybernetics.client.gui.AbilityScreen;
 import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
 import com.vertexcubed.cybernetics.client.render.ScannerRenderer;
@@ -51,7 +52,9 @@ public class ClientEvents {
             Minecraft.getInstance().setScreen(new AbilityScreen());
         }
 
-        handleDoubleJump();
+        PlayerMovement.getInstance().tick(Minecraft.getInstance().player);
+
+//        handleDoubleJump();
     }
 
     @SubscribeEvent
@@ -91,6 +94,7 @@ public class ClientEvents {
 
     // Double jump, dash, spike, etc.
 
+    @Deprecated(forRemoval = true)
     private static void handleDoubleJump() {
         LocalPlayer player = Minecraft.getInstance().player;
         if(player == null) return;

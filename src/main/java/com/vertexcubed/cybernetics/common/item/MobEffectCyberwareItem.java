@@ -23,7 +23,7 @@ public class MobEffectCyberwareItem extends CyberwareItem {
     public void cyberwareTick(ItemStack stack, int slot, Level level, LivingEntity entity) {
         if(level.isClientSide) return;
         for (Triple<Holder<MobEffect>, Integer, Integer> effect : effects) {
-            entity.addEffect(new MobEffectInstance(effect.getFirst(), effect.getSecond(), effect.getThird(), false, false, true));
+            entity.addEffect(new MobEffectInstance(effect.first(), effect.second(), effect.third(), false, false, true));
         }
     }
 
@@ -32,8 +32,8 @@ public class MobEffectCyberwareItem extends CyberwareItem {
         if(level.isClientSide) return;
         //if entity has higher level effect do not remove
         for (Triple<Holder<MobEffect>, Integer, Integer> effect : effects) {
-            if (entity.hasEffect(effect.getFirst()) && entity.getEffect(effect.getFirst()).getAmplifier() == effect.getThird()) {
-                entity.removeEffect(effect.getFirst());
+            if (entity.hasEffect(effect.first()) && entity.getEffect(effect.first()).getAmplifier() == effect.third()) {
+                entity.removeEffect(effect.first());
             }
         }
 

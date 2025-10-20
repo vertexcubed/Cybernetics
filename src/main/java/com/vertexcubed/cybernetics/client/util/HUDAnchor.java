@@ -2,8 +2,8 @@ package com.vertexcubed.cybernetics.client.util;
 
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.util.StringRepresentable;
-import org.joml.Vector2i;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector2i;
 
 import java.util.Arrays;
 import java.util.Map;

@@ -43,10 +43,10 @@ public record BidirectionalAbilityEventPayload(Mode mode, AbilityType<?> ability
             AbilityStorage storage = entity.getData(CybAttachments.ABILITY_STORAGE);
             switch (payload.mode) {
                 case ENABLE -> {
-                    AbilityHelper.enableAbility(entity, payload.abilityType, false);
+                    AbilityHelper.enableAbility(entity, payload.abilityType);
                 }
                 case DISABLE -> {
-                    AbilityHelper.disableAbility(entity, payload.abilityType, false);
+                    AbilityHelper.disableAbility(entity, payload.abilityType);
                 }
             }
 

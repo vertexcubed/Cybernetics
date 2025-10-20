@@ -1,8 +1,6 @@
 package com.vertexcubed.cybernetics.server.network;
 
 import com.vertexcubed.cybernetics.common.item.DoubleJumpItem;
-import com.vertexcubed.cybernetics.common.menu.CyberwareMenu;
-import com.vertexcubed.cybernetics.common.registry.CybSoundEvents;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;

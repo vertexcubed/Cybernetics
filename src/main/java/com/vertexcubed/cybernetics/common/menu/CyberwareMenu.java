@@ -1,7 +1,6 @@
 package com.vertexcubed.cybernetics.common.menu;
 
 import com.mojang.datafixers.util.Pair;
-import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.common.event.CyberwareEvent;
 import com.vertexcubed.cybernetics.common.item.CyberwareItem;
 import com.vertexcubed.cybernetics.common.registry.CybAttachments;

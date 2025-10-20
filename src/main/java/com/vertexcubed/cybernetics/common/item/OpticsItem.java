@@ -1,6 +1,5 @@
 package com.vertexcubed.cybernetics.common.item;
 
-import com.vertexcubed.cybernetics.common.ability.Ability;
 import com.vertexcubed.cybernetics.common.ability.OpticsAbility;
 import com.vertexcubed.cybernetics.common.registry.CybAbilities;
 import com.vertexcubed.cybernetics.common.util.AbilityHelper;

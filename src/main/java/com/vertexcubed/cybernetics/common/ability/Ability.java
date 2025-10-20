@@ -4,11 +4,11 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class Ability implements INBTSerializable<CompoundTag> {
 
     private final AbilityType<?> type;
-    private LivingEntity parent;
     private boolean enabled;
     private int runningTime;
     private int cooldown = -1;
@@ -17,12 +17,12 @@ public abstract class Ability implements INBTSerializable<CompoundTag> {
         this.type = type;
     }
 
-    public void tick() {
+    public void tick(LivingEntity entity) {
         if(enabled) {
             this.runningTime++;
-            this.abilityTick(parent);
+            this.abilityTick(entity);
             if(type.getMaxRuntime() > -1 && this.runningTime >= type.getMaxRuntime()) {
-                this.disable();
+                this.disable(entity);
                 return;
             }
         }
@@ -41,13 +41,6 @@ public abstract class Ability implements INBTSerializable<CompoundTag> {
     public abstract void saveAdditional(CompoundTag tag, HolderLookup.Provider provider);
     public abstract void loadAdditional(CompoundTag tag, HolderLookup.Provider provider);
 
-    //TODO: this is extremely hacky. Figure something out!!!
-    public Ability setParent(LivingEntity parent) {
-        this.parent = parent;
-        return this;
-    }
-
-
     public AbilityType<?> getType() {
         return type;
     }
@@ -56,20 +49,20 @@ public abstract class Ability implements INBTSerializable<CompoundTag> {
         return enabled;
     }
 
-    public boolean enable() {
+    public boolean enable(LivingEntity entity) {
         if(cooldown > -1) return false;
         if(!type.isMultiEnable() && enabled) return false;
         this.enabled = true;
         this.runningTime = 0;
         this.cooldown = type.getMaxCooldown();
-        onEnable(parent);
+        onEnable(entity);
         return true;
     }
 
-    public boolean disable() {
+    public boolean disable(LivingEntity entity) {
         if(!enabled) return false;
         this.enabled = false;
-        onDisable(parent);
+        onDisable(entity);
         return true;
     }
 
@@ -82,9 +75,8 @@ public abstract class Ability implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
+    public CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag tag = new CompoundTag();
-//        tag.putString("type", CybAbilities.ABILITY_TYPE_REGISTRY.getKey(type).toString());
         tag.putBoolean("enabled", enabled);
         tag.putInt("runningTime", runningTime);
         tag.putInt("cooldown", cooldown);
@@ -93,7 +85,7 @@ public abstract class Ability implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
+    public void deserializeNBT(HolderLookup.@NotNull Provider provider, CompoundTag tag) {
         this.enabled = tag.getBoolean("enabled");
         this.runningTime = tag.getInt("runningTime");
         this.cooldown = tag.getInt("cooldown");

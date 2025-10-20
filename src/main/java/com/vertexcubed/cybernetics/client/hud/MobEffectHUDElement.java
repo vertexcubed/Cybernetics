@@ -1,6 +1,5 @@
 package com.vertexcubed.cybernetics.client.hud;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.vertexcubed.cybernetics.client.util.HUDAnchor;
@@ -14,7 +13,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.phys.Vec2;
 import net.neoforged.neoforge.client.extensions.common.IClientMobEffectExtensions;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2i;

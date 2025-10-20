@@ -120,7 +120,6 @@ public class CyberwareInventory extends CombinedInvWrapperModifiable implements 
         return stack.is(section.getType().tag()) && super.isItemValid(slot, stack);
     }
 
-    //  Bless Neoforge handling syncing for me.
 
     @Override
     public CompoundTag serializeNBT(@NotNull HolderLookup.Provider provider) {

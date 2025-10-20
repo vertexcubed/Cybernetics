@@ -58,7 +58,7 @@ public class S2CSyncAbilityStoragePayload implements CustomPacketPayload {
         context.enqueueWork(() -> {
             Player player = context.player();
             LivingEntity entity = (LivingEntity) player.level().getEntity(payload.entity);
-            entity.getData(CybAttachments.ABILITY_STORAGE).copyFrom(payload.abilities, entity);
+            entity.getData(CybAttachments.ABILITY_STORAGE).copyFrom(payload.abilities);
 
             CyberneticsHUD.getInstance().getElements().forEach(element -> {
                 if(element instanceof AbilityHUD abilityHUD) {

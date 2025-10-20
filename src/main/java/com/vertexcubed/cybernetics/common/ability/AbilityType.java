@@ -2,10 +2,8 @@ package com.vertexcubed.cybernetics.common.ability;
 
 import com.vertexcubed.cybernetics.common.registry.CybAbilities;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.LivingEntity;
 
 public class AbilityType<T extends Ability> {
 

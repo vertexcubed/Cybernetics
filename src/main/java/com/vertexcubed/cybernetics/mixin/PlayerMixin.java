@@ -1,6 +1,5 @@
 package com.vertexcubed.cybernetics.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.vertexcubed.cybernetics.common.registry.CybItems;

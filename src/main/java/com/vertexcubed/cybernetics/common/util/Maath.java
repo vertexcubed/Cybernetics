@@ -3,11 +3,12 @@ package com.vertexcubed.cybernetics.common.util;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
 
+//TODO: cleanup
 /**
- * Why the FUCK Am I doing half of this shit? Yeah I don't know either. I wrote this code
- * like two years ago before I knew how rotations worked or what Linear Algebra was.
+ * Mth, but worse.
  */
 public class Maath {
+
     /**
      * Returns a polar radius for the cartesian point (x,y).
      */

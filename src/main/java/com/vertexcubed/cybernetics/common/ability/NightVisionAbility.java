@@ -1,10 +1,7 @@
 package com.vertexcubed.cybernetics.common.ability;
 
-import com.vertexcubed.cybernetics.common.util.Triple;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;

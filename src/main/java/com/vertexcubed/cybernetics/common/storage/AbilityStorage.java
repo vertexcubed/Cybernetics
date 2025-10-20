@@ -15,7 +15,6 @@ import java.util.List;
 
 public class AbilityStorage implements INBTSerializable<CompoundTag> {
 
-    private LivingEntity parent;
     private final List<Ability> abilities = new ArrayList<>();
 
     private CompoundTag tag;
@@ -23,33 +22,21 @@ public class AbilityStorage implements INBTSerializable<CompoundTag> {
 
     }
 
-    public void init(LivingEntity parent) {
-        this.parent = parent;
-        abilities.forEach(ability -> ability.setParent(parent));
-    }
-
-    public void copyFrom(AbilityStorage other, LivingEntity parent) {
+    public void copyFrom(AbilityStorage other) {
         this.abilities.clear();
         this.abilities.addAll(other.abilities);
-        this.parent = parent;
-        this.abilities.forEach(ability -> ability.setParent(parent));
     }
 
-    public void tick() {
-        abilities.forEach(Ability::tick);
-    }
-
-
-    public LivingEntity getParent() {
-        return parent;
+    public void tick(LivingEntity entity) {
+        abilities.forEach(a -> a.tick(entity));
     }
 
     public void add(Ability ability) {
         this.abilities.add(ability);
     }
 
-    public boolean remove(Ability ability) {
-        ability.disable();
+    public boolean remove(LivingEntity entity, Ability ability) {
+        ability.disable(entity);
         return this.abilities.remove(ability);
     }
 

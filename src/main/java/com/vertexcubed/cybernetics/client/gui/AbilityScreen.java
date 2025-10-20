@@ -113,6 +113,8 @@ public class AbilityScreen extends Screen {
 
 
 //        RenderSystem.enableTexture();
+
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.disableBlend();
     }
 

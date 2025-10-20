@@ -73,7 +73,9 @@ public class AbilityHUD implements HUDRenderable {
         for(int i = 0; i < elements.size(); i++) {
             guiGraphics.pose().pushPose();
             guiGraphics.pose().translate(xOffset + (leftOrRight * (i % 7) * 23), yOffset + (upOrDown * (i / 7) * 23), 0);
+            guiGraphics.setColor(1, 1, 1, 0.7f);
             elements.get(i).render(guiGraphics, partialTick);
+            guiGraphics.setColor(1, 1, 1, 1);
             guiGraphics.pose().popPose();
         }
     }
@@ -217,7 +219,6 @@ public class AbilityHUD implements HUDRenderable {
 
 
                 shader.setUniformDefaults();
-                RenderSystem.disableBlend();
             }
         }
     }

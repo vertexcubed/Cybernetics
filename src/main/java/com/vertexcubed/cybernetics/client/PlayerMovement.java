@@ -1,9 +1,7 @@
 package com.vertexcubed.cybernetics.client;
 
 import com.vertexcubed.cybernetics.Cybernetics;
-import com.vertexcubed.cybernetics.common.item.DashCyberwareItem;
 import com.vertexcubed.cybernetics.common.item.DoubleJumpItem;
-import com.vertexcubed.cybernetics.common.item.KineticDischargerItem;
 import com.vertexcubed.cybernetics.common.registry.CybAbilities;
 import com.vertexcubed.cybernetics.common.registry.CybItems;
 import com.vertexcubed.cybernetics.common.registry.CybKeyMappings;
@@ -48,6 +46,7 @@ public class PlayerMovement {
 
     public void tick(LocalPlayer player) {
         this.state.tick(this, player);
+//        Cybernetics.LOGGER.debug("Is enabled: {}", AbilityHelper.isEnabled(player, CybAbilities.KINETIC_DISCHARGER.get()));
     }
 
     public void setState(State state, LocalPlayer player) {
@@ -143,7 +142,7 @@ class AirState extends PlayerMovement.State {
 
         // Spiking
         if(player.isShiftKeyDown() && PlayerMovement.canSpike(player) && isHighEnoughToSpike(player)) {
-            context.setState(new SpikePacket(numJumps), player);
+            context.setState(new SpikeState(numJumps), player);
             return;
         }
         // Dashing
@@ -186,14 +185,14 @@ class DoubleJumpState extends PlayerMovement.State {
     @Override
     void tick(PlayerMovement context, LocalPlayer player) { }
 }
-class SpikePacket extends PlayerMovement.State {
+class SpikeState extends PlayerMovement.State {
 
 
     private boolean releasedDash = false;
     private int time = 0;
     // Spike packet needs this cuz jumps get passed around a lot lol.
     private final int numJumps;
-    SpikePacket(int numJumps) {
+    SpikeState(int numJumps) {
         this.numJumps = numJumps;
     }
 
@@ -232,8 +231,8 @@ class SpikePacket extends PlayerMovement.State {
         // If on ground, send shockwave
         if(player.onGround()) {
 //            Cybernetics.LOGGER.debug("Shockwave");
-            context.setState(new GroundedState(), player);
             PacketDistributor.sendToServer(new C2SSpikeShockwavePayload(this.time));
+            context.setState(new GroundedState(), player);
             return;
         }
 
@@ -243,7 +242,7 @@ class SpikePacket extends PlayerMovement.State {
     @Override
     public void onExit(PlayerMovement context, LocalPlayer player) {
         AbilityHelper.disableAbility(player, CybAbilities.KINETIC_DISCHARGER.get());
-        PacketDistributor.sendToServer(new BidirectionalAbilityEventPayload(BidirectionalAbilityEventPayload.Mode.ENABLE, CybAbilities.KINETIC_DISCHARGER.get(), player.getId()));
+        PacketDistributor.sendToServer(new BidirectionalAbilityEventPayload(BidirectionalAbilityEventPayload.Mode.DISABLE, CybAbilities.KINETIC_DISCHARGER.get(), player.getId()));
     }
 }
 

@@ -1,6 +1,7 @@
 {
     "values": [
         "cybernetics:emergency_defibrillator",
-        "cybernetics:kinetic_discharger"
+        "cybernetics:kinetic_discharger",
+        "cybernetics:dash"
     ]
 }

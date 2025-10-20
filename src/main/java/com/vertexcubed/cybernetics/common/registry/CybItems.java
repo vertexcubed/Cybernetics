@@ -33,8 +33,8 @@ public class CybItems {
 //        MK1_BERSERK = ITEMS.register("mk1_berserk", () -> new SimpleAbilityCyberwareItem(cyberwareProps("mk1_berserk"), CybAbilities.MK1_BERSERK)),
 //        MK2_BERSERK = ITEMS.register("mk2_berserk", () -> new SimpleAbilityCyberwareItem(cyberwareProps("mk2_berserk"), CybAbilities.MK2_BERSERK)),
 //        MK3_BERSERK = ITEMS.register("mk3_berserk", () -> new SimpleAbilityCyberwareItem(cyberwareProps("mk3_berserk"), CybAbilities.MK3_BERSERK)),
-//        MK1_DASH = ITEMS.register("mk1_dash", () -> new DashCyberwareItem(cyberwareProps("mk1_dash"), CybAbilities.MK1_DASH)),
-//        MK2_DASH = ITEMS.register("mk2_dash", () -> new DashCyberwareItem(cyberwareProps("mk2_dash"), CybAbilities.MK2_DASH)),
+        MK1_DASH = ITEMS.register("mk1_dash", () -> new DashCyberwareItem(cyberwareProps("mk1_dash"))),
+        MK2_DASH = ITEMS.register("mk2_dash", () -> new DashCyberwareItem(cyberwareProps("mk2_dash"))),
 
 
         //EYES

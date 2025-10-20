@@ -4,12 +4,12 @@ import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.common.item.DashCyberwareItem;
 import com.vertexcubed.cybernetics.common.item.DoubleJumpItem;
 import com.vertexcubed.cybernetics.common.item.KineticDischargerItem;
+import com.vertexcubed.cybernetics.common.registry.CybAbilities;
 import com.vertexcubed.cybernetics.common.registry.CybItems;
 import com.vertexcubed.cybernetics.common.registry.CybKeyMappings;
+import com.vertexcubed.cybernetics.common.util.AbilityHelper;
 import com.vertexcubed.cybernetics.common.util.CyberwareHelper;
-import com.vertexcubed.cybernetics.server.network.C2SDashPayload;
-import com.vertexcubed.cybernetics.server.network.C2SDoubleJumpPayload;
-import com.vertexcubed.cybernetics.server.network.C2SSpikePayload;
+import com.vertexcubed.cybernetics.server.network.*;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -29,10 +29,10 @@ public class PlayerMovement {
         return numJumps > 0 && CyberwareHelper.hasCyberware(CybItems.REINFORCED_TENDONS.get(), player);
     }
     public static boolean canSpike(LocalPlayer player) {
-        return true;
+        return AbilityHelper.hasAbility(player, CybAbilities.KINETIC_DISCHARGER.get()) && !AbilityHelper.isOnCooldown(player, CybAbilities.KINETIC_DISCHARGER.get());
     }
     public static boolean canDash(LocalPlayer player) {
-        return true;
+        return AbilityHelper.hasAbility(player, CybAbilities.DASH.get()) && !AbilityHelper.isOnCooldown(player, CybAbilities.DASH.get());
     }
 
 
@@ -54,6 +54,10 @@ public class PlayerMovement {
         this.state.onExit(this, player);
         this.state = state;
         this.state.onEnter(this, player);
+    }
+
+    public void reset(LocalPlayer player) {
+        this.setState(new GroundedState(), player);
     }
 
 
@@ -96,7 +100,7 @@ class GroundedState extends PlayerMovement.State {
     }
 
     boolean canDash(LocalPlayer player) {
-        return true;
+        return AbilityHelper.hasAbility(player, CybAbilities.DASH.get()) && !AbilityHelper.isOnCooldown(player, CybAbilities.DASH.get());
     }
 }
 
@@ -196,9 +200,10 @@ class SpikePacket extends PlayerMovement.State {
     @Override
     public void onEnter(PlayerMovement context, LocalPlayer player) {
 //        Cybernetics.LOGGER.debug("Spike");
-        //TODO: enable ability instead.
-        PacketDistributor.sendToServer(new C2SSpikePayload());
-        KineticDischargerItem.spike(player);
+        if(!AbilityHelper.enableAbility(player, CybAbilities.KINETIC_DISCHARGER.get())) {
+            Cybernetics.LOGGER.warn("Could not enable kinetic discharger ability for player {}, this should not happen!", player.getDisplayName().getString());
+        }
+        PacketDistributor.sendToServer(new BidirectionalAbilityEventPayload(BidirectionalAbilityEventPayload.Mode.ENABLE, CybAbilities.KINETIC_DISCHARGER.get(), player.getId()));
     }
 
     @Override
@@ -228,7 +233,7 @@ class SpikePacket extends PlayerMovement.State {
         if(player.onGround()) {
 //            Cybernetics.LOGGER.debug("Shockwave");
             context.setState(new GroundedState(), player);
-            //TODO: implement shockwave
+            PacketDistributor.sendToServer(new C2SSpikeShockwavePayload(this.time));
             return;
         }
 
@@ -237,7 +242,8 @@ class SpikePacket extends PlayerMovement.State {
 
     @Override
     public void onExit(PlayerMovement context, LocalPlayer player) {
-        //TODO: Disable ability
+        AbilityHelper.disableAbility(player, CybAbilities.KINETIC_DISCHARGER.get());
+        PacketDistributor.sendToServer(new BidirectionalAbilityEventPayload(BidirectionalAbilityEventPayload.Mode.ENABLE, CybAbilities.KINETIC_DISCHARGER.get(), player.getId()));
     }
 }
 
@@ -251,9 +257,11 @@ class DashState extends PlayerMovement.State {
     @Override
     public void onEnter(PlayerMovement context, LocalPlayer player) {
 //        Cybernetics.LOGGER.debug("Dash");
-        //TODO: enable ability instead.
-        PacketDistributor.sendToServer(new C2SDashPayload());
-        DashCyberwareItem.dash(player);
+        if(!AbilityHelper.enableAbility(player, CybAbilities.DASH.get())) {
+            Cybernetics.LOGGER.warn("Could not enable dash ability for player {}, this should not happen!", player.getDisplayName().getString());
+        }
+        PacketDistributor.sendToServer(new BidirectionalAbilityEventPayload(BidirectionalAbilityEventPayload.Mode.ENABLE, CybAbilities.DASH.get(), player.getId()));
+
         if(player.onGround()) {
             context.setState(new GroundedState(), player);
         }

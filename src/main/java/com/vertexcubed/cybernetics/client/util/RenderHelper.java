@@ -74,7 +74,7 @@ public class RenderHelper {
             buffer.endBatch();
         }
         catch(Exception e) {
-            Cybernetics.LOGGER.error("Could not render entity!", e);
+            Cybernetics.LOGGER.error("Could not render entity.", e);
         }
 
         //restore entity rotations

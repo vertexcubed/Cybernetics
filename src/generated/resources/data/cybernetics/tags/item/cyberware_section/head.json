@@ -1,6 +1,8 @@
 {
   "values": [
     "cybernetics:overcapacity_head",
-    "cybernetics:carbon_fiber_skull"
+    "cybernetics:carbon_fiber_skull",
+    "cybernetics:mk1_dash",
+    "cybernetics:mk2_dash"
   ]
 }

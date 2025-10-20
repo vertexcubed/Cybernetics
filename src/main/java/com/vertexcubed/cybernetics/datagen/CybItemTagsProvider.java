@@ -21,12 +21,12 @@ public class CybItemTagsProvider extends ItemTagsProvider {
                 //section tags
         this.tag(CybTags.HEAD_SECTION).add(
                 CybItems.OVERCAPACITY_HEAD.get(),
-                CybItems.CARBON_FIBER_SKULL.get()
+                CybItems.CARBON_FIBER_SKULL.get(),
 //                CybItems.MK1_BERSERK.get(),
 //                CybItems.MK2_BERSERK.get(),
 //                CybItems.MK3_BERSERK.get(),
-//                CybItems.MK1_DASH.get(),
-//                CybItems.MK2_DASH.get()
+                CybItems.MK1_DASH.get(),
+                CybItems.MK2_DASH.get()
         );
         this.tag(CybTags.EYES_SECTION).add(
                 CybItems.MK1_OPTICS.get(),
@@ -76,6 +76,6 @@ public class CybItemTagsProvider extends ItemTagsProvider {
         this.tag(CybTags.OPTICS).add(CybItems.MK1_OPTICS.get(), CybItems.MK2_OPTICS.get(), CybItems.MK3_OPTICS.get());
         this.tag(CybTags.SKELETONS).add(CybItems.REINFORCED_SKELETON.get(), CybItems.TITANIUM_SKELETON.get());
 //        this.tag(CybTags.DOUBLE_JUMP_ADDERS).add(CybItems.MK1_DOUBLE_JUMP_ADDER.get(), CybItems.MK2_DOUBLE_JUMP_ADDER.get());
-//        this.tag(CybTags.DASH_ITEMS).add(CybItems.MK1_DASH.get(), CybItems.MK2_DASH.get());
+        this.tag(CybTags.DASH_ITEMS).add(CybItems.MK1_DASH.get(), CybItems.MK2_DASH.get());
     }
 }

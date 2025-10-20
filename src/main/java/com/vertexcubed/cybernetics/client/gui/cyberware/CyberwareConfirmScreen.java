@@ -105,7 +105,7 @@ public class CyberwareConfirmScreen extends Screen {
                             PacketDistributor.sendToServer(new C2SApplyCyberwarePayload());
                         }
                         else {
-                            Cybernetics.LOGGER.error("Couldn't apply changes: menu is not CyberwareMenu!");
+                            Cybernetics.LOGGER.error("Couldn't apply cyberware changes: menu is not CyberwareMenu!");
                         }
                     }
                     this.minecraft.popGuiLayer();

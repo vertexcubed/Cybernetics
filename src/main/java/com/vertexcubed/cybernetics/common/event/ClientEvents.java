@@ -88,6 +88,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onClientLogout(ClientPlayerNetworkEvent.LoggingOut event) {
         ScannerRenderer.getInstance().stop();
+        PlayerMovement.getInstance().reset(event.getPlayer());
     }
 
 

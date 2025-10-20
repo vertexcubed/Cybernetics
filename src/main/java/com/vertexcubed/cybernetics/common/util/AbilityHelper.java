@@ -87,8 +87,9 @@ public class AbilityHelper {
         boolean enabledAnything = false;
         for(Ability a : storage.getAbilities()) {
             if(a.getType() == type) {
-                a.enable();
-                enabledAnything = true;
+                if(a.enable()) {
+                    enabledAnything = true;
+                }
             }
         }
         if(syncToClient && !entity.level().isClientSide() && enabledAnything) {
@@ -107,8 +108,9 @@ public class AbilityHelper {
         boolean disabledAnything = false;
         for(Ability a : storage.getAbilities()) {
             if(a.getType() == type) {
-                a.disable();
-                disabledAnything = true;
+                if(a.disable()) {
+                    disabledAnything = true;
+                }
             }
         }
         if(syncToClient && !entity.level().isClientSide() && disabledAnything) {
@@ -126,5 +128,26 @@ public class AbilityHelper {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns the cooldown of this ability, or -1 if not found / not on cooldown.
+     * @param entity    The entity to test on
+     * @param type      The ability type to check
+     * @return          The cooldown of the FIRST instance of this ability
+     */
+    public static int getCooldown(LivingEntity entity, AbilityType<?> type) {
+        if(!entity.hasData(CybAttachments.ABILITY_STORAGE)) return -1;
+        AbilityStorage storage = entity.getData(CybAttachments.ABILITY_STORAGE);
+        for(Ability a : storage.getAbilities()) {
+            if(a.getType() == type) {
+                return a.getCooldown();
+            }
+        }
+        return -1;
+    }
+
+    public static boolean isOnCooldown(LivingEntity entity, AbilityType<?> type) {
+        return getCooldown(entity, type) > -1;
     }
 }

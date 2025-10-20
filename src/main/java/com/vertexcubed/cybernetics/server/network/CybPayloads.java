@@ -13,8 +13,7 @@ public class CybPayloads {
         C2SSwitchInventoryPagePayload.register(main);
         C2SApplyCyberwarePayload.register(main);
         C2SDoubleJumpPayload.register(main);
-        C2SSpikePayload.register(main);
-        C2SDashPayload.register(main);
+        C2SSpikeShockwavePayload.register(main);
         C2SSwitchActiveSlotsPayload.register(main);
 
 

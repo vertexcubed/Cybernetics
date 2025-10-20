@@ -27,10 +27,13 @@ public class CybAbilities {
     public static final Supplier<AbilityType<OpticsAbility>> OPTICS
             = ABILITY_TYPES.register("optics", () -> new AbilityType.Builder<>(OpticsAbility::new).build());
     public static final Supplier<AbilityType<ScanAbility>> SCAN
-            = ABILITY_TYPES.register("scan", () -> new AbilityType.Builder<>(ScanAbility::new).maxRuntime(0).maxCooldown(120 * 20).build());
+            = ABILITY_TYPES.register("scan", () -> new AbilityType.Builder<>(ScanAbility::new).maxRuntime(0).maxCooldown(100).build());
     public static final Supplier<AbilityType<EmergencyDefibrillatorAbility>> EMERGENCY_DEFIBRILLATOR
-            = ABILITY_TYPES.register("emergency_defibrillator", () -> new AbilityType.Builder<>(EmergencyDefibrillatorAbility::new).maxRuntime(0).maxCooldown(120).build());
-
+            = ABILITY_TYPES.register("emergency_defibrillator", () -> new AbilityType.Builder<>(EmergencyDefibrillatorAbility::new).maxRuntime(0).maxCooldown(120 * 20).build());
+    public static final Supplier<AbilityType<DashAbility>> DASH
+            = ABILITY_TYPES.register("dash", () -> new AbilityType.Builder<>(DashAbility::new).maxRuntime(0).maxCooldown(80).build());
+    public static final Supplier<AbilityType<KineticDischargerAbility>> KINETIC_DISCHARGER
+            = ABILITY_TYPES.register("kinetic_discharger", () -> new AbilityType.Builder<>(KineticDischargerAbility::new).maxCooldown(200).build());
 
 
     public static void register(IEventBus eventBus) {

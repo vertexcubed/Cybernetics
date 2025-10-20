@@ -1,24 +1,23 @@
 package com.vertexcubed.cybernetics.common.item;
 
-import com.vertexcubed.cybernetics.Cybernetics;
-import net.minecraft.world.entity.player.Player;
+import com.vertexcubed.cybernetics.common.ability.DashAbility;
+import com.vertexcubed.cybernetics.common.registry.CybAbilities;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.function.Supplier;
-
-public class DashCyberwareItem extends CyberwareItem {
+public class DashCyberwareItem extends SimpleAbilityCyberwareItem<DashAbility> {
 
     public DashCyberwareItem(Properties properties) {
-        super(properties);
+        super(properties, CybAbilities.DASH);
     }
 
-    public static void dash(Player player) {
-        Vec3 movement = new Vec3(player.getDeltaMovement().x, 0.0, player.getDeltaMovement().z);
+    public static void dash(LivingEntity entity) {
+        Vec3 movement = new Vec3(entity.getDeltaMovement().x, 0.0, entity.getDeltaMovement().z);
         float scale = 0.5f;
-        if(player.onGround()) {
+        if(entity.onGround()) {
             scale = 1.5f;
         }
-        player.setDeltaMovement(movement.add(new Vec3(movement.x, 0.0, movement.z).normalize().scale(scale)));
+        entity.setDeltaMovement(movement.add(new Vec3(movement.x, 0.0, movement.z).normalize().scale(scale)));
 //        player.hurtMarked = true;
     }
 }

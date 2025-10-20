@@ -18,13 +18,15 @@ import team.lodestar.lodestone.systems.rendering.shader.ExtendedShaderInstance;
 import java.util.ArrayList;
 import java.util.List;
 
-import static team.lodestar.lodestone.handlers.RenderHandler.LODESTONE_DEPTH_CACHE;
+import static team.lodestar.lodestone.handlers.LodestoneRenderHandler.LODESTONE_DEPTH_CACHE;
 
 public class ScannerRenderer {
     private static final ScannerRenderer INSTANCE = new ScannerRenderer();
     public static ScannerRenderer getInstance() {
         return INSTANCE;
     }
+
+
 
 
     public static final int SCAN_RANGE = 30;
@@ -62,7 +64,7 @@ public class ScannerRenderer {
         }
 
 
-        ExtendedShaderInstance shader = (ExtendedShaderInstance) CybCoreShaders.SCAN.getInstance().get();
+        ExtendedShaderInstance shader = (ExtendedShaderInstance) CybCoreShaders.SCAN.getShaderInstance();
         if(shader == null) return;
 
         // width and height

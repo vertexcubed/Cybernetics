@@ -35,8 +35,11 @@ neoForge {
         minecraftVersion = project.parchment_minecraft_version
     }
 
-    // This line is optional. Access Transformers are automatically detected
-    // accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
+
+    // Validate AT files and raise errors when they have invalid targets
+//    validateAccessTransformers = true
+
+
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
@@ -133,6 +136,8 @@ dependencies {
     compileOnlyApi "top.theillusivec4.curios:curios-neoforge:${curios_version}:api"
 
     compileOnlyApi "team.lodestar.lodestone:lodestone:${minecraft_version}-${lodestone_version}"
+    // Testing
+    accessTransformers "team.lodestar.lodestone:lodestone:${minecraft_version}-${lodestone_version}"
     runtimeOnly "team.lodestar.lodestone:lodestone:${minecraft_version}-${lodestone_version}"
 }
 

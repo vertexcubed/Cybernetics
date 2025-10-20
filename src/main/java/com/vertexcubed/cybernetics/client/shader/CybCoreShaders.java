@@ -19,13 +19,15 @@ public class CybCoreShaders {
     private static final List<ShaderHolder> shaders = new ArrayList<>();
 
     public static ShaderHolder
-            CIRCLE_PROGRESS = register(modLoc("circle_progress"), DefaultVertexFormat.POSITION_TEX, "Progress"),
-            SCAN = register(modLoc("scan"), DefaultVertexFormat.POSITION_TEX, "CameraPos", "Center", "Radius")
+            CIRCLE_PROGRESS = register(modLoc("circle_progress"), DefaultVertexFormat.POSITION_TEX),
+            SCAN = register(modLoc("scan"), DefaultVertexFormat.POSITION_TEX),
+            FALLING_PARTICLE = register(modLoc("falling_particle"), DefaultVertexFormat.PARTICLE),
+            BLAST_WAVE = register(modLoc("blast_wave"), DefaultVertexFormat.PARTICLE)
     ;
 
 
-    public static ShaderHolder register(ResourceLocation location, VertexFormat vertexFormat, String... uniformsToCache) {
-        ShaderHolder holder = new ShaderHolder(location, vertexFormat, uniformsToCache);
+    public static ShaderHolder register(ResourceLocation location, VertexFormat vertexFormat) {
+        ShaderHolder holder = new ShaderHolder(location, vertexFormat);
         shaders.add(holder);
         return holder;
     }

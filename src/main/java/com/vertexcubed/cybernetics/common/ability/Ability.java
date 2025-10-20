@@ -19,8 +19,8 @@ public abstract class Ability implements INBTSerializable<CompoundTag> {
 
     public void tick(LivingEntity entity) {
         if(enabled) {
-            this.runningTime++;
             this.abilityTick(entity);
+            this.runningTime++;
             if(type.getMaxRuntime() > -1 && this.runningTime >= type.getMaxRuntime()) {
                 this.disable(entity);
                 return;

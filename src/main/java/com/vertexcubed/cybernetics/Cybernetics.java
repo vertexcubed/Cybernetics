@@ -4,6 +4,8 @@ import com.mojang.logging.LogUtils;
 import com.vertexcubed.cybernetics.client.hud.AbilityHUD;
 import com.vertexcubed.cybernetics.client.hud.CyberneticsHUD;
 import com.vertexcubed.cybernetics.client.hud.MobEffectHUDElement;
+import com.vertexcubed.cybernetics.client.particle.BlastWaveParticle;
+import com.vertexcubed.cybernetics.client.particle.FallingParticle;
 import com.vertexcubed.cybernetics.client.shader.CybCoreShaders;
 import com.vertexcubed.cybernetics.client.util.HUDAnchor;
 import com.vertexcubed.cybernetics.common.registry.*;
@@ -23,10 +25,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.client.event.RegisterShadersEvent;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
@@ -74,7 +73,7 @@ public class Cybernetics
         CybItems.register(modEventBus);
         CybCreativeTabs.register(modEventBus);
         CybSoundEvents.register(modEventBus);
-
+        CybParticles.register(modEventBus);
     }
 
     @SubscribeEvent
@@ -97,6 +96,11 @@ public class Cybernetics
         DataGenerators.gatherData(event);
     }
 
+    @SubscribeEvent
+    public void registerParticles(RegisterParticleProvidersEvent event) {
+        event.registerSpecial(CybParticles.BLAST_WAVE.get(), new BlastWaveParticle.Provider());
+        event.registerSpecial(CybParticles.FALLING_PARTICLE.get(), new FallingParticle.Provider());
+    }
 
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent

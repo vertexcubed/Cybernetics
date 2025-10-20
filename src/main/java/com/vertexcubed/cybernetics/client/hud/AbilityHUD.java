@@ -193,7 +193,7 @@ public class AbilityHUD implements HUDRenderable {
 
 
 
-                ExtendedShaderInstance shader = (ExtendedShaderInstance) CybCoreShaders.CIRCLE_PROGRESS.getInstance().get();
+                ExtendedShaderInstance shader = (ExtendedShaderInstance) CybCoreShaders.CIRCLE_PROGRESS.getShaderInstance();
                 float progress = (ability.getCooldown() - partialTick) / ability.getType().getMaxCooldown();
                 shader.safeGetUniform("Progress").set(progress);
 

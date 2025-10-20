@@ -1,13 +1,15 @@
 package com.vertexcubed.cybernetics.common.item;
 
+import com.vertexcubed.cybernetics.client.particle.options.BlastWaveParticleOptions;
 import com.vertexcubed.cybernetics.common.ability.KineticDischargerAbility;
 import com.vertexcubed.cybernetics.common.registry.CybAbilities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
@@ -35,14 +37,15 @@ public class KineticDischargerItem extends SimpleAbilityCyberwareItem<KineticDis
 //        BlockPos pos = new BlockPos((int)player.position().x, (int)(player.getBoundingBox().minY - 0.5000001D), (int)player.position().z);
         if(spikeTime == -1) return;
 
-        BlockPos pos = player.blockPosition().subtract(new Vec3i(0, 1, 0));
+        BlockPos pos = player.getBlockPosBelowThatAffectsMyMovement();
+        //TODO: this tanks performance.
         BlockPos.betweenClosed(pos.offset(3, 0, 3), pos.offset(-3, 0, -3)).forEach(blockPos -> {
 
             BlockPos difference = blockPos.subtract(pos);
             if(Math.abs(difference.getX()) == 3 && Math.abs(difference.getZ()) == 3) return;
 
             BlockState block = level.getBlockState(blockPos);
-            level.levelEvent(2001, blockPos, Block.getId(block));
+            level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, blockPos, Block.getId(block));
         });
 
         AABB box = new AABB(player.blockPosition()).inflate(4);
@@ -57,14 +60,14 @@ public class KineticDischargerItem extends SimpleAbilityCyberwareItem<KineticDis
 
 
         //todo: make this run 1 tick later
-//        if(level instanceof ServerLevel server) {
-//            server.sendParticles(new BlastWaveParticleOptions(CybParticles.BLAST_WAVE.get()), player.position().x, player.position().y + 0.01, player.position().z, 1, 0, 0, 0, 0);
-//
-//            CybPackets.getInstance().send(
+        if(level instanceof ServerLevel server) {
+            server.sendParticles(new BlastWaveParticleOptions(), player.position().x, player.position().y + 0.01, player.position().z, 1, 0, 0, 0, 0);
+
+//            PacketDistributor.sendToPlayersNear(
 //                    PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(player.position().x, player.position().y, player.position().z, 10.0, player.level().dimension())),
 //                    new CustomPositionedScreenshakePacket(3, true, player.position(), 5.0f, 10.0f).setIntensity(0.775f).setEasing(Easing.EXPO_OUT, Easing.SINE_IN_OUT)
 //            );
-//        }
+        }
 
     }
 }

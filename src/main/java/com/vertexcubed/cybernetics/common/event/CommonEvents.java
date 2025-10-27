@@ -18,7 +18,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, modid = Cybernetics.MOD_ID)
+@EventBusSubscriber(modid = Cybernetics.MOD_ID)
 public class CommonEvents {
 
     @SubscribeEvent

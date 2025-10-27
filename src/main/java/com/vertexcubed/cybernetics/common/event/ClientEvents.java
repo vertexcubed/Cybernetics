@@ -3,7 +3,6 @@ package com.vertexcubed.cybernetics.common.event;
 import com.vertexcubed.cybernetics.Cybernetics;
 import com.vertexcubed.cybernetics.client.PlayerMovement;
 import com.vertexcubed.cybernetics.client.gui.AbilityScreen;
-import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
 import com.vertexcubed.cybernetics.client.render.ScannerRenderer;
 import com.vertexcubed.cybernetics.client.util.InputHelper;
 import com.vertexcubed.cybernetics.common.item.CyberwareItem;
@@ -25,7 +24,7 @@ import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, modid = Cybernetics.MOD_ID, value = Dist.CLIENT)
+@EventBusSubscriber(modid = Cybernetics.MOD_ID, value = Dist.CLIENT)
 public class ClientEvents {
 
     private static boolean releasedJump;
@@ -54,14 +53,6 @@ public class ClientEvents {
         PlayerMovement.getInstance().tick(Minecraft.getInstance().player);
 
 //        handleDoubleJump();
-    }
-
-    @SubscribeEvent
-    public static void renderScreenPre(ScreenEvent.Render.Pre event) {
-        if(Minecraft.getInstance().level == null) {
-            return;
-        }
-        ScreenHelper.getTaskManager(event.getScreen()).tickFrame(Minecraft.getInstance().level.getGameTime(), event.getPartialTick());
     }
 
     @SubscribeEvent

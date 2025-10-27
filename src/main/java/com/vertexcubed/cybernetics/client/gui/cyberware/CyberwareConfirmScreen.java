@@ -2,10 +2,7 @@ package com.vertexcubed.cybernetics.client.gui.cyberware;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.vertexcubed.cybernetics.Cybernetics;
-import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
-import com.vertexcubed.cybernetics.client.gui.widget.BasicWidget;
 import com.vertexcubed.cybernetics.client.gui.widget.TextWidget;
-import com.vertexcubed.cybernetics.client.task.TweenTask;
 import com.vertexcubed.cybernetics.common.menu.CyberwareMenu;
 import com.vertexcubed.cybernetics.common.registry.CybSoundEvents;
 import com.vertexcubed.cybernetics.server.network.C2SApplyCyberwarePayload;
@@ -16,7 +13,10 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.network.PacketDistributor;
-import team.lodestar.lodestone.systems.easing.Easing;
+import vertexcubed.vrtex.client.screen.ScreenHelper;
+import vertexcubed.vrtex.client.screen.widget.BasicWidget;
+import vertexcubed.vrtex.common.math.Easing;
+import vertexcubed.vrtex.common.task.TweenTask;
 
 import static com.vertexcubed.cybernetics.Cybernetics.modLoc;
 

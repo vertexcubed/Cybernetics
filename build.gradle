@@ -124,6 +124,11 @@ repositories {
         name = "Curios maven"
         url = uri("https://maven.theillusivec4.top/")
     }
+
+    maven {
+        url "https://jitpack.io"
+        content { includeGroup "com.github.vertexcubed" }
+    }
 }
 
 dependencies {
@@ -139,6 +144,10 @@ dependencies {
     // Testing
     accessTransformers "team.lodestar.lodestone:lodestone:${minecraft_version}-${lodestone_version}"
     runtimeOnly "team.lodestar.lodestone:lodestone:${minecraft_version}-${lodestone_version}"
+
+    implementation "com.github.vertexcubed:VrTeX:main-SNAPSHOT"
+
+
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

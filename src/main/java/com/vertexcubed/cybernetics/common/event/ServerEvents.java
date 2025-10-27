@@ -17,7 +17,7 @@ import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, modid = Cybernetics.MOD_ID)
+@EventBusSubscriber(modid = Cybernetics.MOD_ID)
 public class ServerEvents {
 
     @SubscribeEvent
@@ -76,3 +76,4 @@ public class ServerEvents {
 
 
 }
+

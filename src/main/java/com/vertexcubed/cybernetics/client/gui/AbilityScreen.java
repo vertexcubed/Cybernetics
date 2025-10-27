@@ -2,10 +2,7 @@ package com.vertexcubed.cybernetics.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
-import com.vertexcubed.cybernetics.client.gui.widget.CybAbstractWidget;
 import com.vertexcubed.cybernetics.client.gui.widget.TextWidget;
-import com.vertexcubed.cybernetics.client.task.TweenTask;
 import com.vertexcubed.cybernetics.client.util.InputHelper;
 import com.vertexcubed.cybernetics.common.ability.Ability;
 import com.vertexcubed.cybernetics.common.registry.CybAbilities;
@@ -26,7 +23,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.joml.Matrix4f;
-import team.lodestar.lodestone.systems.easing.Easing;
+import vertexcubed.vrtex.common.math.Easing;
+import vertexcubed.vrtex.client.screen.ScreenHelper;
+import vertexcubed.vrtex.client.screen.widget.VrTeXAbstractWidget;
+import vertexcubed.vrtex.common.task.TweenTask;
 
 import java.util.List;
 
@@ -198,7 +198,7 @@ public class AbilityScreen extends Screen {
 
 
 
-    public class AbilitySlice extends CybAbstractWidget {
+    public class AbilitySlice extends VrTeXAbstractWidget {
 
         private boolean selected;
         private float inner;

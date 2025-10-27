@@ -12,6 +12,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.network.PacketDistributor;
+import vertexcubed.vrtex.client.screenshake.PositionedScreenshake;
+import vertexcubed.vrtex.server.network.ClientboundPositionedScreenshakePayload;
 
 public class KineticDischargerItem extends SimpleAbilityCyberwareItem<KineticDischargerAbility> {
 
@@ -59,9 +62,18 @@ public class KineticDischargerItem extends SimpleAbilityCyberwareItem<KineticDis
         });
 
 
+        double screenshakeRadius = 10.0;
+
         //todo: make this run 1 tick later
         if(level instanceof ServerLevel server) {
             server.sendParticles(new BlastWaveParticleOptions(), player.position().x, player.position().y + 0.01, player.position().z, 1, 0, 0, 0, 0);
+
+            PacketDistributor.sendToPlayersNear(
+                    server, null,
+                    player.position().x, player.position().y, player.position().z, screenshakeRadius,
+                    new ClientboundPositionedScreenshakePayload(new PositionedScreenshake(15, player.position().toVector3f(), 0.6f).setMaxDistance((float) screenshakeRadius).setFalloffDistance((float) screenshakeRadius - 2.5f))
+            );
+
 
 //            PacketDistributor.sendToPlayersNear(
 //                    PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(player.position().x, player.position().y, player.position().z, 10.0, player.level().dimension())),

@@ -6,8 +6,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FormattedCharSequence;
+import vertexcubed.vrtex.client.screen.widget.VrTeXAbstractWidget;
 
-public class TextWidget extends CybAbstractWidget {
+public class TextWidget extends VrTeXAbstractWidget {
 
 
     private Component realText = Component.empty();

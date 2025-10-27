@@ -1,11 +1,6 @@
 package com.vertexcubed.cybernetics.client.gui.cyberware;
 
-import com.vertexcubed.cybernetics.client.gui.util.ScreenHelper;
-import com.vertexcubed.cybernetics.client.gui.util.ScreenState;
-import com.vertexcubed.cybernetics.client.gui.util.ScreenStateMachine;
-import com.vertexcubed.cybernetics.client.gui.widget.BasicWidget;
 import com.vertexcubed.cybernetics.client.gui.widget.TextWidget;
-import com.vertexcubed.cybernetics.client.task.*;
 import com.vertexcubed.cybernetics.client.util.FakeLocalPlayer;
 import com.vertexcubed.cybernetics.client.util.RenderHelper;
 import com.vertexcubed.cybernetics.common.menu.CyberwareMenu;
@@ -23,7 +18,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
-import team.lodestar.lodestone.systems.easing.Easing;
+import vertexcubed.vrtex.client.screen.ScreenHelper;
+import vertexcubed.vrtex.client.screen.state.ScreenState;
+import vertexcubed.vrtex.client.screen.state.ScreenStateMachine;
+import vertexcubed.vrtex.client.screen.widget.BasicWidget;
+import vertexcubed.vrtex.common.math.Easing;
+import vertexcubed.vrtex.common.task.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -121,7 +121,7 @@ public class CyberwareScreen extends AbstractContainerScreen<CyberwareMenu> {
         );
         entityWidget.setScale(60);
 
-        ScreenHelper.getTaskManager(this).addFrameTask(moveWidget(entityWidget, leftPos + 91, topPos + 16, 20, Easing.QUARTIC_OUT));
+        ScreenHelper.getTaskManager(this).addFrameTask(moveWidget(entityWidget, leftPos + 91, topPos + 16, 20, Easing.QUART_OUT));
 
         //===========
         // Slot Masks
